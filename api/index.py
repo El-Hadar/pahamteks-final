@@ -14,6 +14,7 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-3.6-flash')
 
 quiz_cache = {}
+
 @app.route('/')
 @app.route('/index.html')
 def home():
