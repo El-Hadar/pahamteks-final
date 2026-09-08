@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PahamTeks - Global Edu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #58cc02; --primary-shadow: #58a700;
+            --secondary: #1cb0f6; --secondary-shadow: #1899d6;
+            --danger: #ea2b2b; --warning: #ff9600; --warning-shadow: #cc7800;
+            --purple: #a55eea; --purple-shadow: #8854d0;
+            --coding: #2d3436; --coding-shadow: #000000;
+            --bg: #ffffff; --border: #e5e5e5;
+            --text-main: #4b4b4b; --text-light: #afafaf;
+        }
+
+        * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+
+        .navbar { width: 100%; max-width: 1000px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); margin-bottom: 30px; }
+        .logo { font-size: 2rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; cursor: pointer; }
+        .nav-links { display: flex; gap: 10px; }
+        .btn-nav { background-color: white; border: 2px solid var(--border); border-radius: 12px; padding: 10px 15px; font-size: 1.1rem; font-weight: 800; color: var(--text-light); cursor: pointer; border-bottom: 4px solid var(--border); transition: 0.1s; }
+        .btn-nav.active { border-color: var(--secondary); color: var(--secondary); border-bottom: 4px solid var(--secondary-shadow); }
+        .btn-nav:active { border-bottom-width: 2px; transform: translateY(2px); }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+        }
+
+        .page { display: none; width: 100%; max-width: 950px; padding: 0 20px; animation: fadeIn 0.4s ease-out; }
+        .page.active-page { display: flex; flex-direction: column; align-items: center; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn-huge { background-color: var(--primary); color: white; border: none; border-radius: 16px; padding: 18px 40px; font-size: 1.5rem; font-weight: 800; cursor: pointer; border-bottom: 5px solid var(--primary-shadow); transition: 0.1s; margin: 10px; width: 300px; }
+        .btn-huge.blue { background-color: var(--secondary); border-bottom-color: var(--secondary-shadow); }
+        .btn-huge.dark { background-color: var(--coding); border-bottom-color: var(--coding-shadow); }
+        .btn-huge.purple { background-color: var(--purple); border-bottom-color: var(--purple-shadow); }
+        .btn-huge:active { border-bottom-width: 2px; transform: translateY(3px); }
+
+        .hero { text-align: center; margin-top: 40px; }
+        .hero h1 { font-size: 3.5rem; color: var(--text-main); margin-bottom: 10px; }
+        .hero p { font-size: 1.4rem; color: var(--text-light); margin-bottom: 40px; }
+        
+        .controls { width: 100%; display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px;}
+        select { flex: 1; appearance: none; background: white; border: 2px solid var(--border); border-radius: 16px; padding: 15px 20px; font-size: 1.1rem; font-weight: 700; color: var(--text-main); cursor: pointer; outline: none; text-transform: capitalize; }
+        select:focus { border-color: var(--secondary); }
+        .btn-swap { background: white; border: 2px solid var(--border); border-radius: 16px; padding: 15px 20px; cursor: pointer; font-size: 1.2rem; font-weight: 800; color: var(--text-light); border-bottom: 4px solid var(--border); }
+        .btn-swap:active { border-bottom-width: 2px; transform: translateY(2px); }
+        .translation-area { width: 100%; display: flex; gap: 20px; flex-wrap: wrap; }
+        .text-box { flex: 1; min-width: 300px; background: white; border: 2px solid var(--border); border-radius: 20px; overflow: hidden; }
+        .text-box:focus-within { border-color: var(--secondary); }
+        textarea { width: 100%; height: 250px; border: none; padding: 25px; font-size: 1.4rem; font-weight: 700; color: var(--text-main); resize: none; outline: none; background: transparent; line-height: 1.5; }
+        textarea::placeholder { color: var(--text-light); }
+        #target-text { color: var(--primary); }
+        .status-bar { text-align: center; font-weight: 700; font-size: 1.1rem; color: var(--text-light); margin-top: 15px; width: 100%; }
+
+        .setup-container, .quiz-container { width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 10px; margin-bottom: 50px; }
+        
+        .level-box { width: 100%; background: #f0f8ff; border: 2px solid var(--secondary); border-radius: 16px; padding: 20px; margin-bottom: 10px; }
+        .level-box.coding-theme { background: #f5f6fa; border-color: var(--coding); }
+        .level-box label { font-size: 1.2rem; font-weight: 900; color: var(--secondary-shadow); display: block; margin-bottom: 10px; }
+        .level-box.coding-theme label { color: var(--coding-shadow); }
+        .level-box select { width: 100%; font-size: 1.1rem; font-weight: 800; color: var(--text-main); padding: 15px; border-radius: 12px; border: 2px solid var(--secondary); outline: none; cursor: pointer;}
+        .level-box.coding-theme select { border-color: var(--coding); }
+
+        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; background: white; border: 2px solid var(--border); border-radius: 16px; cursor: pointer; transition: 0.1s; border-bottom: 4px solid var(--border); font-size: 1.1rem; font-weight: 800; color: var(--text-main); user-select: none; }
+        .lang-option:active { border-bottom-width: 2px; transform: translateY(2px); }
+        .lang-option input { transform: scale(1.5); accent-color: var(--primary); cursor: pointer; margin-right: 15px;}
+        .sub-menu { display: none; flex-direction: column; gap: 10px; width: 95%; margin-left: 5%; margin-top: -5px; margin-bottom: 10px; animation: fadeIn 0.2s ease-out; }
+        .sub-option { padding: 12px 20px; font-size: 1.05rem; }
+
+        .quiz-card { width: 100%; padding: 30px 20px; background: white; border: 3px solid var(--border); border-radius: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .fc-lang { font-size: 1.1rem; color: var(--secondary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase;}
+        .fc-word { font-size: 1.8rem; font-weight: 900; color: var(--text-main); line-height: 1.3; word-wrap: break-word; }
+        .mc-container { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
+        .mc-btn { background: white; border: 2px solid var(--border); border-radius: 16px; padding: 18px 20px; font-size: 1.2rem; font-weight: 800; color: var(--text-main); cursor: pointer; border-bottom: 4px solid var(--border); transition: 0.1s; text-align: left; }
+        .mc-btn:active:not(:disabled) { border-bottom-width: 2px; transform: translateY(2px); }
+        .mc-btn.selected { border-color: var(--secondary); background-color: #e5f6ff; color: var(--secondary-shadow); border-bottom-color: var(--secondary); }
+        .mc-btn.correct { border-color: var(--primary); background-color: #d7ffb8; color: var(--primary-shadow); border-bottom-color: var(--primary); }
+        .mc-btn.wrong { border-color: var(--danger); background-color: #ffdfe0; color: var(--danger); border-bottom-color: var(--danger); }
+        
+        .quiz-feedback { width: 100%; padding: 15px 20px; border-radius: 16px; font-size: 1.2rem; font-weight: 800; display: none; text-align: left; margin-bottom: 15px; }
+        .feedback-correct { display: block; background-color: #d7ffb8; color: var(--primary-shadow); border: 2px solid var(--primary); }
+        .feedback-wrong { display: block; background-color: #ffdfe0; color: var(--danger); border: 2px solid var(--danger); }
+        
+        .btn-check { background-color: var(--primary); color: white; border: none; border-radius: 16px; padding: 18px 30px; font-size: 1.3rem; font-weight: 800; cursor: pointer; border-bottom: 5px solid var(--primary-shadow); width: 100%; transition: 0.1s; }
+        .btn-check:active:not(:disabled) { border-bottom-width: 2px; transform: translateY(3px); }
+        .btn-check:disabled { background-color: var(--border); border-bottom-color: #d0d0d0; cursor: not-allowed; color: #a0a0a0; }
+        .btn-check.next { background-color: var(--secondary); border-bottom-color: var(--secondary-shadow); color: white;}
+        .btn-check.purple { background-color: var(--purple); border-bottom-color: var(--purple-shadow); }
+        .btn-check.orange { background-color: var(--warning); border-bottom-color: var(--warning-shadow); }
+        
+        .explainer-box { width: 100%; padding: 20px; background-color: #fff4e6; border: 2px solid var(--warning); border-radius: 16px; color: var(--text-main); font-weight: 700; font-size: 1.1rem; display: none; margin-bottom: 15px; text-align: left; }
+        
+        /* GAYA KAMUS & CHAT */
+        .chat-msg { margin-bottom: 10px; padding: 10px 15px; border-radius: 12px; max-width: 90%; font-size: 1.05rem; }
+        .msg-ai { background-color: white; border: 1px solid var(--warning); color: var(--text-main); align-self: flex-start; }
+        .msg-user { background-color: var(--warning); color: white; align-self: flex-end; margin-left: auto; }
+        .chat-container { display: flex; flex-direction: column; max-height: 250px; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; }
+        
+        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: var(--purple); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 3px solid white; z-index: 100; transition: transform 0.2s; }
+        .floating-kamus-btn:active { transform: scale(0.9); }
+        
+        .kamus-modal { display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 3px solid var(--purple); z-index: 101; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .kamus-header { background: var(--purple); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .kamus-input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--border); outline: none; font-size: 1rem; font-weight: 700; }
+        .kamus-input:focus { border-color: var(--purple); }
+        .kamus-result { margin-top: 10px; padding: 15px; background: #f3eaff; border-radius: 12px; font-size: 1rem; color: var(--text-main); font-weight: 700; display: none; max-height: 200px; overflow-y: auto; line-height: 1.5; }
+        
+        @media (max-width: 400px) { .kamus-modal { width: 90%; right: 5%; } }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="switchPage('home')">PahamTeks</div>
+    <div class="nav-links">
+        <button class="btn-nav active" id="nav-home" onclick="switchPage('home')">Beranda</button>
+        <button class="btn-nav" id="nav-translator" onclick="switchPage('translator')">Translator</button>
+        <button class="btn-nav" id="nav-learn" onclick="switchPage('learn')">Bahasa Dunia</button>
+        <button class="btn-nav" id="nav-coding" onclick="switchPage('coding')">Pemrograman</button>
+    </div>
+</div>
+
+<div id="page-home" class="page active-page">
+    <div class="hero">
+        <h1>Eksplorasi Bahasa & Logika.</h1>
+        <p>Pelajari bahasa asing dari seluruh dunia hingga logika bahasa pemrograman secara interaktif.</p>
+        <button class="btn-huge purple" onclick="switchPage('translator')">Mulai Translator</button>
+        <br>
+        <button class="btn-huge blue" onclick="switchPage('learn')">Mulai Bahasa Asing</button>
+        <br>
+        <button class="btn-huge dark" onclick="switchPage('coding')">Mulai Ngoding</button>
+    </div>
+</div>
+
+<div id="page-translator" class="page">
+    <div class="controls">
+        <select id="source-lang"><option value="auto">Mendeteksi...</option></select>
+        <button class="btn-swap" onclick="swapLangs()">⇄</button>
+        <select id="target-lang"><option value="en">Mendeteksi...</option></select>
+    </div>
+    <div class="translation-area">
+        <div class="text-box"><textarea id="source-text" placeholder="Ketik teks yang ingin diterjemahkan..."></textarea></div>
+        <div class="text-box" style="background-color: #f7f7f7;"><textarea id="target-text" placeholder="Terjemahan dan pelafalan (Romaji/Latin) akan muncul di sini..." readonly></textarea></div>
+    </div>
+    <div id="status" class="status-bar">Menghubungkan ke server AI...</div>
+</div>
+
+<div id="page-learn" class="page">
+    <div class="setup-container">
+        <div class="level-box">
+            <label>🏅 Pilih Tingkat Penguasaan</label>
+            <select id="lang-level">
+                <option value="Pemula">🌱 Pemula (Dasar / Kosakata A1)</option>
+                <option value="Menengah">🌿 Menengah (Struktur Kalimat / B1-B2)</option>
+                <option value="Mahir">🌳 Mahir (Kompleks / C1-C2 / Slang)</option>
+            </select>
+        </div>
+
+        <h2 style="color: var(--text-main); font-size: 1.8rem; margin-bottom: 0; align-self: flex-start;">Pilih Bahasa Manusia</h2>
+        <p style="color: var(--text-light); font-weight: 700; margin-top: 5px; align-self: flex-start;">Pilih salah satu bahasa untuk difokuskan.</p>
+        
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('indo-eng-submenu', 'indo-eng-arrow')">
+            <div style="display: flex; align-items: center;">🌍 Populer (Indo & Inggris)</div><span id="indo-eng-arrow">▼</span>
+        </label>
+        <div id="indo-eng-submenu" class="sub-menu" style="display: flex;">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Indonesia (Baku & EYD)" class="quiz-radio" checked> 🇮🇩 B. Indonesia (Baku)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Indonesia (Gaul & Kiasan)" class="quiz-radio"> 🇮🇩 B. Indonesia (Gaul & Kiasan)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Inggris (Grammar Dasar & Lanjutan)" class="quiz-radio"> 🇬🇧 B. Inggris (Grammar & TOEFL)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris" class="quiz-radio"> 🇬🇧 B. Inggris (Idiom & Slang)</div></label>
+        </div>
+
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('arab-submenu', 'arab-arrow')">
+            <div style="display: flex; align-items: center;">🕋 Timur Tengah & Afrika</div><span id="arab-arrow">▼</span>
+        </label>
+        <div id="arab-submenu" class="sub-menu">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)" class="quiz-radio"> 🇸🇦 Bahasa Arab (Fusha)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Al-Qur'an dan Tajwid Dasar" class="quiz-radio"> 📖 Bahasa Al-Qur'an</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Ibrani (Hebrew)" class="quiz-radio"> 🇮🇱 Bahasa Ibrani</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Turki" class="quiz-radio"> 🇹🇷 Bahasa Turki</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Persia (Farsi)" class="quiz-radio"> 🇮🇷 Bahasa Persia</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Swahili" class="quiz-radio"> 🇰🇪 Bahasa Swahili</div></label>
+        </div>
+
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
+            <div style="display: flex; align-items: center;">🌏 Asia & Pasifik</div><span id="asia-arrow">▼</span>
+        </label>
+        <div id="asia-submenu" class="sub-menu">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)" class="quiz-radio"> 🇯🇵 Bahasa Jepang</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Korea (Hangul)" class="quiz-radio"> 🇰🇷 Bahasa Korea</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)" class="quiz-radio"> 🇨🇳 Bahasa Mandarin</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Hindi" class="quiz-radio"> 🇮🇳 Bahasa Hindi</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Thailand" class="quiz-radio"> 🇹🇭 Bahasa Thailand</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Vietnam" class="quiz-radio"> 🇻🇳 Bahasa Vietnam</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Tagalog (Filipina)" class="quiz-radio"> 🇵🇭 Bahasa Tagalog</div></label>
+        </div>
+
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('eropa-submenu', 'eropa-arrow')">
+            <div style="display: flex; align-items: center;">🌍 Benua Eropa</div><span id="eropa-arrow">▼</span>
+        </label>
+        <div id="eropa-submenu" class="sub-menu">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Spanyol" class="quiz-radio"> 🇪🇸 Bahasa Spanyol</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Prancis" class="quiz-radio"> 🇫🇷 Bahasa Prancis</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Jerman" class="quiz-radio"> 🇩🇪 Bahasa Jerman</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Italia" class="quiz-radio"> 🇮🇹 Bahasa Italia</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Rusia" class="quiz-radio"> 🇷🇺 Bahasa Rusia</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Belanda" class="quiz-radio"> 🇳🇱 Bahasa Belanda</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Portugis" class="quiz-radio"> 🇵🇹 Bahasa Portugis</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Latin & Yunani Kuno" class="quiz-radio"> 🏛️ Bahasa Latin / Yunani</div></label>
+        </div>
+
+        <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 15px;">
+            <button class="btn-huge blue" style="flex: 1; margin: 0; padding: 18px 10px;" onclick="startQuizSession('lang')">Mulai Belajar</button>
+            <button class="btn-huge orange" style="flex: 1; margin: 0; padding: 18px 10px;" onclick="printModule('lang')">🖨️ Cetak Modul</button>
+        </div>
+        <div id="print-status-lang" style="margin-top: 10px; font-weight: 700; color: var(--text-light);"></div>
+    </div>
+</div>
+
+<div id="page-coding" class="page">
+    <div class="setup-container">
+        <div class="level-box coding-theme">
+            <label>💻 Pilih Kompleksitas Algoritma</label>
+            <select id="code-level">
+                <option value="Pemula">🌱 Pemula (Sintaks Dasar, Variabel, Looping)</option>
+                <option value="Menengah">🌿 Menengah (Fungsi, Array, OOP Dasar)</option>
+                <option value="Mahir">🌳 Mahir (Arsitektur Kompleks, Algoritma Rumit)</option>
+            </select>
+        </div>
+
+        <h2 style="color: var(--text-main); font-size: 1.8rem; margin-bottom: 0; align-self: flex-start;">Pilih Bahasa Pemrograman</h2>
+        <p style="color: var(--text-light); font-weight: 700; margin-top: 5px; align-self: flex-start;">Uji kemampuan logika koding Anda.</p>
+        
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('web-submenu', 'web-arrow')">
+            <div style="display: flex; align-items: center;">🌐 Web & Scripting</div><span id="web-arrow">▼</span>
+        </label>
+        <div id="web-submenu" class="sub-menu" style="display: flex;">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" class="quiz-radio" checked> ⚡ JavaScript / TypeScript</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Python" class="quiz-radio"> 🐍 Python</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman PHP" class="quiz-radio"> 🐘 PHP</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Ruby" class="quiz-radio"> 💎 Ruby</div></label>
+        </div>
+
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
+            <div style="display: flex; align-items: center;">⚙️ Sistem & Software</div><span id="sys-arrow">▼</span>
+        </label>
+        <div id="sys-submenu" class="sub-menu">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman C" class="quiz-radio"> 🔵 C</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman C++" class="quiz-radio"> 🚀 C++</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Java" class="quiz-radio"> ☕ Java</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman C#" class="quiz-radio"> 🎯 C#</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Go (Golang)" class="quiz-radio"> 🐹 Go (Golang)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Rust" class="quiz-radio"> 🦀 Rust</div></label>
+        </div>
+
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
+            <div style="display: flex; align-items: center;">📱 Mobile, Data & Database</div><span id="mob-arrow">▼</span>
+        </label>
+        <div id="mob-submenu" class="sub-menu">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Kotlin" class="quiz-radio"> 🤖 Kotlin</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Swift" class="quiz-radio"> 🍎 Swift</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter" class="quiz-radio"> 🎯 Dart (Flutter)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Bahasa SQL & Database" class="quiz-radio"> 🐬 SQL & Database</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman R / MATLAB" class="quiz-radio"> 📊 R / MATLAB</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Bash & Shell Scripting" class="quiz-radio"> 🐚 Bash / Shell Scripting</div></label>
+        </div>
+
+        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('teori-submenu', 'teori-arrow')">
+            <div style="display: flex; align-items: center;">🧠 Teori & Algoritma Khusus</div><span id="teori-arrow">▼</span>
+        </label>
+        <div id="teori-submenu" class="sub-menu">
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)" class="quiz-radio"> 🧱 Struktur Data (Array, Stack, Tree)</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar" class="quiz-radio"> 🔐 Kriptografi & Keamanan</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Design Patterns & Arsitektur Software" class="quiz-radio"> 🏗️ Design Patterns Software</div></label>
+        </div>
+
+        <div style="display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 15px;">
+            <button class="btn-huge dark" style="flex: 1; margin: 0; padding: 18px 10px;" onclick="startQuizSession('coding')">Mulai Latihan</button>
+            <button class="btn-huge orange" style="flex: 1; margin: 0; padding: 18px 10px;" onclick="printModule('coding')">🖨️ Cetak Modul</button>
+        </div>
+        <div id="print-status-code" style="margin-top: 10px; font-weight: 700; color: var(--text-light);"></div>
+    </div>
+</div>
+
+<div id="page-quiz-active" class="page">
+    <div class="quiz-container">
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+            <h2 id="quiz-header" style="color: var(--text-main); font-size: 1.8rem; margin: 0;">Latihan Soal</h2>
+            <button onclick="closeQuiz()" style="background: none; border: none; color: var(--text-light); font-weight: 800; cursor: pointer; text-decoration: underline;">Tutup</button>
+        </div>
+        
+        <div class="quiz-card">
+            <div id="quiz-instruction" class="fc-lang">Intruksi</div>
+            <div id="quiz-question" class="fc-word">Pertanyaan</div>
+        </div>
+        
+        <div id="mc-options" class="mc-container"></div>
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+        
+        <div id="explainer-box" class="explainer-box"></div>
+        <button id="btn-explain" class="btn-check purple" style="display: none; margin-bottom: 10px;" onclick="explainAnswer()">💡 Bahas Jawaban (AI Tutor)</button>
+        
+        <button id="btn-check" class="btn-check" disabled onclick="processQuiz()">Periksa Jawaban</button>
+    </div>
+</div>
+
+<div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar">📖</div>
+
+<div id="kamus-modal" class="kamus-modal">
+    <div class="kamus-header">
+        <span>📖 Kamus Pintar AI</span>
+        <span style="cursor: pointer; font-size: 1.5rem; line-height: 1;" onclick="toggleKamus()">×</span>
+    </div>
+    <div class="kamus-body">
+        <input type="text" id="kamus-input" class="kamus-input" placeholder="Contoh: Linked List, Hill Cipher, atau Kosakata..." onkeypress="handleKamusEnter(event)">
+        <button class="btn-check purple" style="padding: 12px; font-size: 1.1rem; width: 100%; margin: 0;" onclick="searchKamus()">Cari Arti</button>
+        <div id="kamus-result" class="kamus-result"></div>
+    </div>
+</div>
+
+<script>
+    let currentSetupMode = 'learn';
+    let chatHistoryContext = "";
+
+    function switchPage(pageName) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
+        document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
+        
+        if (pageName === 'learn' || pageName === 'coding') {
+            document.getElementById('page-' + pageName).classList.add('active-page');
+            document.getElementById('nav-' + pageName).classList.add('active');
+            currentSetupMode = pageName;
+        } else if (pageName === 'home' || pageName === 'translator') {
+            document.getElementById('page-' + pageName).classList.add('active-page');
+            document.getElementById('nav-' + pageName).classList.add('active');
+        }
+    }
+
+    function closeQuiz() {
+        switchPage(currentSetupMode);
+        document.getElementById('print-status-lang').innerText = "";
+        document.getElementById('print-status-code').innerText = "";
+    }
+
+    // SERVER URL DIKOSONGKAN AGAR VERCEL MENGATURNYA OTOMATIS
+    const serverUrl = ""; 
+    
+    let timeout = null;
+    const sourceSelect = document.getElementById("source-lang"), targetSelect = document.getElementById("target-lang");
+    const sourceText = document.getElementById("source-text"), targetText = document.getElementById("target-text");
+    const status = document.getElementById("status");
+
+    function updateStatus(message, color) { status.innerText = message; status.style.color = color; }
+    
+    function loadLanguages() {
+        fetch(`${serverUrl}/api/languages`).then(res => res.json()).then(data => {
+            sourceSelect.innerHTML = ""; targetSelect.innerHTML = "";
+            sourceSelect.add(new Option("Deteksi Otomatis", "auto"));
+            for (const [name, code] of Object.entries(data)) {
+                sourceSelect.add(new Option(name.toUpperCase(), code)); targetSelect.add(new Option(name.toUpperCase(), code));
+            }
+            sourceSelect.value = "id"; targetSelect.value = "en"; updateStatus("PahamTeks siap! Ketik sesuatu.", "#58cc02");
+        }).catch(err => updateStatus(`Error Koneksi. Pastikan server berjalan.`, "#ea2b2b"));
+    }
+    loadLanguages();
+    
+    function swapLangs() { let temp = sourceSelect.value; if (temp === "auto") temp = "id"; sourceSelect.value = targetSelect.value; targetSelect.value = temp; let tempText = sourceText.value; sourceText.value = targetText.value; targetText.value = ""; triggerTranslate(); }
+    sourceText.addEventListener("keyup", () => { clearTimeout(timeout); timeout = setTimeout(triggerTranslate, 800); });
+    sourceSelect.addEventListener("change", triggerTranslate); targetSelect.addEventListener("change", triggerTranslate);
+    
+    function triggerTranslate() {
+        let text = sourceText.value.trim(); if (!text) { targetText.value = ""; updateStatus("PahamTeks siap! Ketik sesuatu.", "#58cc02"); return; }
+        updateStatus("AI sedang memikirkan konteks...", "#1cb0f6"); 
+        fetch(`${serverUrl}/api/translate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text, source: sourceSelect.value, target: targetSelect.value }) })
+        .then(res => res.json()).then(data => { if (data.error) throw new Error(data.error); targetText.value = data.translated_text; updateStatus("Terjemahan Selesai!", "#58cc02"); })
+        .catch(err => updateStatus(`Error AI. Silakan coba lagi.`, "#ea2b2b"));
+    }
+
+    function toggleMenu(menuId, arrowId) {
+        const submenu = document.getElementById(menuId), arrow = document.getElementById(arrowId);
+        if (submenu.style.display === "flex") { submenu.style.display = "none"; arrow.innerText = "▼"; } 
+        else { submenu.style.display = "flex"; arrow.innerText = "▲"; }
+    }
+
+    let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
+
+    function printModule(type) {
+        let radioName = type === 'coding' ? 'code-category' : 'lang-category';
+        let levelId = type === 'coding' ? 'code-level' : 'lang-level';
+        let statusId = type === 'coding' ? 'print-status-code' : 'print-status-lang';
+
+        const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+        if (!selectedRadio) { alert("Silakan pilih satu materi belajar terlebih dahulu!"); return; }
+        
+        const selectedCategories = [selectedRadio.value];
+        const selectedLevel = document.getElementById(levelId).value; 
+        const statusBox = document.getElementById(statusId);
+        statusBox.innerText = "⏳ Menyusun modul PDF. Harap tunggu...";
+
+        fetch(`${serverUrl}/api/generate_quiz`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ categories: selectedCategories, level: selectedLevel }) 
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) throw new Error(data.error);
+            let printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html><head><title>Modul Latihan PahamTeks</title>
+                <style>body { font-family: 'Arial', sans-serif; padding: 40px; color: #333; line-height: 1.6; } h1 { color: #58cc02; margin-bottom: 5px;} h3 { color: #888; margin-top: 0;} .question-block { margin-bottom: 30px; page-break-inside: avoid; } .options { margin-left: 20px; margin-top: 10px; } .option-line { margin-bottom: 8px; }</style>
+                </head><body>
+                <h1>Lembar Kerja PahamTeks</h1><h3>Topik: ${selectedCategories[0]} | Level: ${selectedLevel}</h3><hr style="border: 1px solid #e5e5e5; margin-bottom: 30px;">
+            `);
+            data.forEach((q, index) => {
+                printWindow.document.write(`<div class="question-block"><strong>${index+1}. ${q.instruction}</strong><br><div style="font-size: 1.2rem; margin: 10px 0;">${q.question}</div><div class="options">`);
+                q.options.forEach(opt => printWindow.document.write(`<div class="option-line">( &nbsp; &nbsp; ) &nbsp; ${opt}</div>`));
+                printWindow.document.write(`</div></div>`);
+            });
+            printWindow.document.write('</body></html>'); printWindow.document.close(); printWindow.focus();
+            setTimeout(() => { printWindow.print(); statusBox.innerText = "✅ Modul berhasil dicetak!"; }, 1000);
+        }).catch(err => { 
+            statusBox.innerHTML = `❌ Gagal memuat modul. Waktunya rehat sejenak.`; 
+        });
+    }
+
+    function startQuizSession(type) {
+        currentSetupMode = type;
+        let radioName = type === 'coding' ? 'code-category' : 'lang-category';
+        let levelId = type === 'coding' ? 'code-level' : 'lang-level';
+
+        const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+        if (!selectedRadio) { alert("Silakan pilih materi belajar terlebih dahulu!"); return; }
+        
+        const selectedCategories = [selectedRadio.value];
+        const selectedLevel = document.getElementById(levelId).value; 
+
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
+        document.getElementById('page-quiz-active').classList.add('active-page');
+        
+        generateNewQuiz(selectedCategories, selectedLevel);
+    }
+
+    function generateNewQuiz(categories, level) {
+        document.getElementById("quiz-instruction").innerText = `Level: ${level}`;
+        document.getElementById("quiz-question").innerHTML = "<div style='font-size: 1.5rem; color: var(--secondary); margin-bottom: 20px;'>🤖 Guru AI sedang menyusun soal khusus untuk topik ini... ⏳</div>";
+        document.getElementById("mc-options").innerHTML = "";
+        document.getElementById("quiz-feedback").style.display = "none";
+        document.getElementById("btn-check").style.display = "none"; 
+        document.getElementById("btn-explain").style.display = "none";
+        document.getElementById("explainer-box").style.display = "none";
+
+        fetch(`${serverUrl}/api/generate_quiz`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ categories: categories, level: level }) 
+        }).then(res => res.json()).then(data => {
+            if (data.error) throw new Error(data.error);
+            activeQuizPool = data; currentQuizIndex = 0;
+            document.getElementById("btn-check").style.display = "block";
+            loadQuiz();
+        }).catch(err => {
+            document.getElementById("quiz-question").innerHTML = `
+                <div style='text-align:center; padding: 15px;'>
+                    <div style='font-size: 3.5rem; margin-bottom: 10px;'>☕</div>
+                    <div style='font-size: 1.4rem; color: var(--warning); font-weight: 800; margin-bottom: 10px;'>Waktunya Rehat Sejenak!</div>
+                    <div style='font-size: 1.1rem; color: var(--text-main); line-height: 1.6; font-weight: 700;'>
+                        ${err.message}
+                    </div>
+                </div>`;
+            document.getElementById("btn-check").innerText = "Tutup & Coba Lagi Nanti"; 
+            document.getElementById("btn-check").style.display = "block"; 
+            document.getElementById("btn-check").onclick = closeQuiz;
+        });
+    }
+
+    function loadQuiz() {
+        isChecking = true; selectedAnswer = null; chatHistoryContext = "";
+        const currentData = activeQuizPool[currentQuizIndex];
+        let levelId = currentSetupMode === 'coding' ? 'code-level' : 'lang-level';
+        const selectedLevel = document.getElementById(levelId).value;
+        
+        document.getElementById("quiz-instruction").innerText = `${currentData.instruction} (Level: ${selectedLevel})`;
+        document.getElementById("quiz-question").innerHTML = currentData.question;
+        document.getElementById("quiz-feedback").style.display = "none";
+        document.getElementById("btn-explain").style.display = "none";
+        document.getElementById("explainer-box").style.display = "none";
+        
+        const btnCheck = document.getElementById("btn-check");
+        btnCheck.style.display = "block"; btnCheck.innerText = "Periksa Jawaban"; btnCheck.className = "btn-check"; btnCheck.disabled = true; btnCheck.onclick = processQuiz;
+        const optionsContainer = document.getElementById("mc-options"); optionsContainer.innerHTML = ""; 
+
+        const shuffledOptions = currentData.options.sort(() => Math.random() - 0.5);
+        shuffledOptions.forEach(optionText => {
+            const btn = document.createElement("button");
+            btn.className = "mc-btn"; btn.innerText = optionText;
+            btn.onclick = () => selectOption(btn, optionText);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(clickedBtn, optionText) {
+        if (!isChecking) return; 
+        document.querySelectorAll('.mc-btn').forEach(btn => btn.classList.remove('selected'));
+        clickedBtn.classList.add('selected'); selectedAnswer = optionText;
+        document.getElementById("btn-check").disabled = false;
+    }
+
+    function processQuiz() {
+        const btnCheck = document.getElementById("btn-check"), feedback = document.getElementById("quiz-feedback");
+        
+        if (!isChecking) { 
+            currentQuizIndex++;
+            if (currentQuizIndex >= activeQuizPool.length) {
+                document.getElementById("quiz-instruction").innerText = "Selesai!";
+                document.getElementById("quiz-question").innerHTML = "<div style='font-size: 2.2rem; color: var(--primary); margin-bottom: 15px;'>🎉 Sesi Selesai! 🎉</div><div style='font-size: 1.2rem; color: var(--text-main); font-weight: 700;'>Hasil yang bagus! Apa yang ingin kamu lakukan selanjutnya?</div>";
+                document.getElementById("mc-options").innerHTML = `<button class="btn-check" style="margin-bottom: 10px;" onclick="startQuizSession(currentSetupMode)">📚 Lanjut Latihan (Buat Soal Baru)</button><button class="btn-check blue" onclick="closeQuiz()">🔍 Cari Materi Lain / Ganti Level</button>`;
+                feedback.style.display = "none"; btnCheck.style.display = "none"; document.getElementById("btn-explain").style.display = "none"; document.getElementById("explainer-box").style.display = "none";
+                return;
+            }
+            loadQuiz(); return; 
+        }
+
+        isChecking = false;
+        const correctAnswer = activeQuizPool[currentQuizIndex].answer;
+        document.querySelectorAll('.mc-btn').forEach(btn => { btn.disabled = true; if (btn.innerText === correctAnswer) btn.classList.add('correct'); });
+
+        if (selectedAnswer === correctAnswer) { feedback.innerHTML = "Betul sekali! 🎉"; feedback.className = "quiz-feedback feedback-correct"; } 
+        else { document.querySelector('.mc-btn.selected').classList.add('wrong'); feedback.innerHTML = "Salah! Jawaban yang benar ditandai dengan warna hijau."; feedback.className = "quiz-feedback feedback-wrong"; }
+        
+        document.getElementById("btn-explain").style.display = "block"; document.getElementById("btn-explain").innerText = "💡 Bahas Jawaban (AI Tutor)";
+        btnCheck.innerText = "Lanjut"; btnCheck.className = "btn-check next";
+    }
+
+    function explainAnswer() {
+        const currentData = activeQuizPool[currentQuizIndex];
+        const explainBtn = document.getElementById("btn-explain");
+        const explainBox = document.getElementById("explainer-box");
+
+        explainBtn.innerText = "⏳ Tutor AI Sedang Menganalisis..."; explainBtn.disabled = true;
+
+        fetch(`${serverUrl}/api/explain_answer`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question: currentData.question, answer: currentData.answer }) 
+        }).then(res => res.json()).then(data => {
+            if (data.error) throw new Error(data.error);
+            chatHistoryContext = data.explanation;
+            explainBox.style.display = "block"; explainBtn.style.display = "none"; 
+            
+            explainBox.innerHTML = `
+                <div id="chat-tutor-history" class="chat-container">
+                    <div class="chat-msg msg-ai">👩‍🏫 <b>Tutor AI:</b><br>${data.explanation.replace(/\n/g, '<br>')}</div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <input type="text" id="tutor-chat-input" style="flex:1; padding:12px; border-radius:12px; border:2px solid var(--border); outline:none; font-size:1rem;" placeholder="Ketik jawabanmu ke Tutor..." onkeypress="handleTutorEnter(event)">
+                    <button onclick="sendTutorChat()" class="btn-check purple" style="padding:10px 20px; font-size:1rem; margin:0; width:auto;">Balas</button>
+                </div>
+            `;
+            scrollToBottomChat();
+        }).catch(err => { explainBtn.innerText = `💡 Gagal Memuat Penjelasan`; explainBtn.disabled = false; });
+    }
+
+    function handleTutorEnter(e) { if(e.key === "Enter") sendTutorChat(); }
+    
+    function sendTutorChat() {
+        const input = document.getElementById("tutor-chat-input");
+        const msg = input.value.trim();
+        if(!msg) return;
+        
+        const chatBox = document.getElementById("chat-tutor-history");
+        chatBox.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
+        chatBox.innerHTML += `<div class="chat-msg msg-ai" id="ai-typing"><i>👩‍🏫 Tutor sedang mengetik...</i></div>`;
+        input.value = ""; scrollToBottomChat();
+
+        fetch(`${serverUrl}/api/chat_tutor`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg, history: chatHistoryContext }) 
+        }).then(res => res.json()).then(data => {
+            document.getElementById("ai-typing").remove();
+            chatBox.innerHTML += `<div class="chat-msg msg-ai">👩‍🏫 <b>Tutor AI:</b><br>${data.reply.replace(/\n/g, '<br>')}</div>`;
+            chatHistoryContext += ` | Murid: ${msg} | Tutor: ${data.reply}`;
+            scrollToBottomChat();
+        }).catch(err => { document.getElementById("ai-typing").innerText = `Error mengambil balasan.`; });
+    }
+    
+    function scrollToBottomChat() {
+        const box = document.getElementById("chat-tutor-history");
+        if(box) box.scrollTop = box.scrollHeight;
+    }
+
+    function toggleKamus() {
+        const modal = document.getElementById("kamus-modal");
+        modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+        if(modal.style.display === "flex") document.getElementById("kamus-input").focus();
+    }
+    
+    function handleKamusEnter(e) { if(e.key === "Enter") searchKamus(); }
+
+    function searchKamus() {
+        const input = document.getElementById("kamus-input").value.trim();
+        const resultBox = document.getElementById("kamus-result");
+        if(!input) return;
+        
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "<i>⏳ AI sedang mencari di Kamus...</i>";
+        
+        fetch(`${serverUrl}/api/dictionary`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ keyword: input }) 
+        }).then(res => res.json()).then(data => {
+            if (data.error) throw new Error(data.error);
+            resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
+        }).catch(err => { resultBox.innerHTML = `❌ Gagal mengambil data kamus. Waktunya rehat sejenak.`; });
+    }
+</script>
+
+</body>
+</html>
