@@ -9,13 +9,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# PERUBAHAN PENTING: Kunci AI sekarang diambil dari brankas Vercel (Environment Variable)
+# Konfigurasi Gemini dari Environment Variable Vercel
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-3.6-flash')
 
 quiz_cache = {}
 
-# --- SISTEM DATABASE MEMORI ---
+# --- SISTEM DATABASE MEMORI (Untuk Login & Daftar) ---
 users_db = {}
 
 @app.route('/api/register', methods=['POST'])
@@ -47,7 +47,7 @@ def login():
         return jsonify({'error': 'Kata sandi salah!'}), 400
         
     return jsonify({'message': 'Login berhasil!', 'name': users_db[email]['name']})
-# ------------------------------
+# -----------------------------------------------------
 
 LANGUAGES = {
     "afrikaans": "af", "albanian": "sq", "amharic": "am", "arabic": "ar", "armenian": "hy", "azerbaijani": "az",
@@ -139,8 +139,6 @@ def generate_quiz():
     Format WAJIB JSON Array utuh tanpa markdown (```).
     Bentuk JSON:
     [{{ "instruction": "Perintah", "question": "Soal", "options": ["A", "B", "C", "D"], "answer": "Jawaban" }}]
-    Khusus 'Bahasa Al-Qur'an', format question WAJIB:
-    "<div style='font-size: 3.5rem; font-family: serif;' dir='rtl'>ARAB</div><div style='font-size: 1.4rem; color: #afafaf; margin-top: -5px;'>Latin</div>".
     """
     
     try:
@@ -182,7 +180,7 @@ def chat_tutor():
     Kamu adalah Tutor AI PahamTeks.
     Konteks percakapan sebelumnya: {history}
     Murid merespons: "{user_msg}"
-    Berikan jawaban interaktif dan ramah. Jika murid masih bingung, berikan contoh sederhana. Jika murid sudah paham, berikan apresiasi. Jangan gunakan markdown tebal/miring.
+    Berikan jawaban interaktif dan ramah. Jangan gunakan markdown tebal/miring berlebihan.
     """
     try:
         response = generate_with_retry(prompt)
@@ -197,7 +195,7 @@ def dictionary():
     
     prompt = f"""
     Kamu adalah 'Kamus Pintar AI'. Pengguna mencari kata/istilah/konsep: "{keyword}".
-    Berikan: 1. Definisi singkat. 2. Terjemahan/Fungsi. 3. Satu contoh penggunaan dalam kalimat atau sintaks kode.
+    Berikan: 1. Definisi singkat. 2. Terjemahan/Fungsi. 3. Satu contoh penggunaan.
     Gunakan teks biasa yang rapi.
     """
     try:
@@ -205,3 +203,14 @@ def dictionary():
         return jsonify({'result': response.text.strip()})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# Rute Sapu Jagat (Untuk menampilkan halaman depan)
+@app.route('/')
+@app.route('/index.html')
+def home():
+    try:
+        file_path = os.path.join(os.path.dirname(__file__), '..', 'index.html')
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        return f"<h1>Memuat Tampilan...</h1><p>Silakan muat ulang halaman. Error: {e}</p>"
