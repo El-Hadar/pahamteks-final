@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta tag ini memaksa browser agar tidak menggunakan cache lama -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>PahamTeks - Global Edu</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* Penyesuaian Warna Tema Utama sesuai standar Edu-App (Gamified) */
+        /* Skema Warna Harmonis Sesuai Referensi PDF Gamified */
         :root {
             --primary: #58cc02; --primary-shadow: #58a700;
             --secondary: #1cb0f6; --secondary-shadow: #1899d6;
@@ -244,7 +248,6 @@
             <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris" class="quiz-radio"> B. Inggris (Idiom & Slang)</div></label>
         </div>
 
-        <!-- Opsi Lainnya disembunyikan untuk kerapian code, tambahkan kembali sesuai selera jika perlu -->
         <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
             <div style="display: flex; align-items: center;">Asia & Pasifik</div><span id="asia-arrow">▼</span>
         </label>
@@ -346,7 +349,7 @@
     let chatHistoryContext = "";
 
     // --- LOGIC AUTHENTICATION (Login / Daftar / Guest) ---
-    let authMode = 'login'; // 'login' or 'register'
+    let authMode = 'login'; 
     
     function openAuthModal(mode) {
         document.getElementById('auth-modal').style.display = 'flex';
@@ -380,7 +383,7 @@
         }
     }
     
-   function processAuth() {
+    function processAuth() {
         const email = document.getElementById('auth-email').value.trim();
         const pass = document.getElementById('auth-password').value.trim();
         const name = document.getElementById('auth-name').value.trim();
@@ -425,20 +428,15 @@
             alert("❌ Gagal terhubung ke server. Coba lagi.");
         });
     }
-        // Simulasi sukses login
-        activateUser("Pengguna");
-    }
     
     function continueAsGuest() {
         activateUser("Tamu");
     }
     
-    function activateUser(typeName) {
+    function activateUser(userName) {
         closeAuthModal();
-        // Sembunyikan tombol Login/Daftar
         const navRight = document.getElementById('nav-auth-section');
-        navRight.innerHTML = `<div class="user-profile" style="display:block;">👤 Akun ${typeName}</div>`;
-        alert(`Selamat datang! Anda sedang menggunakan mode ${typeName}.`);
+        navRight.innerHTML = `<div class="user-profile" style="display:block;">👤 Halo, ${userName}</div>`;
     }
 
     // --- LOGIC NAVIGATION ---
@@ -498,7 +496,7 @@
     let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
 
     function closeQuiz() {
-        switchPage(currentSetupMode); // Otomatis kembali ke menu bahasa atau pemrograman sesuai asalnya
+        switchPage(currentSetupMode); 
         document.getElementById('print-status-lang').innerText = "";
         document.getElementById('print-status-code').innerText = "";
     }
@@ -610,7 +608,6 @@
         if (!isChecking) { 
             currentQuizIndex++;
             if (currentQuizIndex >= activeQuizPool.length) {
-                // Modifikasi Navigasi Selesai (Dinamis sesuai Asal Menu)
                 let navText = currentSetupMode === 'learn' ? 'Ganti Materi Bahasa Dunia' : 'Ganti Materi Pemrograman';
                 
                 document.getElementById("quiz-instruction").innerText = "Selesai!";
