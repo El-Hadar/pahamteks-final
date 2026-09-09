@@ -100,6 +100,14 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
         .modal-box { background: #111; width: 90%; max-width: 400px; border-radius: 20px; padding: 30px; border: 1px solid var(--card-border); text-align: center; }
         .auth-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: #000; color: white; margin-bottom: 10px; font-size: 1rem; }
+
+        /* Kamus Floating Button & Modal */
+        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(0,0,0,0.8); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid var(--btn-cyan); z-index: 100; transition: transform 0.2s; }
+        .floating-kamus-btn:active { transform: scale(0.9); }
+        .kamus-modal { display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; background: #111; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
     </style>
 </head>
 <body>
@@ -258,7 +266,7 @@
     </div>
 </div>
 
-<!-- Pemrograman -->
+<!-- Pemrograman (Super Lengkap) -->
 <div id="page-coding" class="page">
     <div class="setup-container">
         <div class="input-group">
@@ -279,18 +287,24 @@
             <div>🌐 Web & Scripting</div><span id="web-arrow">▼</span>
         </label>
         <div id="web-submenu" class="sub-menu" style="display: flex;">
+            <label class="sub-option"><input type="radio" name="code-category" value="Dasar HTML & CSS"> Dasar HTML & CSS</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" checked> JavaScript / TypeScript</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Python"> Python</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman PHP"> PHP</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Ruby"> Ruby</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
             <div>🌐 Sistem & Software</div><span id="sys-arrow">▼</span>
         </label>
         <div id="sys-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C"> C</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C++"> C++</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C#"> C#</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Java"> Java</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Go (Golang)"> Go (Golang)</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Rust"> Rust</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Swift"> Swift</label>
         </div>
         
         <label class="lang-option" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
@@ -299,7 +313,9 @@
         <div id="mob-submenu" class="sub-menu">
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Kotlin"> Kotlin</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter"> Dart (Flutter)</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa SQL & Database"> SQL & Database</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa SQL & Database Relasional"> SQL & Database</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="NoSQL & MongoDB"> NoSQL & MongoDB</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa R (Data Science)"> R (Data Science)</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('teori-submenu', 'teori-arrow')">
@@ -308,6 +324,8 @@
         <div id="teori-submenu" class="sub-menu">
             <label class="sub-option"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)"> Struktur Data (Array, Stack, Tree)</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar"> Kriptografi & Keamanan</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Konsep Machine Learning Dasar"> Machine Learning Dasar</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Design Patterns (OOP)"> Design Patterns (OOP)</label>
         </div>
 
         <div class="action-row">
@@ -347,6 +365,20 @@
     </div>
 </div>
 
+<!-- Kamus Floating Button & Modal -->
+<div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar AI">📖</div>
+<div id="kamus-modal" class="kamus-modal">
+    <div class="kamus-header">
+        <span>📖 Kamus Pintar AI</span>
+        <span style="cursor: pointer; font-size: 1.5rem; line-height: 1;" onclick="toggleKamus()">×</span>
+    </div>
+    <div class="kamus-body">
+        <input type="text" id="kamus-input" class="auth-input" placeholder="Ketik kata/istilah/syntax..." onkeypress="handleKamusEnter(event)">
+        <button class="btn-huge btn-cyan" style="padding: 12px; font-size: 1.1rem; width: 100%; margin: 0; min-width: auto; color:black;" onclick="searchKamus()">Cari Arti</button>
+        <div id="kamus-result" style="margin-top: 10px; margin-bottom:0; font-size: 0.95rem; display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:15px; line-height:1.5; color:white;"></div>
+    </div>
+</div>
+
 <script>
     const serverUrl = ""; 
     let currentSetupMode = 'learn';
@@ -369,7 +401,6 @@
             document.getElementById('nav-' + pageName).classList.add('active');
         }
         
-        // Reset kuis jika keluar
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
     }
@@ -444,6 +475,31 @@
         const s = document.getElementById("source-lang"), t = document.getElementById("target-lang"), sT = document.getElementById("source-text"), tT = document.getElementById("target-text");
         let tempL = s.value === "auto" ? "id" : s.value; s.value = t.value; t.value = tempL;
         sT.value = tT.value; tT.value = ""; triggerTranslate();
+    }
+
+    // --- KAMUS PINTAR AI ---
+    function toggleKamus() {
+        const modal = document.getElementById("kamus-modal");
+        modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+        if(modal.style.display === "flex") document.getElementById("kamus-input").focus();
+    }
+    
+    function handleKamusEnter(e) { if(e.key === "Enter") searchKamus(); }
+
+    function searchKamus() {
+        const input = document.getElementById("kamus-input").value.trim();
+        const resultBox = document.getElementById("kamus-result");
+        if(!input) return;
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "<i>⏳ AI sedang mencari di Kamus...</i>";
+        
+        fetch(`${serverUrl}/api/dictionary`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ keyword: input }) 
+        }).then(res => res.json()).then(data => {
+            if (data.error) throw new Error(data.error);
+            resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
+        }).catch(err => { resultBox.innerHTML = `❌ Gagal mengambil data kamus.`; });
     }
 
     // --- KUIS & SISTEM NILAI ---
