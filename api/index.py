@@ -15,16 +15,39 @@ model = genai.GenerativeModel('gemini-3.6-flash')
 
 quiz_cache = {}
 
-@app.route('/')
-@app.route('/index.html')
-def home():
-    try:
-        # Menyuruh Python mengambil file index.html di folder luar dan menampilkannya
-        file_path = os.path.join(os.path.dirname(__file__), '..', 'index.html')
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return f.read()
-    except Exception as e:
-        return f"<h1>Tampilan sedang diproses...</h1><p>Silakan muat ulang (refresh) halaman ini. Error: {e}</p>"
+# --- SISTEM DATABASE MEMORI ---
+users_db = {}
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    data = request.json
+    email = data.get('email', '').strip()
+    password = data.get('password', '').strip()
+    name = data.get('name', '').strip()
+    
+    if not email or not password or not name:
+        return jsonify({'error': 'Semua kolom wajib diisi!'}), 400
+        
+    if email in users_db:
+        return jsonify({'error': 'Email sudah terdaftar! Silakan login.'}), 400
+        
+    users_db[email] = {'name': name, 'password': password}
+    return jsonify({'message': 'Pendaftaran berhasil!', 'name': name})
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data.get('email', '').strip()
+    password = data.get('password', '').strip()
+    
+    if email not in users_db:
+        return jsonify({'error': 'Email tidak ditemukan!'}), 400
+        
+    if users_db[email]['password'] != password:
+        return jsonify({'error': 'Kata sandi salah!'}), 400
+        
+    return jsonify({'message': 'Login berhasil!', 'name': users_db[email]['name']})
+# ------------------------------
 
 LANGUAGES = {
     "afrikaans": "af", "albanian": "sq", "amharic": "am", "arabic": "ar", "armenian": "hy", "azerbaijani": "az",
