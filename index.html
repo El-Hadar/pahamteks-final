@@ -67,8 +67,8 @@
         .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
         .lang-option:hover { background: rgba(255,255,255,0.1); }
         .sub-menu { display: none; flex-direction: column; gap: 10px; width: 95%; margin-left: 5%; margin-top: -10px; }
-        .sub-option { background: rgba(0,0,0,0.2); padding: 12px 20px; font-size: 1rem; border-radius: 8px; }
-        .sub-option input { margin-right: 15px; transform: scale(1.3); accent-color: var(--btn-green); }
+        .sub-option { background: rgba(0,0,0,0.2); padding: 12px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
+        .sub-option input { margin-right: 15px; transform: scale(1.3); accent-color: var(--btn-green); cursor: pointer; }
 
         .action-row { display: flex; gap: 15px; width: 100%; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
         .btn-huge { border: none; border-radius: 25px; padding: 15px 40px; font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: 0.2s; color: black; min-width: 200px; text-transform: uppercase; }
@@ -196,17 +196,38 @@
             <div>🌐 Populer (Indo & Inggris)</div><span id="indo-eng-arrow">▼</span>
         </label>
         <div id="indo-eng-submenu" class="sub-menu" style="display: flex;">
-            <label class="lang-option sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia Baku" checked> B. Indonesia (Baku)</label>
-            <label class="lang-option sub-option"><input type="radio" name="lang-category" value="Bahasa Inggris Grammar"> B. Inggris (Grammar)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Baku & EYD)" checked> B. Indonesia (Baku)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Gaul & Kiasan)"> B. Indonesia (Gaul & Kiasan)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Inggris (Grammar Dasar & Lanjutan)"> B. Inggris (Grammar & TOEFL)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris"> B. Inggris (Idiom & Slang)</label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('arab-submenu', 'arab-arrow')">
+            <div>🌐 Timur Tengah & Afrika</div><span id="arab-arrow">▼</span>
+        </label>
+        <div id="arab-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)"> Bahasa Arab (Fusha)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Al-Qur'an dan Tajwid Dasar"> Bahasa Al-Qur'an</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Ibrani (Hebrew)"> Bahasa Ibrani</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Turki"> Bahasa Turki</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
             <div>🌐 Asia Pasifik (Jepang, Korea, Mandarin)</div><span id="asia-arrow">▼</span>
         </label>
         <div id="asia-submenu" class="sub-menu">
-            <label class="lang-option sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang"> Bahasa Jepang</label>
-            <label class="lang-option sub-option"><input type="radio" name="lang-category" value="Bahasa Korea"> Bahasa Korea</label>
-            <label class="lang-option sub-option"><input type="radio" name="lang-category" value="Bahasa Mandarin"> Bahasa Mandarin</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)"> Bahasa Jepang</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Korea (Hangul)"> Bahasa Korea</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)"> Bahasa Mandarin</label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('eropa-submenu', 'eropa-arrow')">
+            <div>🌐 Benua Eropa</div><span id="eropa-arrow">▼</span>
+        </label>
+        <div id="eropa-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Spanyol"> Bahasa Spanyol</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Prancis"> Bahasa Prancis</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jerman"> Bahasa Jerman</label>
         </div>
 
         <div class="action-row">
@@ -238,16 +259,35 @@
             <div>🌐 Web & Scripting</div><span id="web-arrow">▼</span>
         </label>
         <div id="web-submenu" class="sub-menu" style="display: flex;">
-            <label class="lang-option sub-option"><input type="radio" name="code-category" value="JavaScript" checked> JavaScript / TypeScript</label>
-            <label class="lang-option sub-option"><input type="radio" name="code-category" value="Python"> Python</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" checked> JavaScript / TypeScript</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Python"> Python</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman PHP"> PHP</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
             <div>🌐 Sistem & Software</div><span id="sys-arrow">▼</span>
         </label>
         <div id="sys-submenu" class="sub-menu">
-            <label class="lang-option sub-option"><input type="radio" name="code-category" value="C++"> C++</label>
-            <label class="lang-option sub-option"><input type="radio" name="code-category" value="Java"> Java</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C++"> C++</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Java"> Java</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Go (Golang)"> Go (Golang)</label>
+        </div>
+        
+        <label class="lang-option" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
+            <div>🌐 Mobile, Data & Database</div><span id="mob-arrow">▼</span>
+        </label>
+        <div id="mob-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Kotlin"> Kotlin</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter"> Dart (Flutter)</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa SQL & Database"> SQL & Database</label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('teori-submenu', 'teori-arrow')">
+            <div>🌐 Teori & Algoritma Khusus</div><span id="teori-arrow">▼</span>
+        </label>
+        <div id="teori-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)"> Struktur Data (Array, Stack, Tree)</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar"> Kriptografi & Keamanan</label>
         </div>
 
         <div class="action-row">
