@@ -6,31 +6,33 @@
     <title>PahamTeks - Global Edu</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* Penyesuaian Warna Tema Utama sesuai standar Edu-App (Gamified) */
         :root {
             --primary: #58cc02; --primary-shadow: #58a700;
             --secondary: #1cb0f6; --secondary-shadow: #1899d6;
             --danger: #ea2b2b; --warning: #ff9600; --warning-shadow: #cc7800;
-            --purple: #a55eea; --purple-shadow: #8854d0;
-            --coding: #2d3436; --coding-shadow: #000000;
+            --purple: #ce82ff; --purple-shadow: #a55eea;
+            --coding: #4b4b4b; --coding-shadow: #333333;
             --bg: #ffffff; --border: #e5e5e5;
             --text-main: #4b4b4b; --text-light: #afafaf;
         }
 
         * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        body { background-color: var(--bg); color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
 
         .navbar { width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
         .nav-left { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; }
-        .logo { font-size: 2rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; cursor: pointer; }
+        .logo { font-size: 2.2rem; font-weight: 900; color: var(--primary); letter-spacing: -1px; cursor: pointer; }
         .nav-links { display: flex; gap: 10px; flex-wrap: wrap;}
         .btn-nav { background-color: white; border: 2px solid var(--border); border-radius: 12px; padding: 10px 15px; font-size: 1.1rem; font-weight: 800; color: var(--text-light); cursor: pointer; border-bottom: 4px solid var(--border); transition: 0.1s; }
         .btn-nav.active { border-color: var(--secondary); color: var(--secondary); border-bottom: 4px solid var(--secondary-shadow); }
         .btn-nav:active { border-bottom-width: 2px; transform: translateY(2px); }
         
-        .nav-right { display: flex; gap: 10px; }
+        .nav-right { display: flex; gap: 10px; align-items: center; }
         .btn-auth { background-color: white; border: 2px solid var(--border); border-radius: 12px; padding: 10px 20px; font-size: 1.1rem; font-weight: 800; color: var(--text-main); cursor: pointer; border-bottom: 4px solid var(--border); transition: 0.1s; }
         .btn-auth.primary { background-color: var(--primary); color: white; border-color: var(--primary-shadow); border-bottom-color: var(--primary-shadow); }
         .btn-auth:active { border-bottom-width: 2px; transform: translateY(2px); }
+        .user-profile { display: none; font-weight: 800; color: var(--secondary); font-size: 1.2rem; border: 2px solid var(--border); padding: 8px 15px; border-radius: 12px; }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
@@ -42,14 +44,15 @@
         
         .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; margin-bottom: 50px; }
         .feature-card { background: white; border: 2px solid var(--border); border-radius: 20px; padding: 25px; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 15px;}
-        .feature-card p { font-size: 0.95rem; color: var(--text-main); line-height: 1.6; margin: 0; font-weight: 700; text-align: justify;}
+        .feature-card p { font-size: 0.95rem; color: var(--text-light); line-height: 1.6; margin: 0; font-weight: 700; text-align: justify;}
         
-        .btn-huge { background-color: var(--primary); color: white; border: none; border-radius: 16px; padding: 18px 20px; font-size: 1.3rem; font-weight: 900; cursor: pointer; border-bottom: 5px solid var(--primary-shadow); transition: 0.1s; width: 100%; text-align: center; }
+        .btn-huge { background-color: var(--primary); color: white; border: none; border-radius: 16px; padding: 18px 20px; font-size: 1.3rem; font-weight: 900; cursor: pointer; border-bottom: 5px solid var(--primary-shadow); transition: 0.1s; width: 100%; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px; }
         .btn-huge.blue { background-color: var(--secondary); border-bottom-color: var(--secondary-shadow); }
         .btn-huge.dark { background-color: var(--coding); border-bottom-color: var(--coding-shadow); }
-        .btn-huge.purple { background-color: var(--purple); border-bottom-color: var(--purple-shadow); }
+        .btn-huge.purple { background-color: var(--purple-shadow); border-bottom-color: #8854d0; }
         .btn-huge:active { border-bottom-width: 2px; transform: translateY(3px); }
 
+        /* Translator Styles */
         .translator-container { width: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .translation-area { width: 100%; display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch; justify-content: center; }
         .text-box-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
@@ -65,8 +68,8 @@
         .btn-swap:active { border-bottom-width: 2px; transform: translateY(2px); }
         .status-bar { text-align: center; font-weight: 800; font-size: 1.1rem; color: var(--text-light); margin-top: 15px; width: 100%; }
 
+        /* Learning/Coding Setup Styles */
         .setup-container, .quiz-container { width: 100%; max-width: 700px; display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 10px; margin-bottom: 50px; }
-        
         .level-box { width: 100%; background: #f0f8ff; border: 2px solid var(--secondary); border-radius: 16px; padding: 20px; margin-bottom: 10px; }
         .level-box.coding-theme { background: #f5f6fa; border-color: var(--coding); }
         .level-box label { font-size: 1.2rem; font-weight: 900; color: var(--secondary-shadow); display: block; margin-bottom: 10px; }
@@ -80,6 +83,7 @@
         .sub-menu { display: none; flex-direction: column; gap: 10px; width: 95%; margin-left: 5%; margin-top: -5px; margin-bottom: 10px; animation: fadeIn 0.2s ease-out; }
         .sub-option { padding: 12px 20px; font-size: 1.05rem; }
 
+        /* Quiz Styles */
         .quiz-card { width: 100%; padding: 30px 20px; background: white; border: 3px solid var(--border); border-radius: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .fc-lang { font-size: 1.1rem; color: var(--secondary); font-weight: 800; margin-bottom: 15px; text-transform: uppercase;}
         .fc-word { font-size: 1.8rem; font-weight: 900; color: var(--text-main); line-height: 1.3; word-wrap: break-word; }
@@ -98,36 +102,44 @@
         .btn-check:active:not(:disabled) { border-bottom-width: 2px; transform: translateY(3px); }
         .btn-check:disabled { background-color: var(--border); border-bottom-color: #d0d0d0; cursor: not-allowed; color: #a0a0a0; }
         .btn-check.next { background-color: var(--secondary); border-bottom-color: var(--secondary-shadow); color: white;}
-        .btn-check.purple { background-color: var(--purple); border-bottom-color: var(--purple-shadow); }
+        .btn-check.purple { background-color: var(--purple-shadow); border-bottom-color: #8854d0; }
         .btn-check.orange { background-color: var(--warning); border-bottom-color: var(--warning-shadow); }
         
         .explainer-box { width: 100%; padding: 20px; background-color: #fff4e6; border: 2px solid var(--warning); border-radius: 16px; color: var(--text-main); font-weight: 700; font-size: 1.1rem; display: none; margin-bottom: 15px; text-align: left; }
-        
         .chat-msg { margin-bottom: 10px; padding: 10px 15px; border-radius: 12px; max-width: 90%; font-size: 1.05rem; }
         .msg-ai { background-color: white; border: 1px solid var(--warning); color: var(--text-main); align-self: flex-start; }
         .msg-user { background-color: var(--warning); color: white; align-self: flex-end; margin-left: auto; }
         .chat-container { display: flex; flex-direction: column; max-height: 250px; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; }
         
-        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: var(--purple); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 3px solid white; z-index: 100; transition: transform 0.2s; }
-        .floating-kamus-btn:active { transform: scale(0.9); }
+        /* Modal Auth (Login/Register) */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; animation: fadeIn 0.3s ease-out; }
+        .modal-box { background: white; width: 90%; max-width: 420px; border-radius: 24px; padding: 35px 30px; display: flex; flex-direction: column; gap: 15px; position: relative; border: 3px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.2); text-align: center; }
+        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: var(--text-light); font-weight: bold; border: none; background: none; transition: 0.2s; }
+        .modal-close:hover { color: var(--danger); }
+        .modal-title { font-size: 2rem; font-weight: 900; color: var(--text-main); margin-bottom: 5px; }
+        .auth-input { width: 100%; padding: 16px; border-radius: 16px; border: 2px solid var(--border); font-size: 1.1rem; font-weight: 700; outline: none; transition: 0.2s; background: #f7f7f7; color: var(--text-main); }
+        .auth-input:focus { border-color: var(--secondary); background: white; }
+        .auth-toggle-btn { color: var(--secondary); cursor: pointer; font-weight: 800; font-size: 1rem; text-decoration: underline; background: none; border: none; margin-top: 10px; }
         
-        .kamus-modal { display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 3px solid var(--purple); z-index: 101; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; }
+        /* Kamus Floating Button */
+        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: var(--purple-shadow); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 3px solid white; z-index: 100; transition: transform 0.2s; }
+        .floating-kamus-btn:active { transform: scale(0.9); }
+        .kamus-modal { display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 3px solid var(--purple-shadow); z-index: 101; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .kamus-header { background: var(--purple); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .kamus-header { background: var(--purple-shadow); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .kamus-input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--border); outline: none; font-size: 1rem; font-weight: 700; }
-        .kamus-input:focus { border-color: var(--purple); }
-        .kamus-result { margin-top: 10px; padding: 15px; background: #f3eaff; border-radius: 12px; font-size: 1rem; color: var(--text-main); font-weight: 700; display: none; max-height: 200px; overflow-y: auto; line-height: 1.5; }
         
         @media (max-width: 768px) {
             .navbar { justify-content: center; }
             .nav-left { justify-content: center; }
+            .nav-right { width: 100%; justify-content: center; }
             .btn-swap-wrap { padding-top: 0; padding-bottom: 10px; }
         }
     </style>
 </head>
 <body>
 
+<!-- Navbar -->
 <div class="navbar">
     <div class="nav-left">
         <div class="logo" onclick="switchPage('home')">PahamTeks</div>
@@ -138,12 +150,34 @@
             <button class="btn-nav" id="nav-coding" onclick="switchPage('coding')">Pemrograman</button>
         </div>
     </div>
-    <div class="nav-right">
-        <button class="btn-auth">Login</button>
-        <button class="btn-auth primary">Daftar</button>
+    <div class="nav-right" id="nav-auth-section">
+        <button class="btn-auth" onclick="openAuthModal('login')">Login</button>
+        <button class="btn-auth primary" onclick="openAuthModal('register')">Daftar</button>
+        <div class="user-profile" id="user-profile-badge">👤 Akun Tamu</div>
     </div>
 </div>
 
+<!-- Modal Autentikasi (Login/Daftar) -->
+<div class="modal-overlay" id="auth-modal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeAuthModal()">×</button>
+        <h2 class="modal-title" id="auth-title">Masuk Akun</h2>
+        
+        <!-- Input Fields -->
+        <input type="text" id="auth-name" class="auth-input" placeholder="Nama Lengkap" style="display: none;">
+        <input type="email" id="auth-email" class="auth-input" placeholder="Alamat Email">
+        <input type="password" id="auth-password" class="auth-input" placeholder="Kata Sandi">
+        
+        <button class="btn-check" id="btn-auth-submit" style="margin-top: 10px;" onclick="processAuth()">Masuk</button>
+        
+        <!-- Guest Button -->
+        <button class="btn-check orange" style="margin-top: 0; padding: 12px 20px; font-size: 1.1rem;" onclick="continueAsGuest()">Lanjutkan sebagai Tamu</button>
+        
+        <button class="auth-toggle-btn" id="auth-toggle-text" onclick="toggleAuthMode()">Belum punya akun? Daftar di sini</button>
+    </div>
+</div>
+
+<!-- Halaman Beranda -->
 <div id="page-home" class="page active-page">
     <div class="hero">
         <h1>Eksplorasi Bahasa & Logika</h1>
@@ -165,6 +199,7 @@
     </div>
 </div>
 
+<!-- Halaman Translator -->
 <div id="page-translator" class="page">
     <div class="translator-container">
         <div class="translation-area">
@@ -184,6 +219,7 @@
     </div>
 </div>
 
+<!-- Halaman Bahasa Dunia (Setup) -->
 <div id="page-learn" class="page">
     <div class="setup-container">
         <div class="level-box">
@@ -208,16 +244,7 @@
             <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris" class="quiz-radio"> B. Inggris (Idiom & Slang)</div></label>
         </div>
 
-        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('arab-submenu', 'arab-arrow')">
-            <div style="display: flex; align-items: center;">Timur Tengah & Afrika</div><span id="arab-arrow">▼</span>
-        </label>
-        <div id="arab-submenu" class="sub-menu">
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)" class="quiz-radio"> Bahasa Arab (Fusha)</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Al-Qur'an dan Tajwid Dasar" class="quiz-radio"> Bahasa Al-Qur'an</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Ibrani (Hebrew)" class="quiz-radio"> Bahasa Ibrani</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Turki" class="quiz-radio"> Bahasa Turki</div></label>
-        </div>
-
+        <!-- Opsi Lainnya disembunyikan untuk kerapian code, tambahkan kembali sesuai selera jika perlu -->
         <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
             <div style="display: flex; align-items: center;">Asia & Pasifik</div><span id="asia-arrow">▼</span>
         </label>
@@ -227,23 +254,15 @@
             <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)" class="quiz-radio"> Bahasa Mandarin</div></label>
         </div>
 
-        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('eropa-submenu', 'eropa-arrow')">
-            <div style="display: flex; align-items: center;">Benua Eropa</div><span id="eropa-arrow">▼</span>
-        </label>
-        <div id="eropa-submenu" class="sub-menu">
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Spanyol" class="quiz-radio"> Bahasa Spanyol</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Prancis" class="quiz-radio"> Bahasa Prancis</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="lang-category" value="Bahasa Jerman" class="quiz-radio"> Bahasa Jerman</div></label>
-        </div>
-
         <div style="display: flex; gap: 10px; width: 100%; margin-top: 15px;">
-            <button class="btn-huge blue" style="flex: 1;" onclick="startQuizSession('lang')">MULAI BELAJAR</button>
+            <button class="btn-huge blue" style="flex: 1;" onclick="startQuizSession('learn')">MULAI BELAJAR</button>
             <button class="btn-huge orange" style="flex: 1;" onclick="printModule('lang')">CETAK MODUL</button>
         </div>
         <div id="print-status-lang" style="margin-top: 10px; font-weight: 700; color: var(--text-light);"></div>
     </div>
 </div>
 
+<!-- Halaman Pemrograman (Setup) -->
 <div id="page-coding" class="page">
     <div class="setup-container">
         <div class="level-box coding-theme">
@@ -273,24 +292,7 @@
         <div id="sys-submenu" class="sub-menu">
             <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman C++" class="quiz-radio"> C++</div></label>
             <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Java" class="quiz-radio"> Java</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Go (Golang)" class="quiz-radio"> Go (Golang)</div></label>
-        </div>
-
-        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
-            <div style="display: flex; align-items: center;">Mobile, Data & Database</div><span id="mob-arrow">▼</span>
-        </label>
-        <div id="mob-submenu" class="sub-menu">
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Kotlin" class="quiz-radio"> Kotlin</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter" class="quiz-radio"> Dart (Flutter)</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Bahasa SQL & Database" class="quiz-radio"> SQL & Database</div></label>
-        </div>
-
-        <label class="lang-option" style="background-color: #f7f7f7;" onclick="toggleMenu('teori-submenu', 'teori-arrow')">
-            <div style="display: flex; align-items: center;">Teori & Algoritma Khusus</div><span id="teori-arrow">▼</span>
-        </label>
-        <div id="teori-submenu" class="sub-menu">
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)" class="quiz-radio"> Struktur Data (Array, Stack, Tree)</div></label>
-            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar" class="quiz-radio"> Kriptografi & Keamanan</div></label>
+            <label class="lang-option sub-option"><div style="display: flex; align-items: center;"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)" class="quiz-radio"> Struktur Data & Algoritma</div></label>
         </div>
 
         <div style="display: flex; gap: 10px; width: 100%; margin-top: 15px;">
@@ -301,11 +303,12 @@
     </div>
 </div>
 
+<!-- Halaman Kuis Interaktif -->
 <div id="page-quiz-active" class="page">
     <div class="quiz-container">
         <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
             <h2 id="quiz-header" style="color: var(--text-main); font-size: 1.8rem; margin: 0;">Latihan Soal</h2>
-            <button onclick="closeQuiz()" style="background: none; border: none; color: var(--text-light); font-weight: 800; cursor: pointer; text-decoration: underline;">Tutup</button>
+            <button onclick="closeQuiz()" style="background: none; border: none; color: var(--text-light); font-weight: 800; cursor: pointer; text-decoration: underline;">Berhenti</button>
         </div>
         
         <div class="quiz-card">
@@ -323,24 +326,84 @@
     </div>
 </div>
 
+<!-- Kamus Floating Button & Modal -->
 <div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar">📖</div>
-
 <div id="kamus-modal" class="kamus-modal">
     <div class="kamus-header">
         <span>📖 Kamus Pintar AI</span>
         <span style="cursor: pointer; font-size: 1.5rem; line-height: 1;" onclick="toggleKamus()">×</span>
     </div>
     <div class="kamus-body">
-        <input type="text" id="kamus-input" class="kamus-input" placeholder="Contoh: Linked List, Hill Cipher, atau Kosakata..." onkeypress="handleKamusEnter(event)">
+        <input type="text" id="kamus-input" class="auth-input" style="padding:12px; background:white;" placeholder="Ketik kata/istilah..." onkeypress="handleKamusEnter(event)">
         <button class="btn-check purple" style="padding: 12px; font-size: 1.1rem; width: 100%; margin: 0;" onclick="searchKamus()">Cari Arti</button>
-        <div id="kamus-result" class="kamus-result"></div>
+        <div id="kamus-result" class="explainer-box" style="margin-top: 10px; margin-bottom:0; font-size: 1rem;"></div>
     </div>
 </div>
 
 <script>
+    const serverUrl = ""; 
     let currentSetupMode = 'learn';
     let chatHistoryContext = "";
 
+    // --- LOGIC AUTHENTICATION (Login / Daftar / Guest) ---
+    let authMode = 'login'; // 'login' or 'register'
+    
+    function openAuthModal(mode) {
+        document.getElementById('auth-modal').style.display = 'flex';
+        authMode = mode;
+        updateAuthUI();
+    }
+    
+    function closeAuthModal() {
+        document.getElementById('auth-modal').style.display = 'none';
+        document.getElementById('auth-email').value = "";
+        document.getElementById('auth-password').value = "";
+        document.getElementById('auth-name').value = "";
+    }
+    
+    function toggleAuthMode() {
+        authMode = (authMode === 'login') ? 'register' : 'login';
+        updateAuthUI();
+    }
+    
+    function updateAuthUI() {
+        if (authMode === 'login') {
+            document.getElementById('auth-title').innerText = "Masuk Akun";
+            document.getElementById('auth-name').style.display = "none";
+            document.getElementById('btn-auth-submit').innerText = "Masuk";
+            document.getElementById('auth-toggle-text').innerText = "Belum punya akun? Daftar di sini";
+        } else {
+            document.getElementById('auth-title').innerText = "Buat Akun Baru";
+            document.getElementById('auth-name').style.display = "block";
+            document.getElementById('btn-auth-submit').innerText = "Daftar Sekarang";
+            document.getElementById('auth-toggle-text').innerText = "Sudah punya akun? Masuk di sini";
+        }
+    }
+    
+    function processAuth() {
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-password').value;
+        if(!email || !pass) {
+            alert("Harap isi email dan password terlebih dahulu.");
+            return;
+        }
+        // Simulasi sukses login
+        activateUser("Pengguna");
+    }
+    
+    function continueAsGuest() {
+        activateUser("Tamu");
+    }
+    
+    function activateUser(typeName) {
+        closeAuthModal();
+        // Sembunyikan tombol Login/Daftar
+        const navRight = document.getElementById('nav-auth-section');
+        navRight.innerHTML = `<div class="user-profile" style="display:block;">👤 Akun ${typeName}</div>`;
+        alert(`Selamat datang! Anda sedang menggunakan mode ${typeName}.`);
+    }
+
+    // --- LOGIC NAVIGATION ---
     function switchPage(pageName) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
@@ -355,14 +418,13 @@
         }
     }
 
-    function closeQuiz() {
-        switchPage(currentSetupMode);
-        document.getElementById('print-status-lang').innerText = "";
-        document.getElementById('print-status-code').innerText = "";
+    function toggleMenu(menuId, arrowId) {
+        const submenu = document.getElementById(menuId), arrow = document.getElementById(arrowId);
+        if (submenu.style.display === "flex") { submenu.style.display = "none"; arrow.innerText = "▼"; } 
+        else { submenu.style.display = "flex"; arrow.innerText = "▲"; }
     }
 
-    const serverUrl = ""; 
-    
+    // --- LOGIC TRANSLATOR ---
     let timeout = null;
     const sourceSelect = document.getElementById("source-lang"), targetSelect = document.getElementById("target-lang");
     const sourceText = document.getElementById("source-text"), targetText = document.getElementById("target-text");
@@ -377,8 +439,8 @@
             for (const [name, code] of Object.entries(data)) {
                 sourceSelect.add(new Option(name.charAt(0).toUpperCase() + name.slice(1), code)); targetSelect.add(new Option(name.charAt(0).toUpperCase() + name.slice(1), code));
             }
-            sourceSelect.value = "id"; targetSelect.value = "en"; updateStatus("PahamTeks siap! Ketik sesuatu.", "#58cc02");
-        }).catch(err => updateStatus(`Error Koneksi. Pastikan server berjalan.`, "#ea2b2b"));
+            sourceSelect.value = "id"; targetSelect.value = "en"; updateStatus("PahamTeks siap! Ketik sesuatu.", "var(--primary)");
+        }).catch(err => updateStatus(`Menunggu koneksi server...`, "var(--warning)"));
     }
     loadLanguages();
     
@@ -387,20 +449,21 @@
     sourceSelect.addEventListener("change", triggerTranslate); targetSelect.addEventListener("change", triggerTranslate);
     
     function triggerTranslate() {
-        let text = sourceText.value.trim(); if (!text) { targetText.value = ""; updateStatus("PahamTeks siap! Ketik sesuatu.", "#58cc02"); return; }
-        updateStatus("AI sedang memikirkan konteks...", "#1cb0f6"); 
+        let text = sourceText.value.trim(); if (!text) { targetText.value = ""; updateStatus("PahamTeks siap! Ketik sesuatu.", "var(--primary)"); return; }
+        updateStatus("AI sedang memikirkan konteks...", "var(--secondary)"); 
         fetch(`${serverUrl}/api/translate`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text, source: sourceSelect.value, target: targetSelect.value }) })
-        .then(res => res.json()).then(data => { if (data.error) throw new Error(data.error); targetText.value = data.translated_text; updateStatus("Terjemahan Selesai!", "#58cc02"); })
-        .catch(err => updateStatus(`Error AI. Silakan coba lagi.`, "#ea2b2b"));
+        .then(res => res.json()).then(data => { if (data.error) throw new Error(data.error); targetText.value = data.translated_text; updateStatus("Terjemahan Selesai!", "var(--primary)"); })
+        .catch(err => updateStatus(`Error AI. Silakan coba lagi.`, "var(--danger)"));
     }
 
-    function toggleMenu(menuId, arrowId) {
-        const submenu = document.getElementById(menuId), arrow = document.getElementById(arrowId);
-        if (submenu.style.display === "flex") { submenu.style.display = "none"; arrow.innerText = "▼"; } 
-        else { submenu.style.display = "flex"; arrow.innerText = "▲"; }
-    }
-
+    // --- LOGIC QUIZ & AI TUTOR ---
     let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
+
+    function closeQuiz() {
+        switchPage(currentSetupMode); // Otomatis kembali ke menu bahasa atau pemrograman sesuai asalnya
+        document.getElementById('print-status-lang').innerText = "";
+        document.getElementById('print-status-code').innerText = "";
+    }
 
     function printModule(type) {
         let radioName = type === 'coding' ? 'code-category' : 'lang-category';
@@ -408,7 +471,7 @@
         let statusId = type === 'coding' ? 'print-status-code' : 'print-status-lang';
 
         const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
-        if (!selectedRadio) { alert("Silakan pilih satu materi belajar terlebih dahulu!"); return; }
+        if (!selectedRadio) { alert("Silakan pilih materi belajar terlebih dahulu!"); return; }
         
         const selectedCategories = [selectedRadio.value];
         const selectedLevel = document.getElementById(levelId).value; 
@@ -418,27 +481,18 @@
         fetch(`${serverUrl}/api/generate_quiz`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ categories: selectedCategories, level: selectedLevel }) 
-        })
-        .then(res => res.json())
-        .then(data => {
+        }).then(res => res.json()).then(data => {
             if (data.error) throw new Error(data.error);
             let printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html><head><title>Modul Latihan PahamTeks</title>
-                <style>body { font-family: 'Arial', sans-serif; padding: 40px; color: #333; line-height: 1.6; } h1 { color: #58cc02; margin-bottom: 5px;} h3 { color: #888; margin-top: 0;} .question-block { margin-bottom: 30px; page-break-inside: avoid; } .options { margin-left: 20px; margin-top: 10px; } .option-line { margin-bottom: 8px; }</style>
-                </head><body>
-                <h1>Lembar Kerja PahamTeks</h1><h3>Topik: ${selectedCategories[0]} | Level: ${selectedLevel}</h3><hr style="border: 1px solid #e5e5e5; margin-bottom: 30px;">
-            `);
+            printWindow.document.write(`<html><head><title>Modul Latihan PahamTeks</title><style>body { font-family: 'Arial', sans-serif; padding: 40px; } h1 { color: #58cc02; } .question-block { margin-bottom: 30px; }</style></head><body><h1>Lembar Kerja PahamTeks</h1><h3>Topik: ${selectedCategories[0]}</h3><hr>`);
             data.forEach((q, index) => {
-                printWindow.document.write(`<div class="question-block"><strong>${index+1}. ${q.instruction}</strong><br><div style="font-size: 1.2rem; margin: 10px 0;">${q.question}</div><div class="options">`);
-                q.options.forEach(opt => printWindow.document.write(`<div class="option-line">( &nbsp; &nbsp; ) &nbsp; ${opt}</div>`));
-                printWindow.document.write(`</div></div>`);
+                printWindow.document.write(`<div class="question-block"><strong>${index+1}. ${q.instruction}</strong><br><div style="font-size: 1.2rem; margin: 10px 0;">${q.question}</div>`);
+                q.options.forEach(opt => printWindow.document.write(`<div>( &nbsp; ) &nbsp; ${opt}</div>`));
+                printWindow.document.write(`</div>`);
             });
             printWindow.document.write('</body></html>'); printWindow.document.close(); printWindow.focus();
             setTimeout(() => { printWindow.print(); statusBox.innerText = "✅ Modul berhasil dicetak!"; }, 1000);
-        }).catch(err => { 
-            statusBox.innerHTML = `❌ Gagal memuat modul. Waktunya rehat sejenak.`; 
-        });
+        }).catch(err => { statusBox.innerHTML = `❌ Gagal memuat modul. Server sibuk.`; });
     }
 
     function startQuizSession(type) {
@@ -454,7 +508,6 @@
 
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.getElementById('page-quiz-active').classList.add('active-page');
-        
         generateNewQuiz(selectedCategories, selectedLevel);
     }
 
@@ -476,15 +529,8 @@
             document.getElementById("btn-check").style.display = "block";
             loadQuiz();
         }).catch(err => {
-            document.getElementById("quiz-question").innerHTML = `
-                <div style='text-align:center; padding: 15px;'>
-                    <div style='font-size: 3.5rem; margin-bottom: 10px;'>☕</div>
-                    <div style='font-size: 1.4rem; color: var(--warning); font-weight: 800; margin-bottom: 10px;'>Waktunya Rehat Sejenak!</div>
-                    <div style='font-size: 1.1rem; color: var(--text-main); line-height: 1.6; font-weight: 700;'>
-                        ${err.message}
-                    </div>
-                </div>`;
-            document.getElementById("btn-check").innerText = "Tutup & Coba Lagi Nanti"; 
+            document.getElementById("quiz-question").innerHTML = `<div style='text-align:center;'>Waktunya Rehat Sejenak! Server Sibuk.</div>`;
+            document.getElementById("btn-check").innerText = "Tutup"; 
             document.getElementById("btn-check").style.display = "block"; 
             document.getElementById("btn-check").onclick = closeQuiz;
         });
@@ -493,10 +539,8 @@
     function loadQuiz() {
         isChecking = true; selectedAnswer = null; chatHistoryContext = "";
         const currentData = activeQuizPool[currentQuizIndex];
-        let levelId = currentSetupMode === 'coding' ? 'code-level' : 'lang-level';
-        const selectedLevel = document.getElementById(levelId).value;
         
-        document.getElementById("quiz-instruction").innerText = `${currentData.instruction} (Level: ${selectedLevel})`;
+        document.getElementById("quiz-instruction").innerText = currentData.instruction;
         document.getElementById("quiz-question").innerHTML = currentData.question;
         document.getElementById("quiz-feedback").style.display = "none";
         document.getElementById("btn-explain").style.display = "none";
@@ -528,9 +572,15 @@
         if (!isChecking) { 
             currentQuizIndex++;
             if (currentQuizIndex >= activeQuizPool.length) {
+                // Modifikasi Navigasi Selesai (Dinamis sesuai Asal Menu)
+                let navText = currentSetupMode === 'learn' ? 'Ganti Materi Bahasa Dunia' : 'Ganti Materi Pemrograman';
+                
                 document.getElementById("quiz-instruction").innerText = "Selesai!";
-                document.getElementById("quiz-question").innerHTML = "<div style='font-size: 2.2rem; color: var(--primary); margin-bottom: 15px;'>🎉 Sesi Selesai! 🎉</div><div style='font-size: 1.2rem; color: var(--text-main); font-weight: 700;'>Hasil yang bagus! Apa yang ingin kamu lakukan selanjutnya?</div>";
-                document.getElementById("mc-options").innerHTML = `<button class="btn-check" style="margin-bottom: 10px;" onclick="startQuizSession(currentSetupMode)">📚 Lanjut Latihan (Buat Soal Baru)</button><button class="btn-check blue" onclick="closeQuiz()">🔍 Cari Materi Lain / Ganti Level</button>`;
+                document.getElementById("quiz-question").innerHTML = "<div style='font-size: 2.2rem; color: var(--primary); margin-bottom: 15px;'>🎉 Sesi Selesai! 🎉</div><div style='font-size: 1.2rem; color: var(--text-main); font-weight: 700;'>Hasil yang bagus! Silakan pilih langkah selanjutnya.</div>";
+                document.getElementById("mc-options").innerHTML = `
+                    <button class="btn-check" style="margin-bottom: 10px;" onclick="startQuizSession(currentSetupMode)">📚 Ulangi Materi Ini (Soal Baru)</button>
+                    <button class="btn-check blue" onclick="closeQuiz()">🔍 ${navText}</button>
+                `;
                 feedback.style.display = "none"; btnCheck.style.display = "none"; document.getElementById("btn-explain").style.display = "none"; document.getElementById("explainer-box").style.display = "none";
                 return;
             }
@@ -552,7 +602,6 @@
         const currentData = activeQuizPool[currentQuizIndex];
         const explainBtn = document.getElementById("btn-explain");
         const explainBox = document.getElementById("explainer-box");
-
         explainBtn.innerText = "⏳ Tutor AI Sedang Menganalisis..."; explainBtn.disabled = true;
 
         fetch(`${serverUrl}/api/explain_answer`, {
@@ -562,17 +611,15 @@
             if (data.error) throw new Error(data.error);
             chatHistoryContext = data.explanation;
             explainBox.style.display = "block"; explainBtn.style.display = "none"; 
-            
             explainBox.innerHTML = `
                 <div id="chat-tutor-history" class="chat-container">
                     <div class="chat-msg msg-ai">👩‍🏫 <b>Tutor AI:</b><br>${data.explanation.replace(/\n/g, '<br>')}</div>
                 </div>
                 <div style="display:flex; gap:10px; margin-top:10px;">
-                    <input type="text" id="tutor-chat-input" style="flex:1; padding:12px; border-radius:12px; border:2px solid var(--border); outline:none; font-size:1rem;" placeholder="Ketik jawabanmu ke Tutor..." onkeypress="handleTutorEnter(event)">
-                    <button onclick="sendTutorChat()" class="btn-check purple" style="padding:10px 20px; font-size:1rem; margin:0; width:auto;">Balas</button>
+                    <input type="text" id="tutor-chat-input" class="auth-input" style="padding:12px;" placeholder="Ketik balasanmu..." onkeypress="handleTutorEnter(event)">
+                    <button onclick="sendTutorChat()" class="btn-check purple" style="padding:10px 20px; width:auto; margin:0;">Balas</button>
                 </div>
             `;
-            scrollToBottomChat();
         }).catch(err => { explainBtn.innerText = `💡 Gagal Memuat Penjelasan`; explainBtn.disabled = false; });
     }
 
@@ -582,11 +629,10 @@
         const input = document.getElementById("tutor-chat-input");
         const msg = input.value.trim();
         if(!msg) return;
-        
         const chatBox = document.getElementById("chat-tutor-history");
         chatBox.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
         chatBox.innerHTML += `<div class="chat-msg msg-ai" id="ai-typing"><i>👩‍🏫 Tutor sedang mengetik...</i></div>`;
-        input.value = ""; scrollToBottomChat();
+        input.value = ""; chatBox.scrollTop = chatBox.scrollHeight;
 
         fetch(`${serverUrl}/api/chat_tutor`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -595,13 +641,8 @@
             document.getElementById("ai-typing").remove();
             chatBox.innerHTML += `<div class="chat-msg msg-ai">👩‍🏫 <b>Tutor AI:</b><br>${data.reply.replace(/\n/g, '<br>')}</div>`;
             chatHistoryContext += ` | Murid: ${msg} | Tutor: ${data.reply}`;
-            scrollToBottomChat();
+            chatBox.scrollTop = chatBox.scrollHeight;
         }).catch(err => { document.getElementById("ai-typing").innerText = `Error mengambil balasan.`; });
-    }
-    
-    function scrollToBottomChat() {
-        const box = document.getElementById("chat-tutor-history");
-        if(box) box.scrollTop = box.scrollHeight;
     }
 
     function toggleKamus() {
@@ -616,7 +657,6 @@
         const input = document.getElementById("kamus-input").value.trim();
         const resultBox = document.getElementById("kamus-result");
         if(!input) return;
-        
         resultBox.style.display = "block";
         resultBox.innerHTML = "<i>⏳ AI sedang mencari di Kamus...</i>";
         
@@ -626,7 +666,7 @@
         }).then(res => res.json()).then(data => {
             if (data.error) throw new Error(data.error);
             resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
-        }).catch(err => { resultBox.innerHTML = `❌ Gagal mengambil data kamus. Waktunya rehat sejenak.`; });
+        }).catch(err => { resultBox.innerHTML = `❌ Gagal mengambil data kamus.`; });
     }
 </script>
 
