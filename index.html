@@ -380,13 +380,51 @@
         }
     }
     
-    function processAuth() {
-        const email = document.getElementById('auth-email').value;
-        const pass = document.getElementById('auth-password').value;
+   function processAuth() {
+        const email = document.getElementById('auth-email').value.trim();
+        const pass = document.getElementById('auth-password').value.trim();
+        const name = document.getElementById('auth-name').value.trim();
+        
         if(!email || !pass) {
-            alert("Harap isi email dan password terlebih dahulu.");
+            alert("Harap isi email dan kata sandi terlebih dahulu.");
             return;
         }
+        if(authMode === 'register' && !name) {
+            alert("Harap isi nama lengkap Anda.");
+            return;
+        }
+        
+        const btnSubmit = document.getElementById('btn-auth-submit');
+        const originalText = btnSubmit.innerText;
+        btnSubmit.innerText = "Memproses...";
+        btnSubmit.disabled = true;
+
+        const endpoint = authMode === 'login' ? '/api/login' : '/api/register';
+        const payload = authMode === 'login' ? { email: email, password: pass } : { email: email, password: pass, name: name };
+
+        fetch(`${serverUrl}${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = originalText;
+            
+            if(data.error) {
+                alert("❌ " + data.error);
+            } else {
+                alert("✅ " + data.message);
+                activateUser(data.name);
+            }
+        })
+        .catch(err => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = originalText;
+            alert("❌ Gagal terhubung ke server. Coba lagi.");
+        });
+    }
         // Simulasi sukses login
         activateUser("Pengguna");
     }
