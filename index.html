@@ -406,7 +406,7 @@
     const serverUrl = ""; 
     let currentSetupMode = 'learn';
     
-    // --- TEXT-TO-SPEECH (SUARA AI) ---
+    // --- TEXT-TO-SPEECH (SUARA AI) DENGAN FILTER ---
     function speakText(text, langCode = 'id-ID') {
         if (!('speechSynthesis' in window)) {
             alert(currentLang === 'id' ? "Browser Anda tidak mendukung fitur Suara (Text-to-Speech)." : "Your browser does not support Text-to-Speech.");
@@ -414,8 +414,14 @@
         }
         if (!text) return;
         
-        window.speechSynthesis.cancel(); // Menghentikan suara yang sedang berjalan (jika ada)
-        const utterance = new SpeechSynthesisUtterance(text);
+        let filteredText = text;
+        const blankWord = langCode.startsWith('en') ? " blank " : " titik-titik ";
+        
+        filteredText = filteredText.replace(/_{3,}/g, blankWord);
+        filteredText = filteredText.replace(/\*/g, '');
+        
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(filteredText);
         utterance.lang = langCode;
         window.speechSynthesis.speak(utterance);
     }
@@ -614,7 +620,7 @@
         }).then(res => res.json()).then(data => {
             if (data.error) throw new Error(data.error);
             resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
-            btnSpeak.style.display = "flex"; // Munculkan tombol suara setelah hasil keluar
+            btnSpeak.style.display = "flex"; 
         }).catch(err => { resultBox.innerHTML = `❌ ${currentLang === 'id' ? 'Gagal mengambil data.' : 'Failed to fetch data.'}`; });
     }
 
