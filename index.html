@@ -83,14 +83,19 @@
         .translator-container { width: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .translation-area { width: 100%; display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch; justify-content: center; }
         .text-box-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
-        .text-box { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
-        textarea { flex: 1; min-height: 250px; border: none; padding: 25px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; line-height: 1.5; }
+        .text-box { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        textarea { flex: 1; min-height: 250px; border: none; padding: 25px; padding-bottom: 60px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; line-height: 1.5; }
         .btn-swap-wrap { display: flex; align-items: center; padding-top: 55px; }
         .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
         .btn-swap:active { transform: scale(0.9); }
+        
+        /* TTS Button */
+        .btn-speak { position: absolute; bottom: 15px; right: 15px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; cursor: pointer; transition: 0.2s; color: white; }
+        .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
+        .btn-speak:active { transform: scale(0.9); }
 
         /* Quiz Area */
-        .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; text-align: center; }
+        .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; text-align: center; position: relative; }
         .mc-btn { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 20px; font-size: 1.1rem; font-weight: 700; color: white; cursor: pointer; text-align: left; margin-bottom: 10px; transition: 0.2s; }
         .mc-btn.selected { border-color: var(--btn-green); background: rgba(180, 242, 126, 0.1); }
         .mc-btn.correct { border-color: var(--correct); background: rgba(88, 204, 2, 0.2); }
@@ -177,12 +182,18 @@
         <div class="translation-area">
             <div class="text-box-wrapper">
                 <select id="source-lang" class="styled-select" style="background:var(--card-bg);"><option value="auto">Mendeteksi...</option></select>
-                <div class="text-box"><textarea id="source-text" data-i18n-ph="trans_ph_source" placeholder="Ketik teks yang ingin di terjemahkan..."></textarea></div>
+                <div class="text-box">
+                    <textarea id="source-text" data-i18n-ph="trans_ph_source" placeholder="Ketik teks yang ingin di terjemahkan..."></textarea>
+                    <button class="btn-speak" title="Baca Teks" onclick="speakText(document.getElementById('source-text').value, document.getElementById('source-lang').value === 'auto' ? 'id' : document.getElementById('source-lang').value)">🔊</button>
+                </div>
             </div>
             <div class="btn-swap-wrap"><button class="btn-swap" onclick="swapLangs()">⇄</button></div>
             <div class="text-box-wrapper">
                 <select id="target-lang" class="styled-select" style="background:var(--card-bg);"><option value="en">Mendeteksi...</option></select>
-                <div class="text-box"><textarea id="target-text" data-i18n-ph="trans_ph_target" placeholder="Terjemahan atau pelafalan (Romaji/Latin) akan muncul di sini.." readonly></textarea></div>
+                <div class="text-box">
+                    <textarea id="target-text" data-i18n-ph="trans_ph_target" placeholder="Terjemahan atau pelafalan (Romaji/Latin) akan muncul di sini.." readonly></textarea>
+                    <button class="btn-speak" title="Baca Terjemahan" onclick="speakText(document.getElementById('target-text').value, document.getElementById('target-lang').value)">🔊</button>
+                </div>
             </div>
         </div>
         <div id="status" data-i18n="trans_status" style="color:var(--btn-green); font-weight:bold;">Menghubungkan ke server AI...</div>
@@ -351,7 +362,10 @@
         </div>
         <div class="quiz-card">
             <div id="quiz-instruction" style="color:var(--btn-cyan); font-weight:bold; margin-bottom:10px;">Instruksi</div>
-            <div id="quiz-question" style="font-size:1.4rem; font-weight:bold; margin-bottom:20px;">Memuat soal AI...</div>
+            <div style="display:flex; align-items:flex-start; justify-content:center; gap:10px; margin-bottom:20px;">
+                <div id="quiz-question" style="font-size:1.4rem; font-weight:bold; max-width:85%;">Memuat soal AI...</div>
+                <button class="btn-speak" style="position:static; margin-top:-5px;" title="Baca Soal" onclick="speakText(document.getElementById('quiz-question').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
+            </div>
             <div id="mc-options"></div>
         </div>
         <button id="btn-check" class="btn-huge btn-grey" disabled onclick="processQuiz()" style="width:100%;">Pilih Jawaban</button>
@@ -381,13 +395,30 @@
     <div class="kamus-body">
         <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/istilah/syntax..." onkeypress="handleKamusEnter(event)">
         <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="padding: 12px; font-size: 1.1rem; width: 100%; margin: 0; min-width: auto; color:black;" onclick="searchKamus()">Cari Arti</button>
-        <div id="kamus-result" style="margin-top: 10px; margin-bottom:0; font-size: 0.95rem; display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:15px; line-height:1.5; color:white;"></div>
+        <div style="position:relative;">
+            <div id="kamus-result" style="margin-top: 10px; margin-bottom:0; font-size: 0.95rem; display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:15px; padding-right:45px; line-height:1.5; color:white;"></div>
+            <button id="btn-speak-kamus" class="btn-speak" style="display:none; bottom:10px; right:10px; width:35px; height:35px; font-size:1rem;" title="Baca Hasil" onclick="speakText(document.getElementById('kamus-result').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
+        </div>
     </div>
 </div>
 
 <script>
     const serverUrl = ""; 
     let currentSetupMode = 'learn';
+    
+    // --- TEXT-TO-SPEECH (SUARA AI) ---
+    function speakText(text, langCode = 'id-ID') {
+        if (!('speechSynthesis' in window)) {
+            alert(currentLang === 'id' ? "Browser Anda tidak mendukung fitur Suara (Text-to-Speech)." : "Your browser does not support Text-to-Speech.");
+            return;
+        }
+        if (!text) return;
+        
+        window.speechSynthesis.cancel(); // Menghentikan suara yang sedang berjalan (jika ada)
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = langCode;
+        window.speechSynthesis.speak(utterance);
+    }
     
     // --- BILINGUAL DICTIONARY ---
     const dict = {
@@ -571,8 +602,10 @@
     function searchKamus() {
         const input = document.getElementById("kamus-input").value.trim();
         const resultBox = document.getElementById("kamus-result");
+        const btnSpeak = document.getElementById("btn-speak-kamus");
         if(!input) return;
         resultBox.style.display = "block";
+        btnSpeak.style.display = "none";
         resultBox.innerHTML = `<i>⏳ ${currentLang === 'id' ? 'AI sedang mencari di Kamus...' : 'AI is searching Dictionary...'}</i>`;
         
         fetch(`${serverUrl}/api/dictionary`, {
@@ -581,6 +614,7 @@
         }).then(res => res.json()).then(data => {
             if (data.error) throw new Error(data.error);
             resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
+            btnSpeak.style.display = "flex"; // Munculkan tombol suara setelah hasil keluar
         }).catch(err => { resultBox.innerHTML = `❌ ${currentLang === 'id' ? 'Gagal mengambil data.' : 'Failed to fetch data.'}`; });
     }
 
@@ -601,7 +635,6 @@
         const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
         if (!selectedRadio) return alert(currentLang === 'id' ? "Silakan pilih materi belajar terlebih dahulu!" : "Please select a learning topic first!");
         
-        // PENTING: Sembunyikan halaman pemilihan materi agar kuis terasa seperti "Page Baru"
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         
         document.getElementById('page-quiz-active').classList.add('active-page');
