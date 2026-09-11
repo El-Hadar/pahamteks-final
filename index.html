@@ -11,9 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-green: radial-gradient(circle at top center, #187a41, #0a1f13);
-            --bg-blue: radial-gradient(circle at top center, #1b4b6b, #05131f);
-            --card-bg: rgba(0, 0, 0, 0.6); --card-border: rgba(255, 255, 255, 0.1);
+            --bg-green: radial-gradient(circle at top center, #115930, #0a1f13);
+            --bg-blue: radial-gradient(circle at top center, #153a52, #05131f);
+            --card-bg: rgba(0, 0, 0, 0.4); 
+            --card-border: rgba(255, 255, 255, 0.1);
             --btn-green: #b4f27e; --btn-cyan: #7ef2e0; --btn-grey: #c8d6ce;
             --text-main: #ffffff; --text-muted: #a0aab2;
             --correct: #58cc02; --wrong: #ff4757; --warning-orange: #ff9f43;
@@ -23,21 +24,23 @@
         body { background: var(--bg-green); background-attachment: fixed; color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; transition: background 0.5s ease; }
 
         .navbar { width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .logo { font-size: 2rem; font-weight: 900; color: white; cursor: pointer; }
+        .logo { font-size: 2.2rem; font-weight: 900; color: white; cursor: pointer; }
         
-        .nav-links { display: flex; gap: 5px; background: rgba(0,0,0,0.4); padding: 5px; border-radius: 30px; flex-wrap: wrap; align-items: center;}
+        .nav-links { display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 30px; flex-wrap: wrap; align-items: center;}
         .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-        .btn-nav.active { background: rgba(255,255,255,0.2); color: white; }
+        .btn-nav.active { background: rgba(255,255,255,0.15); color: white; }
         .btn-nav:hover:not(.active) { color: white; }
         .lang-toggle { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--card-border); padding: 8px 12px; font-weight: 900; border-radius: 20px; cursor: pointer; margin-left: 5px; transition: 0.2s;}
         .lang-toggle:hover { background: rgba(255,255,255,0.2); }
 
         .nav-right { display: flex; gap: 10px; align-items: center; }
-        .btn-auth { background: rgba(255,255,255,0.1); border: 1px solid var(--card-border); border-radius: 20px; padding: 8px 20px; font-size: 1rem; font-weight: 700; color: white; cursor: pointer; transition: 0.2s; }
-        .btn-auth.primary { background: black; border-color: black; }
+        /* Style Sign In button menyesuaikan referensi gambar 2 */
+        .btn-auth { background: #1a5632; border: none; border-radius: 20px; padding: 10px 22px; font-size: 1rem; font-weight: 800; color: white; cursor: pointer; transition: 0.2s; }
+        .btn-auth:hover { background: #134225; }
+        .btn-auth.primary { background: #000000; border: 1px solid var(--card-border); }
         .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); }
 
-        .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; }
+        .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; flex: 1; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -46,55 +49,57 @@
         .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
         
         .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; width: 100%; margin-bottom: 40px; }
-        .feature-card { background: #000000; border-radius: 20px; padding: 30px 20px; text-align: left; display: flex; flex-direction: column; gap: 15px; box-shadow: 10px 10px 0px rgba(0,0,0,0.3); transition: transform 0.2s; border: 1px solid var(--card-border); }
+        .feature-card { background: rgba(0,0,0,0.7); border-radius: 20px; padding: 30px 20px; text-align: left; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: transform 0.2s; border: 1px solid var(--card-border); }
         .feature-card:hover { transform: translateY(-5px); }
         .feature-card h2 { font-size: 1.7rem; margin: 0; line-height: 1.2; text-transform: uppercase; }
         .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
         
-        .setup-container, .quiz-container { width: 100%; max-width: 750px; display: flex; flex-direction: column; gap: 20px; margin-top: 10px; margin-bottom: 50px; }
+        .setup-container, .quiz-container { width: 100%; max-width: 750px; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 50px; }
         .input-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; width: 100%; }
         .styled-select { width: 100%; background: transparent; border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
-        .styled-select option { background: #1a1a1a; color: white; }
+        .styled-select option { background: #115930; color: white; }
         
-        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
-        .lang-option:hover { background: rgba(255,255,255,0.1); }
-        .sub-menu { display: none; flex-direction: column; gap: 10px; width: 95%; margin-left: 5%; margin-top: -10px; }
-        .sub-option { background: rgba(0,0,0,0.2); padding: 12px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
+        /* Style dropdown menu bahasa menyesuaikan gambar 1 */
+        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
+        .lang-option:hover { background: rgba(0,0,0,0.7); }
+        .sub-menu { display: none; flex-direction: column; gap: 8px; width: 95%; margin-left: 5%; margin-top: -5px; margin-bottom: 10px;}
+        .sub-option { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); padding: 12px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; transition: 0.2s;}
+        .sub-option:hover { background: rgba(255,255,255,0.1); }
         .sub-option input { margin-right: 15px; transform: scale(1.3); accent-color: var(--btn-green); cursor: pointer;}
 
-        .action-row { display: flex; gap: 15px; width: 100%; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
+        .action-row { display: flex; gap: 15px; width: 100%; margin-top: 15px; justify-content: center; flex-wrap: wrap; }
         .btn-huge { border: none; border-radius: 25px; padding: 15px 30px; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: 0.2s; color: black; min-width: 180px; text-transform: uppercase; }
         .btn-huge:active { transform: scale(0.95); }
         .btn-green { background: var(--btn-green); }
         .btn-cyan { background: var(--btn-cyan); }
         .btn-grey { background: var(--btn-grey); }
         
-        /* Tombol Outline untuk Tantangan agar sesuai tema */
+        /* Tombol Outline untuk Permainan Cepat agar sesuai tema */
         .btn-outline-green { background: transparent; border: 2px solid var(--btn-green); color: var(--btn-green); }
-        .btn-outline-green:hover { background: rgba(180, 242, 126, 0.1); }
+        .btn-outline-green:hover { background: rgba(180, 242, 126, 0.15); }
         .btn-outline-cyan { background: transparent; border: 2px solid var(--btn-cyan); color: var(--btn-cyan); }
-        .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.1); }
+        .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.15); }
 
-        /* Dashboard Tracking Terintegrasi */
-        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-top: 30px; }
+        /* Dashboard Tracking Inline */
+        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-top: 40px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
+        .stat-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
         .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--btn-green); margin-top: 5px; }
         .chart-container { position: relative; height: 250px; width: 100%; margin-bottom: 20px; }
 
-        /* Translator */
+        /* Translator Area */
         .translator-container { width: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .translation-area { width: 100%; display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch; justify-content: center; }
         .text-box-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
         .text-box { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-        textarea { flex: 1; min-height: 220px; border: none; padding: 25px; padding-bottom: 50px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; }
+        textarea { flex: 1; min-height: 220px; border: none; padding: 25px; padding-bottom: 60px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; }
         .btn-swap-wrap { display: flex; align-items: center; padding-top: 45px; }
         .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
         .btn-swap:active { transform: scale(0.9); }
         .btn-speak { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; color: white; transition: 0.2s;}
         .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
 
-        /* Quiz & Challenge */
+        /* Quiz Area */
         .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; text-align: center; position: relative; }
         .mc-btn { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px; font-size: 1.05rem; font-weight: 700; color: white; cursor: pointer; text-align: left; margin-bottom: 10px; transition: 0.2s; }
         .mc-btn.selected { border-color: var(--btn-green); background: rgba(180, 242, 126, 0.1); }
@@ -113,15 +118,19 @@
         .auth-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: #000; color: white; margin-bottom: 10px; font-size: 1rem; outline: none;}
         .auth-input:focus { border-color: var(--btn-cyan); }
 
-        /* Kamus Floating Button (Responsif) */
-        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(0,0,0,0.85); color: white; height: 60px; border-radius: 30px; display: flex; justify-content: center; align-items: center; padding: 0 25px; gap: 10px; cursor: pointer; border: 2px solid var(--btn-cyan); z-index: 100; transition: transform 0.2s, background 0.2s; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
+        /* Kamus Floating Button */
+        .floating-kamus-btn { position: fixed; bottom: 40px; right: 25px; background: rgba(0,0,0,0.9); color: white; height: 60px; border-radius: 30px; display: flex; justify-content: center; align-items: center; padding: 0 25px; gap: 10px; cursor: pointer; border: 1px solid var(--btn-cyan); z-index: 100; transition: 0.2s; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
         .floating-kamus-btn:active { transform: scale(0.95); }
-        .floating-kamus-btn:hover { background: #000; }
+        .floating-kamus-btn:hover { background: #111; }
         .kamus-text { display: inline; }
-        .kamus-modal { display: none; position: fixed; bottom: 95px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: slideUp 0.3s ease-out;}
+        .kamus-modal { display: none; position: fixed; bottom: 110px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: slideUp 0.3s ease-out;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+        /* Watermark Footer gaya Gambar 3 */
+        .watermark-footer { width: 100%; text-align: center; padding: 25px 10px 15px 10px; margin-top: auto; }
+        .watermark-box { display: inline-block; background: #b4f27e; color: #0a1f13; padding: 4px 12px; border-radius: 3px; font-size: 0.85rem; font-weight: 800; }
 
         @media (max-width: 768px) {
             .floating-kamus-btn { width: 60px; height: 60px; border-radius: 50%; padding: 0; justify-content: center; }
@@ -142,13 +151,13 @@
             <button class="btn-nav" id="nav-translator" data-i18n="nav_translator" onclick="switchPage('translator')">Translator</button>
             <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
             <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
-            <button class="btn-nav" id="nav-dashboard" data-i18n="nav_dashboard" onclick="openDashboard()" style="color:var(--btn-cyan)">Tracking</button>
+            <button class="btn-nav" id="nav-dashboard" data-i18n="nav_dashboard" onclick="scrollToTracking()" style="color:var(--btn-cyan)">Tracking</button>
             <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
         </div>
     </div>
     <div class="nav-right" id="nav-auth-section">
-        <button class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Login</button>
-        <button class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Daftar</button>
+        <button class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Sign In</button>
+        <button class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Sign Up</button>
         <div class="user-profile" id="user-profile-badge" style="display:none;">👤 <span data-i18n="guest">Tamu</span></div>
     </div>
 </div>
@@ -156,11 +165,11 @@
 <!-- Modal Auth -->
 <div class="modal-overlay" id="auth-modal">
     <div class="modal-box">
-        <h2 id="auth-title" data-i18n="auth_login_title" style="margin-top:0;">Masuk Akun</h2>
+        <h2 id="auth-title" data-i18n="auth_login_title" style="margin-top:0;">Sign In</h2>
         <input type="text" id="auth-name" class="auth-input" data-i18n-ph="auth_ph_name" placeholder="Nama Lengkap" style="display: none;">
         <input type="email" id="auth-email" class="auth-input" data-i18n-ph="auth_ph_email" placeholder="Alamat Email">
         <input type="password" id="auth-password" class="auth-input" data-i18n-ph="auth_ph_pass" placeholder="Kata Sandi">
-        <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 5px; padding: 12px;" onclick="processAuth()">Masuk</button>
+        <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 5px; padding: 12px;" onclick="processAuth()">Sign In</button>
         <button class="btn-huge btn-grey" data-i18n="auth_btn_guest" style="width:100%; margin-top: 10px; padding: 12px;" onclick="continueAsGuest()">Mode Tamu</button>
         <p style="color:var(--btn-cyan); cursor:pointer; margin-top:12px; font-size:0.9rem;" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_reg">Belum punya akun? Daftar</p>
         <p style="color:var(--wrong); cursor:pointer; font-size:0.9rem;" onclick="closeAuthModal()" data-i18n="btn_cancel">Batal</p>
@@ -176,15 +185,15 @@
     <div class="cards-container">
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('translator')">
             <h2 data-i18n="card_1_title">Mulai<br>Translator</h2>
-            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia secara akurat.</p>
+            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('learn')">
             <h2 data-i18n="card_2_title">Mulai<br>Bahasa Asing</h2>
-            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia Anda melalui latihan kuis cerdas yang disesuaikan dengan tingkat pemahaman.</p>
+            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia Anda melalui latihan kuis cerdas yang disesuaikan tingkat pemahaman.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('coding')">
             <h2 data-i18n="card_3_title">Mulai<br>Ngoding</h2>
-            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar web hingga struktur data.</p>
+            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar web hingga arsitektur.</p>
         </div>
     </div>
 </div>
@@ -231,31 +240,70 @@
         </div>
 
         <label class="lang-option" onclick="toggleMenu('indo-eng-submenu', 'indo-eng-arrow')">
-            <div data-i18n="cat_pop">Populer (Indo & Inggris)</div><span id="indo-eng-arrow">▼</span>
+            <div data-i18n="cat_pop">🌐 Populer (Indo & Inggris)</div><span id="indo-eng-arrow">▼</span>
         </label>
         <div id="indo-eng-submenu" class="sub-menu" style="display: flex;">
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Baku & EYD)" checked> B. Indonesia (Baku)</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Gaul & Kiasan)"> B. Indonesia (Gaul & Kiasan)</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Inggris (Grammar Dasar & Lanjutan)"> B. Inggris (Grammar)</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris"> B. Inggris (Idiom & Slang)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Baku & EYD)" checked> <span data-i18n="opt_lang_id_baku">Indonesia (Baku)</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Gaul & Kiasan)"> <span data-i18n="opt_lang_id_gaul">Indonesia (Gaul & Kiasan)</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Inggris (Grammar Dasar & Lanjutan)"> <span data-i18n="opt_lang_en_gram">Inggris (Grammar)</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris"> <span data-i18n="opt_lang_en_slang">Inggris (Idiom & Slang)</span></label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('nusantara-submenu', 'nusantara-arrow')">
+            <div data-i18n="cat_nus">🌐 Bahasa Nusantara (Lokal)</div><span id="nusantara-arrow">▼</span>
+        </label>
+        <div id="nusantara-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jawa (Ngoko & Krama)"> <span data-i18n="opt_lang_jv">Jawa</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Sunda"> <span data-i18n="opt_lang_su">Sunda</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Minangkabau"> <span data-i18n="opt_lang_mi">Minang</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Bali"> <span data-i18n="opt_lang_ba">Bali</span></label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('arab-submenu', 'arab-arrow')">
+            <div data-i18n="cat_mid">🌐 Timur Tengah & Afrika</div><span id="arab-arrow">▼</span>
+        </label>
+        <div id="arab-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)"> <span data-i18n="opt_lang_ar">Arab</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Al-Qur'an dan Tajwid Dasar"> <span data-i18n="opt_lang_quran">Al-Qur'an</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Ibrani (Hebrew)"> <span data-i18n="opt_lang_he">Ibrani</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Turki"> <span data-i18n="opt_lang_tr">Turki</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Persia (Farsi)"> <span data-i18n="opt_lang_fa">Persia</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Swahili"> <span data-i18n="opt_lang_sw">Swahili</span></label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
-            <div data-i18n="cat_asia">Asia & Pasifik</div><span id="asia-arrow">▼</span>
+            <div data-i18n="cat_asia">🌐 Asia & Pasifik</div><span id="asia-arrow">▼</span>
         </label>
         <div id="asia-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)"> Bahasa Jepang</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Korea (Hangul)"> Bahasa Korea</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)"> Bahasa Mandarin</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)"> <span data-i18n="opt_lang_ja">Jepang</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Korea (Hangul)"> <span data-i18n="opt_lang_ko">Korea</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)"> <span data-i18n="opt_lang_zh">Mandarin</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Hindi"> <span data-i18n="opt_lang_hi">Hindi</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Thai"> <span data-i18n="opt_lang_th">Thai</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Vietnam"> <span data-i18n="opt_lang_vi">Vietnam</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Tagalog (Filipino)"> <span data-i18n="opt_lang_tl">Tagalog</span></label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('eropa-submenu', 'eropa-arrow')">
+            <div data-i18n="cat_eur">🌐 Benua Eropa</div><span id="eropa-arrow">▼</span>
+        </label>
+        <div id="eropa-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Spanyol"> <span data-i18n="opt_lang_es">Spanyol</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Prancis"> <span data-i18n="opt_lang_fr">Prancis</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jerman"> <span data-i18n="opt_lang_de">Jerman</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Rusia (Sirilik)"> <span data-i18n="opt_lang_ru">Rusia</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Italia"> <span data-i18n="opt_lang_it">Italia</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Belanda"> <span data-i18n="opt_lang_nl">Belanda</span></label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Portugis"> <span data-i18n="opt_lang_pt">Portugis</span></label>
         </div>
 
         <div class="action-row">
             <button class="btn-huge btn-green" data-i18n="btn_start_learn" onclick="startQuizSession('learn')">MULAI BELAJAR</button>
-            <button class="btn-huge btn-outline-green" onclick="startChallenge('learn')" data-i18n="btn_challenge">UJIAN TANTANGAN (TIMER)</button>
+            <button class="btn-huge btn-outline-green" onclick="startChallenge('learn')" data-i18n="btn_challenge">PERMAINAN CEPAT</button>
             <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('lang')">CETAK MODUL</button>
         </div>
 
-        <!-- Dashboard Tracking (Berada di Menu Belajar) -->
+        <!-- Dashboard Tracking (Inline di Bawah Sesi Belajar) -->
         <div class="dashboard-box">
             <h2 style="margin-top:0;" data-i18n="dash_title">Log & Tracking Belajar</h2>
             <div class="stats-grid">
@@ -268,7 +316,7 @@
                     <div class="stat-num stat-avg-score">0</div>
                 </div>
                 <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Tantangan Selesai</div>
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Permainan Cepat Selesai</div>
                     <div class="stat-num stat-challenges">0</div>
                 </div>
             </div>
@@ -299,30 +347,57 @@
         </div>
 
         <label class="lang-option" onclick="toggleMenu('web-submenu', 'web-arrow')">
-            <div data-i18n="cat_web">Web & Scripting</div><span id="web-arrow">▼</span>
+            <div data-i18n="cat_web">🌐 Web & Scripting</div><span id="web-arrow">▼</span>
         </label>
         <div id="web-submenu" class="sub-menu" style="display: flex;">
-            <label class="sub-option"><input type="radio" name="code-category" value="Dasar HTML & CSS"> Dasar HTML & CSS</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" checked> JavaScript / TypeScript</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Python"> Python</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Dasar HTML & CSS"> <span data-i18n="opt_code_html">HTML & CSS</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" checked> <span data-i18n="opt_code_js">JavaScript / TypeScript</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Python"> <span data-i18n="opt_code_py">Python</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman PHP"> <span data-i18n="opt_code_php">PHP</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Ruby"> <span data-i18n="opt_code_ruby">Ruby</span></label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
-            <div data-i18n="cat_sys">Sistem & Software</div><span id="sys-arrow">▼</span>
+            <div data-i18n="cat_sys">🌐 Sistem & Software</div><span id="sys-arrow">▼</span>
         </label>
         <div id="sys-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C"> C</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C++"> C++</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C#"> C#</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Java"> Java</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Go (Golang)"> Go (Golang)</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Rust"> Rust</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Swift"> Swift</label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
+            <div data-i18n="cat_mob">🌐 Mobile, Data & Database</div><span id="mob-arrow">▼</span>
+        </label>
+        <div id="mob-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Kotlin"> Kotlin</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter"> Dart (Flutter)</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa SQL & Database Relasional"> SQL & Database</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="NoSQL & MongoDB"> NoSQL & MongoDB</label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa R (Data Science)"> R (Data Science)</label>
+        </div>
+
+        <label class="lang-option" onclick="toggleMenu('teori-submenu', 'teori-arrow')">
+            <div data-i18n="cat_theory">🌐 Teori & Algoritma Khusus</div><span id="teori-arrow">▼</span>
+        </label>
+        <div id="teori-submenu" class="sub-menu">
+            <label class="sub-option"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)"> <span data-i18n="opt_code_ds">Struktur Data (Array, Stack, Tree)</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar"> <span data-i18n="opt_code_crypto">Kriptografi & Keamanan</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Konsep Machine Learning Dasar"> <span data-i18n="opt_code_ml">Machine Learning Dasar</span></label>
+            <label class="sub-option"><input type="radio" name="code-category" value="Design Patterns (OOP)"> <span data-i18n="opt_code_dp">Design Patterns (OOP)</span></label>
         </div>
 
         <div class="action-row">
             <button class="btn-huge btn-cyan" data-i18n="btn_start_code" onclick="startQuizSession('coding')">MULAI LATIHAN</button>
-            <button class="btn-huge btn-outline-cyan" onclick="startChallenge('coding')" data-i18n="btn_challenge">UJIAN TANTANGAN (TIMER)</button>
+            <button class="btn-huge btn-outline-cyan" onclick="startChallenge('coding')" data-i18n="btn_challenge">PERMAINAN CEPAT</button>
             <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('coding')">CETAK MODUL</button>
         </div>
 
-        <!-- Dashboard Tracking (Berada di Menu Koding) -->
+        <!-- Dashboard Tracking (Inline di Bawah Sesi Koding) -->
         <div class="dashboard-box">
             <h2 style="margin-top:0;" data-i18n="dash_title">Log & Tracking Belajar</h2>
             <div class="stats-grid">
@@ -335,7 +410,7 @@
                     <div class="stat-num stat-avg-score">0</div>
                 </div>
                 <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Tantangan Selesai</div>
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Permainan Cepat Selesai</div>
                     <div class="stat-num stat-challenges">0</div>
                 </div>
             </div>
@@ -410,25 +485,32 @@
     </div>
 </div>
 
+<!-- Watermark Bawah (Footer) -->
+<div class="watermark-footer">
+    <div class="watermark-box">© 2026 PahamTeks. Global Edu & Tracking.</div>
+</div>
+
 <script>
     const serverUrl = ""; 
     let currentSetupMode = 'learn';
     let currentUser = localStorage.getItem('pahamteks_user') || 'Tamu';
     
     document.getElementById('user-profile-badge').innerHTML = `👤 ${currentUser}`;
-    document.getElementById('user-profile-badge').style.display = "block";
-    document.getElementById('nav-auth-section').querySelector('.btn-auth').style.display = "none";
-    document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
+    if (currentUser !== 'Tamu') {
+        document.getElementById('user-profile-badge').style.display = "block";
+        document.getElementById('nav-auth-section').querySelector('.btn-auth').style.display = "none";
+        document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
+    }
 
-    // --- DICTIONARY BILINGUAL (ID/EN) (Tanpa Emoji Berlebihan) ---
+    // --- DICTIONARY BILINGUAL (ID/EN) LENGKAP ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking",
-            btn_login: "Login", btn_register: "Daftar", guest: "Tamu",
-            auth_login_title: "Masuk Akun", auth_reg_title: "Buat Akun Baru",
+            btn_login: "Sign In", btn_register: "Sign Up", guest: "Tamu",
+            auth_login_title: "Sign In", auth_reg_title: "Buat Akun Baru",
             auth_ph_name: "Nama Lengkap", auth_ph_email: "Alamat Email", auth_ph_pass: "Kata Sandi",
-            auth_btn_login: "Masuk", auth_btn_reg: "Daftar Sekarang", auth_btn_guest: "Mode Tamu",
-            auth_toggle_reg: "Belum punya akun? Daftar", auth_toggle_login: "Sudah punya akun? Masuk", btn_cancel: "Batal",
+            auth_btn_login: "Sign In", auth_btn_reg: "Daftar Sekarang", auth_btn_guest: "Mode Tamu",
+            auth_toggle_reg: "Belum punya akun? Daftar", auth_toggle_login: "Sudah punya akun? Sign In", btn_cancel: "Batal",
             hero_title: "Eksplorasi Bahasa & Logika", hero_desc: "Pelajari bahasa asing dari seluruh dunia hingga logika bahasa pemrograman secara interaktif.",
             card_1_title: "Mulai<br>Translator", card_1_desc: "Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang.",
             card_2_title: "Mulai<br>Bahasa Asing", card_2_desc: "Uji dan tingkatkan kemampuan penguasaan bahasa dunia melalui latihan kuis cerdas.",
@@ -436,26 +518,40 @@
             trans_ph_source: "Ketik teks yang ingin di terjemahkan...", trans_ph_target: "Terjemahan atau pelafalan...", trans_status: "Menghubungkan ke server AI...",
             setup_level: "Pilih Tingkat Penguasaan", opt_level_1: "Pemula (Dasar / Kosakata A1)", opt_level_2: "Menengah (Struktur Kalimat / B1-B2)", opt_level_3: "Mahir (Kompleks / C1-C2 / Slang)",
             setup_lang_title: "Pilih Bahasa Manusia", setup_lang_desc: "Pilih salah satu bahasa untuk difokuskan",
-            cat_pop: "Populer (Indo & Inggris)", cat_asia: "Asia & Pasifik",
-            btn_start_learn: "MULAI BELAJAR", btn_challenge: "UJIAN TANTANGAN (TIMER)", btn_print: "CETAK MODUL",
+            
+            // Nama Bahasa List ID
+            cat_pop: "🌐 Populer (Indo & Inggris)", cat_nus: "🌐 Bahasa Nusantara (Lokal)", cat_mid: "🌐 Timur Tengah & Afrika", cat_asia: "🌐 Asia & Pasifik", cat_eur: "🌐 Benua Eropa",
+            opt_lang_id_baku: "Indonesia (Baku)", opt_lang_id_gaul: "Indonesia (Gaul & Kiasan)", opt_lang_en_gram: "Inggris (Grammar)", opt_lang_en_slang: "Inggris (Idiom & Slang)",
+            opt_lang_jv: "Jawa", opt_lang_su: "Sunda", opt_lang_mi: "Minang", opt_lang_ba: "Bali",
+            opt_lang_ar: "Arab", opt_lang_quran: "Al-Qur'an", opt_lang_he: "Ibrani", opt_lang_tr: "Turki", opt_lang_fa: "Persia", opt_lang_sw: "Swahili",
+            opt_lang_ja: "Jepang", opt_lang_ko: "Korea", opt_lang_zh: "Mandarin", opt_lang_hi: "Hindi", opt_lang_th: "Thai", opt_lang_vi: "Vietnam", opt_lang_tl: "Tagalog",
+            opt_lang_es: "Spanyol", opt_lang_fr: "Prancis", opt_lang_de: "Jerman", opt_lang_ru: "Rusia", opt_lang_it: "Italia", opt_lang_nl: "Belanda", opt_lang_pt: "Portugis",
+
+            btn_start_learn: "MULAI BELAJAR", btn_challenge: "PERMAINAN CEPAT", btn_print: "CETAK MODUL",
             setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Looping)", opt_code_2: "Menengah (Fungsi, OOP)", opt_code_3: "Mahir (Arsitektur Kompleks)",
             setup_code_title: "Pilih Bahasa Pemrograman", setup_code_desc: "Uji kemampuan logika koding Anda",
-            cat_web: "Web & Scripting", cat_sys: "Sistem & Software", btn_start_code: "MULAI LATIHAN",
-            quiz_header: "Latihan Berlangsung", challenge_header: "Ujian Tantangan Ber-Timer", timer_label: "Sisa Waktu Ujian:",
+            
+            // Nama Koding List ID
+            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Teori & Algoritma Khusus",
+            opt_code_html: "HTML & CSS", opt_code_js: "JavaScript / TypeScript", opt_code_py: "Python", opt_code_php: "PHP", opt_code_ruby: "Ruby",
+            opt_code_ds: "Struktur Data (Array, Stack, Tree)", opt_code_crypto: "Kriptografi & Keamanan", opt_code_ml: "Machine Learning Dasar", opt_code_dp: "Design Patterns (OOP)",
+
+            btn_start_code: "MULAI LATIHAN",
+            quiz_header: "Latihan Berlangsung", challenge_header: "Permainan Cepat (Timer)", timer_label: "Sisa Waktu Ujian:",
             result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Kembali ke Menu (Cek Tracking)",
             dash_title: "Log & Tracking Belajar", dash_subtitle: "Pantau rekam jejak progres pembelajaran Anda secara visual.",
-            stat_sessions: "Total Sesi Latihan", stat_avg: "Rata-rata Skor", stat_challenge: "Tantangan Selesai",
+            stat_sessions: "Total Sesi Latihan", stat_avg: "Rata-rata Skor", stat_challenge: "Permainan Cepat Selesai",
             dash_history: "Riwayat Sesi Terakhir:", dash_empty: "Belum ada riwayat aktivitas tercatat.",
             dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_float: "Kamus Pintar AI",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban"
         },
         en: {
             nav_home: "Home", nav_translator: "Translator", nav_learn: "Languages", nav_coding: "Programming", nav_dashboard: "Tracking",
-            btn_login: "Login", btn_register: "Sign Up", guest: "Guest",
+            btn_login: "Sign In", btn_register: "Sign Up", guest: "Guest",
             auth_login_title: "Sign In", auth_reg_title: "Create Account",
             auth_ph_name: "Full Name", auth_ph_email: "Email Address", auth_ph_pass: "Password",
             auth_btn_login: "Sign In", auth_btn_reg: "Sign Up Now", auth_btn_guest: "Guest Mode",
-            auth_toggle_reg: "No account? Sign up", auth_toggle_login: "Have an account? Sign in", btn_cancel: "Cancel",
+            auth_toggle_reg: "No account? Sign up", auth_toggle_login: "Have an account? Sign In", btn_cancel: "Cancel",
             hero_title: "Explore Language & Logic", hero_desc: "Learn foreign languages from around the world and programming logic interactively.",
             card_1_title: "Start<br>Translator", card_1_desc: "Access AI-based natural language translation supporting non-latin scripts, idioms, and slang.",
             card_2_title: "Start<br>Languages", card_2_desc: "Test and improve your world language mastery through smart quiz exercises.",
@@ -463,15 +559,29 @@
             trans_ph_source: "Type text to translate...", trans_ph_target: "Translation or pronunciation...", trans_status: "Connecting to AI server...",
             setup_level: "Select Proficiency Level", opt_level_1: "Beginner (Basics / A1 Vocab)", opt_level_2: "Intermediate (Sentences / B1-B2)", opt_level_3: "Advanced (Complex / C1-C2 / Slang)",
             setup_lang_title: "Select Human Language", setup_lang_desc: "Choose a language to focus on",
-            cat_pop: "Popular (Indo & English)", cat_asia: "Asia & Pacific",
-            btn_start_learn: "START LEARNING", btn_challenge: "TIMED CHALLENGE", btn_print: "PRINT MODULE",
+            
+            // Nama Bahasa List EN
+            cat_pop: "🌐 Popular (Indo & English)", cat_nus: "🌐 Nusantara (Local Indonesian)", cat_mid: "🌐 Middle East & Africa", cat_asia: "🌐 Asia & Pacific", cat_eur: "🌐 Europe",
+            opt_lang_id_baku: "Indonesian (Formal)", opt_lang_id_gaul: "Indonesian (Slang)", opt_lang_en_gram: "English (Grammar)", opt_lang_en_slang: "English (Idioms)",
+            opt_lang_jv: "Javanese", opt_lang_su: "Sundanese", opt_lang_mi: "Minangkabau", opt_lang_ba: "Balinese",
+            opt_lang_ar: "Arabic", opt_lang_quran: "Quranic Arabic", opt_lang_he: "Hebrew", opt_lang_tr: "Turkish", opt_lang_fa: "Persian", opt_lang_sw: "Swahili",
+            opt_lang_ja: "Japanese", opt_lang_ko: "Korean", opt_lang_zh: "Mandarin", opt_lang_hi: "Hindi", opt_lang_th: "Thai", opt_lang_vi: "Vietnamese", opt_lang_tl: "Tagalog",
+            opt_lang_es: "Spanish", opt_lang_fr: "French", opt_lang_de: "German", opt_lang_ru: "Russian", opt_lang_it: "Italian", opt_lang_nl: "Dutch", opt_lang_pt: "Portuguese",
+
+            btn_start_learn: "START LEARNING", btn_challenge: "QUICK PLAY", btn_print: "PRINT MODULE",
             setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Loops)", opt_code_2: "Intermediate (Functions, OOP)", opt_code_3: "Advanced (Complex Architecture)",
             setup_code_title: "Select Programming Language", setup_code_desc: "Test your coding logic skills",
-            cat_web: "Web & Scripting", cat_sys: "System & Software", btn_start_code: "START PRACTICE",
-            quiz_header: "Practice in Progress", challenge_header: "Timed Challenge Quiz", timer_label: "Time Left:",
+            
+            // Nama Koding List EN
+            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Theory & Algorithms",
+            opt_code_html: "HTML & CSS", opt_code_js: "JavaScript / TypeScript", opt_code_py: "Python", opt_code_php: "PHP", opt_code_ruby: "Ruby",
+            opt_code_ds: "Data Structures (Array, Stack, Tree)", opt_code_crypto: "Cryptography & Security", opt_code_ml: "Basic Machine Learning", opt_code_dp: "Design Patterns (OOP)",
+
+            btn_start_code: "START PRACTICE",
+            quiz_header: "Practice in Progress", challenge_header: "Quick Play (Timer)", timer_label: "Time Left:",
             result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Back to Menu (Check Tracking)",
             dash_title: "Learning Log & Tracking", dash_subtitle: "Monitor your learning progress visually.",
-            stat_sessions: "Total Sessions", stat_avg: "Average Score", stat_challenge: "Challenges Completed",
+            stat_sessions: "Total Sessions", stat_avg: "Average Score", stat_challenge: "Quick Plays Completed",
             dash_history: "Recent History:", dash_empty: "No activity history recorded yet.",
             dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_float: "Smart AI Dictionary",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer"
@@ -490,7 +600,13 @@
             const key = el.getAttribute('data-i18n-ph');
             if(dict[currentLang][key]) el.placeholder = dict[currentLang][key];
         });
-        updateTrackingUI(); // Perbarui bahasa di dalam tracking list
+        
+        const btnCheck = document.getElementById("btn-check");
+        if(btnCheck.innerText.includes("➔")) btnCheck.innerText = dict[currentLang].btn_ans_next;
+        else if(btnCheck.disabled) btnCheck.innerText = dict[currentLang].btn_ans_select;
+        else btnCheck.innerText = dict[currentLang].btn_ans_check;
+        
+        updateTrackingUI(); 
     }
 
     // --- TRACKING & GRAFIK (CHART.JS) ---
@@ -536,7 +652,7 @@
         let totalSessions = logs.length;
         let totalScoreSum = logs.reduce((acc, curr) => acc + curr.score, 0);
         let avgScore = totalSessions > 0 ? Math.round(totalScoreSum / totalSessions) : 0;
-        let challengeCount = logs.filter(l => l.activity.includes('Tantangan') || l.activity.includes('Challenge')).length;
+        let challengeCount = logs.filter(l => l.activity.includes('Cepat') || l.activity.includes('Quick')).length;
 
         document.querySelectorAll('.stat-total-sessions').forEach(el => el.innerText = totalSessions);
         document.querySelectorAll('.stat-avg-score').forEach(el => el.innerText = avgScore);
@@ -618,6 +734,17 @@
         
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
+        window.scrollTo(0,0);
+    }
+    
+    function scrollToTracking() {
+        if (currentSetupMode === 'learn' || currentSetupMode === 'coding') {
+            const activePage = document.querySelector('.page.active-page');
+            const dashboard = activePage.querySelector('.dashboard-box');
+            if (dashboard) dashboard.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert(currentLang === 'id' ? "Buka menu Bahasa Dunia atau Pemrograman untuk melihat Tracking." : "Open Languages or Programming menu to view Tracking.");
+        }
     }
 
     function toggleMenu(menuId, arrowId) {
@@ -721,6 +848,7 @@
         document.getElementById('page-quiz-active').classList.add('active-page');
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
+        window.scrollTo(0,0);
         
         document.getElementById("quiz-mode-title").innerText = isChallenge ? dict[currentLang].challenge_header : dict[currentLang].quiz_header;
         document.getElementById("timer-box").style.display = isChallenge ? "block" : "none";
@@ -837,7 +965,8 @@
         circle.style.borderColor = score >= 70 ? "var(--btn-green)" : (score >= 40 ? "var(--btn-cyan)" : "var(--wrong)");
         circle.style.color = circle.style.borderColor;
         
-        logUserActivity(isChallengeMode ? (currentLang === 'id' ? "Tantangan" : "Challenge") : (currentLang === 'id' ? "Latihan Kuis" : "Quiz Session"), score);
+        let modeName = isChallengeMode ? (currentLang === 'id' ? "Permainan Cepat" : "Quick Play") : (currentLang === 'id' ? "Latihan Kuis" : "Quiz Session");
+        logUserActivity(modeName, score);
 
         let breakdownHTML = "";
         userAnswersLog.forEach((ans, idx) => {
