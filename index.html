@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>PahamTeks - Global Edu & Tracking</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <!-- Mengimpor Chart.js untuk Grafik Tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg-green: radial-gradient(circle at top center, #187a41, #0a1f13);
@@ -32,7 +36,7 @@
         .nav-right { display: flex; gap: 10px; align-items: center; }
         .btn-auth { background: rgba(255,255,255,0.1); border: 1px solid var(--card-border); border-radius: 20px; padding: 8px 20px; font-size: 1rem; font-weight: 700; color: white; cursor: pointer; transition: 0.2s; }
         .btn-auth.primary { background: black; border-color: black; }
-        .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+        .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
@@ -53,7 +57,8 @@
         .styled-select { width: 100%; background: transparent; border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
         .styled-select option { background: #1a1a1a; color: white; }
         
-        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; }
+        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
+        .lang-option:hover { background: rgba(255,255,255,0.1); }
         .sub-menu { display: none; flex-direction: column; gap: 10px; width: 95%; margin-left: 5%; margin-top: -10px; }
         .sub-option { background: rgba(0,0,0,0.2); padding: 12px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
         .sub-option input { margin-right: 15px; transform: scale(1.3); accent-color: var(--btn-green); cursor: pointer;}
@@ -66,6 +71,13 @@
         .btn-grey { background: var(--btn-grey); }
         .btn-orange { background: var(--warning-orange); color: white; }
 
+        /* Dashboard Tracking Terintegrasi */
+        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-top: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
+        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--btn-green); margin-top: 5px; }
+        .chart-container { position: relative; height: 250px; width: 100%; margin-bottom: 20px; }
+
         /* Translator */
         .translator-container { width: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .translation-area { width: 100%; display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch; justify-content: center; }
@@ -73,7 +85,8 @@
         .text-box { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
         textarea { flex: 1; min-height: 220px; border: none; padding: 25px; padding-bottom: 50px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; }
         .btn-swap-wrap { display: flex; align-items: center; padding-top: 45px; }
-        .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; }
+        .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
+        .btn-swap:active { transform: scale(0.9); }
         .btn-speak { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; color: white; transition: 0.2s;}
         .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
 
@@ -83,27 +96,36 @@
         .mc-btn.selected { border-color: var(--btn-green); background: rgba(180, 242, 126, 0.1); }
         .mc-btn.correct { border-color: var(--correct); background: rgba(88, 204, 2, 0.2); }
         .mc-btn.wrong { border-color: var(--wrong); background: rgba(255, 71, 87, 0.2); }
-
-        /* Dashboard Tracking */
-        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-bottom: 20px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
-        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--btn-green); margin-top: 5px; }
-
-        /* Timer Bar */
         .timer-bar-container { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
         .timer-bar { width: 100%; height: 100%; background: var(--warning-orange); transition: width 1s linear; }
 
+        .result-box { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 100%; margin-bottom: 20px; border: 1px solid var(--card-border); }
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; font-weight: 900; margin: 0 auto 20px; border: 8px solid var(--btn-green); color: var(--btn-green); }
+        .explanation-item { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
+        
         /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
         .modal-box { background: #111; width: 90%; max-width: 400px; border-radius: 20px; padding: 30px; border: 1px solid var(--card-border); text-align: center; position: relative;}
         .auth-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: #000; color: white; margin-bottom: 10px; font-size: 1rem; outline: none;}
+        .auth-input:focus { border-color: var(--btn-cyan); }
 
-        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(0,0,0,0.8); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; border: 2px solid var(--btn-cyan); z-index: 100; transition: transform 0.2s;}
-        .floating-kamus-btn:active { transform: scale(0.9); }
-        .kamus-modal { display: none; position: fixed; bottom: 95px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; }
-        .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 12px 20px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
-        .kamus-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        /* Kamus Floating Button (Responsif) */
+        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(0,0,0,0.85); color: white; height: 60px; border-radius: 30px; display: flex; justify-content: center; align-items: center; padding: 0 25px; gap: 10px; cursor: pointer; border: 2px solid var(--btn-cyan); z-index: 100; transition: transform 0.2s, background 0.2s; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
+        .floating-kamus-btn:active { transform: scale(0.95); }
+        .floating-kamus-btn:hover { background: #000; }
+        .kamus-text { display: inline; }
+        .kamus-modal { display: none; position: fixed; bottom: 95px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: slideUp 0.3s ease-out;}
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+        @media (max-width: 768px) {
+            .floating-kamus-btn { width: 60px; height: 60px; border-radius: 50%; padding: 0; justify-content: center; }
+            .kamus-text { display: none; }
+            .floating-kamus-btn span:first-child { font-size: 1.6rem !important; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .action-row button { width: 100%; flex: none; }
+        }
     </style>
 </head>
 <body>
@@ -116,14 +138,13 @@
             <button class="btn-nav" id="nav-translator" data-i18n="nav_translator" onclick="switchPage('translator')">Translator</button>
             <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
             <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
-            <button class="btn-nav" id="nav-dashboard" data-i18n="nav_dashboard" onclick="openDashboard()" style="color:var(--btn-cyan)">📊 Tracking</button>
             <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
         </div>
     </div>
     <div class="nav-right" id="nav-auth-section">
         <button class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Login</button>
         <button class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Daftar</button>
-        <div class="user-profile" id="user-profile-badge" onclick="openDashboard()">👤 <span data-i18n="guest">Tamu</span></div>
+        <div class="user-profile" id="user-profile-badge" style="display:none;">👤 <span data-i18n="guest">Tamu</span></div>
     </div>
 </div>
 
@@ -141,38 +162,6 @@
     </div>
 </div>
 
-<!-- Modal Dashboard Tracking -->
-<div class="modal-overlay" id="dashboard-modal">
-    <div class="modal-box" style="max-width: 650px; text-align: left;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 style="margin:0;" data-i18n="dash_title">📊 Log & Tracking Belajar</h2>
-            <span style="cursor:pointer; font-size:1.5rem;" onclick="closeDashboard()">×</span>
-        </div>
-        <p style="color:var(--text-muted); margin-top:0;" data-i18n="dash_subtitle">Pantau rekam jejak progres pembelajaran Anda secara real-time.</p>
-        
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
-                <div class="stat-num" id="stat-total-sessions">0</div>
-            </div>
-            <div class="stat-card">
-                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
-                <div class="stat-num" id="stat-avg-score">0</div>
-            </div>
-            <div class="stat-card">
-                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Tantangan Selesai</div>
-                <div class="stat-num" id="stat-challenges">0</div>
-            </div>
-        </div>
-
-        <h3 style="margin-bottom:10px;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
-        <div id="activity-log-list" style="max-height: 200px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;">
-            <i style="color:var(--text-muted);" data-i18n="dash_empty">Belum ada riwayat aktivitas tercatat.</i>
-        </div>
-        <button class="btn-huge btn-grey" style="width:100%; margin-top:20px; padding:10px;" onclick="closeDashboard()" data-i18n="btn_close">Tutup</button>
-    </div>
-</div>
-
 <!-- Beranda -->
 <div id="page-home" class="page active-page">
     <div class="hero">
@@ -182,15 +171,15 @@
     <div class="cards-container">
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('translator')">
             <h2 data-i18n="card_1_title">Mulai<br>Translator</h2>
-            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang.</p>
+            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia secara akurat.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('learn')">
             <h2 data-i18n="card_2_title">Mulai<br>Bahasa Asing</h2>
-            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia melalui latihan kuis cerdas dari pemula hingga mahir.</p>
+            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia Anda melalui latihan kuis cerdas yang disesuaikan dengan tingkat pemahaman.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('coding')">
             <h2 data-i18n="card_3_title">Mulai<br>Ngoding</h2>
-            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar hingga struktur data.</p>
+            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar web hingga struktur data.</p>
         </div>
     </div>
 </div>
@@ -219,7 +208,7 @@
     </div>
 </div>
 
-<!-- Bahasa Dunia -->
+<!-- Bahasa Dunia & Tracking Inline -->
 <div id="page-learn" class="page">
     <div class="setup-container">
         <div class="input-group">
@@ -246,26 +235,6 @@
             <label class="sub-option"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris"> B. Inggris (Idiom & Slang)</label>
         </div>
 
-        <label class="lang-option" onclick="toggleMenu('nusantara-submenu', 'nusantara-arrow')">
-            <div data-i18n="cat_nus">🌐 Bahasa Nusantara (Lokal)</div><span id="nusantara-arrow">▼</span>
-        </label>
-        <div id="nusantara-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jawa (Ngoko & Krama)"> Bahasa Jawa</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Sunda"> Bahasa Sunda</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Minangkabau"> Bahasa Minang</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Bali"> Bahasa Bali</label>
-        </div>
-
-        <label class="lang-option" onclick="toggleMenu('arab-submenu', 'arab-arrow')">
-            <div data-i18n="cat_mid">🌐 Timur Tengah & Afrika</div><span id="arab-arrow">▼</span>
-        </label>
-        <div id="arab-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)"> Bahasa Arab</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Al-Qur'an dan Tajwid Dasar"> Bahasa Al-Qur'an</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Turki"> Bahasa Turki</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Swahili"> Bahasa Swahili</label>
-        </div>
-
         <label class="lang-option" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
             <div data-i18n="cat_asia">🌐 Asia & Pasifik</div><span id="asia-arrow">▼</span>
         </label>
@@ -273,27 +242,40 @@
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)"> Bahasa Jepang</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Korea (Hangul)"> Bahasa Korea</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)"> Bahasa Mandarin</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Thai"> Bahasa Thai</label>
-        </div>
-
-        <label class="lang-option" onclick="toggleMenu('eropa-submenu', 'eropa-arrow')">
-            <div data-i18n="cat_eur">🌐 Benua Eropa</div><span id="eropa-arrow">▼</span>
-        </label>
-        <div id="eropa-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Spanyol"> Bahasa Spanyol</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Prancis"> Bahasa Prancis</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jerman"> Bahasa Jerman</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Rusia (Sirilik)"> Bahasa Rusia</label>
         </div>
 
         <div class="action-row">
             <button class="btn-huge btn-green" data-i18n="btn_start_learn" onclick="startQuizSession('learn')">MULAI BELAJAR</button>
             <button class="btn-huge btn-orange" onclick="startChallenge('learn')" data-i18n="btn_challenge">⚡ UJIAN TANTANGAN (TIMER)</button>
         </div>
+
+        <!-- Dashboard Tracking (Berada di Menu Belajar) -->
+        <div class="dashboard-box">
+            <h2 style="margin-top:0;" data-i18n="dash_title">📊 Log & Tracking Belajar</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
+                    <div class="stat-num stat-total-sessions">0</div>
+                </div>
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
+                    <div class="stat-num stat-avg-score">0</div>
+                </div>
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Tantangan Selesai</div>
+                    <div class="stat-num stat-challenges">0</div>
+                </div>
+            </div>
+            
+            <div class="chart-container"><canvas id="chart-learn"></canvas></div>
+
+            <h3 style="margin-bottom:10px; font-size:1.1rem;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
+            <div id="log-list-learn" style="max-height: 200px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
     </div>
 </div>
 
-<!-- Pemrograman -->
+<!-- Pemrograman & Tracking Inline -->
 <div id="page-coding" class="page">
     <div class="setup-container">
         <div class="input-group">
@@ -317,7 +299,6 @@
             <label class="sub-option"><input type="radio" name="code-category" value="Dasar HTML & CSS"> Dasar HTML & CSS</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" checked> JavaScript / TypeScript</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Python"> Python</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman PHP"> PHP</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
@@ -327,31 +308,35 @@
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C++"> C++</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Java"> Java</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Go (Golang)"> Go (Golang)</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Swift"> Swift</label>
-        </div>
-
-        <label class="lang-option" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
-            <div data-i18n="cat_mob">🌐 Mobile, Data & Database</div><span id="mob-arrow">▼</span>
-        </label>
-        <div id="mob-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Kotlin"> Kotlin</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter"> Dart (Flutter)</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa SQL & Database Relasional"> SQL & Database</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Bahasa R (Data Science)"> R (Data Science)</label>
-        </div>
-
-        <label class="lang-option" onclick="toggleMenu('teori-submenu', 'teori-arrow')">
-            <div data-i18n="cat_theory">🌐 Teori & Algoritma Khusus</div><span id="teori-arrow">▼</span>
-        </label>
-        <div id="teori-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)"> Struktur Data (Array, Stack, Tree)</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar"> Kriptografi & Keamanan</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Konsep Machine Learning Dasar"> Machine Learning Dasar</label>
         </div>
 
         <div class="action-row">
             <button class="btn-huge btn-cyan" data-i18n="btn_start_code" onclick="startQuizSession('coding')">MULAI LATIHAN</button>
             <button class="btn-huge btn-orange" onclick="startChallenge('coding')" data-i18n="btn_challenge">⚡ UJIAN TANTANGAN (TIMER)</button>
+        </div>
+
+        <!-- Dashboard Tracking (Berada di Menu Koding) -->
+        <div class="dashboard-box">
+            <h2 style="margin-top:0;" data-i18n="dash_title">📊 Log & Tracking Belajar</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
+                    <div class="stat-num stat-total-sessions">0</div>
+                </div>
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
+                    <div class="stat-num stat-avg-score">0</div>
+                </div>
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Tantangan Selesai</div>
+                    <div class="stat-num stat-challenges">0</div>
+                </div>
+            </div>
+            
+            <div class="chart-container"><canvas id="chart-coding"></canvas></div>
+
+            <h3 style="margin-bottom:10px; font-size:1.1rem;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
+            <div id="log-list-coding" style="max-height: 200px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
         </div>
     </div>
 </div>
@@ -392,14 +377,17 @@
             <div id="result-breakdown"></div>
         </div>
         <div class="action-row">
-            <button class="btn-huge btn-green" data-i18n="btn_retry" onclick="switchPage(currentSetupMode)" style="flex:1; padding: 12px;">Kembali ke Menu</button>
-            <button class="btn-huge btn-cyan" data-i18n="nav_dashboard" onclick="openDashboard()" style="flex:1; padding: 12px;">Lihat Tracking</button>
+            <button class="btn-huge btn-green" data-i18n="btn_retry" onclick="switchPage(currentSetupMode)" style="flex:1; padding: 12px; width:100%;">Kembali ke Menu (Cek Tracking)</button>
         </div>
     </div>
 </div>
 
-<!-- Kamus -->
-<div class="floating-kamus-btn" onclick="toggleKamus()" title="Kamus Pintar AI">📖</div>
+<!-- Kamus Floating Button (Responsif Text) -->
+<div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar AI">
+    <span style="font-size: 1.6rem;">📖</span>
+    <span class="kamus-text" data-i18n="dict_btn_float">Kamus Pintar AI</span>
+</div>
+
 <div id="kamus-modal" class="kamus-modal">
     <div class="kamus-header">
         <span data-i18n="dict_title">📖 Kamus Pintar AI</span>
@@ -409,7 +397,7 @@
         <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." onkeypress="handleKamusEnter(event)">
         <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="padding: 10px; width: 100%; min-width:auto; color:black;" onclick="searchKamus()">Cari Arti</button>
         <div style="position:relative;">
-            <div id="kamus-result" style="display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:12px; font-size:0.9rem; line-height:1.4;"></div>
+            <div id="kamus-result" style="display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:12px; padding-right:45px; font-size:0.9rem; line-height:1.4;"></div>
             <button id="btn-speak-kamus" class="btn-speak" style="display:none; bottom:10px; right:10px; width:35px; height:35px; font-size:1rem;" title="Baca Hasil" onclick="speakText(document.getElementById('kamus-result').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
         </div>
     </div>
@@ -421,6 +409,9 @@
     let currentUser = localStorage.getItem('pahamteks_user') || 'Tamu';
     
     document.getElementById('user-profile-badge').innerHTML = `👤 ${currentUser}`;
+    document.getElementById('user-profile-badge').style.display = "block";
+    document.getElementById('nav-auth-section').querySelector('.btn-auth').style.display = "none";
+    document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
 
     // --- DICTIONARY BILINGUAL (ID/EN) ---
     const dict = {
@@ -438,18 +429,17 @@
             trans_ph_source: "Ketik teks yang ingin di terjemahkan...", trans_ph_target: "Terjemahan atau pelafalan...", trans_status: "Menghubungkan ke server AI...",
             setup_level: "Pilih Tingkat Penguasaan", opt_level_1: "Pemula (Dasar / Kosakata A1)", opt_level_2: "Menengah (Struktur Kalimat / B1-B2)", opt_level_3: "Mahir (Kompleks / C1-C2 / Slang)",
             setup_lang_title: "Pilih Bahasa Manusia", setup_lang_desc: "Pilih salah satu bahasa untuk difokuskan",
-            cat_pop: "🌐 Populer (Indo & Inggris)", cat_nus: "🌐 Bahasa Nusantara (Lokal)", cat_mid: "🌐 Timur Tengah & Afrika", cat_asia: "🌐 Asia & Pasifik", cat_eur: "🌐 Benua Eropa",
+            cat_pop: "🌐 Populer (Indo & Inggris)", cat_asia: "🌐 Asia & Pasifik",
             btn_start_learn: "MULAI BELAJAR", btn_challenge: "⚡ UJIAN TANTANGAN (TIMER)", btn_print: "CETAK MODUL",
             setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Looping)", opt_code_2: "Menengah (Fungsi, OOP)", opt_code_3: "Mahir (Arsitektur Kompleks)",
             setup_code_title: "Pilih Bahasa Pemrograman", setup_code_desc: "Uji kemampuan logika koding Anda",
-            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Teori & Algoritma Khusus",
-            btn_start_code: "MULAI LATIHAN",
+            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", btn_start_code: "MULAI LATIHAN",
             quiz_header: "Latihan Berlangsung", challenge_header: "⚡ Ujian Tantangan Ber-Timer", timer_label: "Sisa Waktu Ujian:",
-            result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Kembali ke Menu",
-            dash_title: "📊 Log & Tracking Belajar", dash_subtitle: "Pantau rekam jejak progres pembelajaran Anda secara real-time.",
+            result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Kembali ke Menu (Cek Tracking)",
+            dash_title: "📊 Log & Tracking Belajar", dash_subtitle: "Pantau rekam jejak progres pembelajaran Anda secara visual.",
             stat_sessions: "Total Sesi Latihan", stat_avg: "Rata-rata Skor", stat_challenge: "Tantangan Selesai",
-            dash_history: "Riwayat Sesi Terakhir:", dash_empty: "Belum ada riwayat aktivitas tercatat.", btn_close: "Tutup",
-            dict_title: "📖 Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti",
+            dash_history: "Riwayat Sesi Terakhir:", dash_empty: "Belum ada riwayat aktivitas tercatat.",
+            dict_title: "📖 Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_float: "Kamus Pintar AI",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban"
         },
         en: {
@@ -466,18 +456,17 @@
             trans_ph_source: "Type text to translate...", trans_ph_target: "Translation or pronunciation...", trans_status: "Connecting to AI server...",
             setup_level: "Select Proficiency Level", opt_level_1: "Beginner (Basics / A1 Vocab)", opt_level_2: "Intermediate (Sentences / B1-B2)", opt_level_3: "Advanced (Complex / C1-C2 / Slang)",
             setup_lang_title: "Select Human Language", setup_lang_desc: "Choose a language to focus on",
-            cat_pop: "🌐 Popular (Indo & English)", cat_nus: "🌐 Nusantara (Local Indonesian)", cat_mid: "🌐 Middle East & Africa", cat_asia: "🌐 Asia & Pacific", cat_eur: "🌐 Europe",
+            cat_pop: "🌐 Popular (Indo & English)", cat_asia: "🌐 Asia & Pacific",
             btn_start_learn: "START LEARNING", btn_challenge: "⚡ TIMED CHALLENGE", btn_print: "PRINT MODULE",
             setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Loops)", opt_code_2: "Intermediate (Functions, OOP)", opt_code_3: "Advanced (Complex Architecture)",
             setup_code_title: "Select Programming Language", setup_code_desc: "Test your coding logic skills",
-            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Theory & Algorithms",
-            btn_start_code: "START PRACTICE",
+            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", btn_start_code: "START PRACTICE",
             quiz_header: "Practice in Progress", challenge_header: "⚡ Timed Challenge Quiz", timer_label: "Time Left:",
-            result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Back to Menu",
-            dash_title: "📊 Learning Log & Tracking", dash_subtitle: "Monitor your learning progress and history in real-time.",
+            result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Back to Menu (Check Tracking)",
+            dash_title: "📊 Learning Log & Tracking", dash_subtitle: "Monitor your learning progress visually.",
             stat_sessions: "Total Sessions", stat_avg: "Average Score", stat_challenge: "Challenges Completed",
-            dash_history: "Recent History:", dash_empty: "No activity history recorded yet.", btn_close: "Close",
-            dict_title: "📖 Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning",
+            dash_history: "Recent History:", dash_empty: "No activity history recorded yet.",
+            dict_title: "📖 Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_float: "Smart AI Dictionary",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer"
         }
     };
@@ -494,16 +483,77 @@
             const key = el.getAttribute('data-i18n-ph');
             if(dict[currentLang][key]) el.placeholder = dict[currentLang][key];
         });
-        
-        const btnCheck = document.getElementById("btn-check");
-        if(btnCheck.innerText.includes("➔")) btnCheck.innerText = dict[currentLang].btn_ans_next;
-        else if(btnCheck.disabled) btnCheck.innerText = dict[currentLang].btn_ans_select;
-        else btnCheck.innerText = dict[currentLang].btn_ans_check;
-        
-        updateAuthUI();
+        updateTrackingUI(); // Perbarui bahasa di dalam tracking list
     }
 
-    // --- TRACKING & LOGGING SYSTEM ---
+    // --- TRACKING & GRAFIK (CHART.JS) ---
+    let learnChart, codingChart;
+
+    function renderCharts(logs) {
+        let chartLogs = logs.slice(0, 10).reverse(); // Ambil 10 terakhir dan urutkan dari lama ke baru
+        let labels = chartLogs.map((l, i) => `Sesi ${i+1}`);
+        let dataScores = chartLogs.map(l => l.score);
+
+        const config = {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: currentLang === 'id' ? 'Skor Ujian' : 'Quiz Score',
+                    data: dataScores,
+                    borderColor: '#b4f27e', backgroundColor: 'rgba(180, 242, 126, 0.2)',
+                    borderWidth: 2, fill: true, tension: 0.3, pointRadius: 4, pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, max: 100, ticks: { color: '#a0aab2' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                    x: { ticks: { color: '#a0aab2' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                },
+                plugins: { legend: { labels: { color: '#fff' } } }
+            }
+        };
+
+        if(learnChart) learnChart.destroy();
+        if(codingChart) codingChart.destroy();
+
+        let ctxLearn = document.getElementById('chart-learn');
+        let ctxCoding = document.getElementById('chart-coding');
+        if(ctxLearn) learnChart = new Chart(ctxLearn, config);
+        if(ctxCoding) codingChart = new Chart(ctxCoding, config);
+    }
+
+    function updateTrackingUI() {
+        let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
+        let totalSessions = logs.length;
+        let totalScoreSum = logs.reduce((acc, curr) => acc + curr.score, 0);
+        let avgScore = totalSessions > 0 ? Math.round(totalScoreSum / totalSessions) : 0;
+        let challengeCount = logs.filter(l => l.activity.includes('Tantangan') || l.activity.includes('Challenge')).length;
+
+        // Update semua class stat agar sinkron di kedua halaman (Bahasa & Pemrograman)
+        document.querySelectorAll('.stat-total-sessions').forEach(el => el.innerText = totalSessions);
+        document.querySelectorAll('.stat-avg-score').forEach(el => el.innerText = avgScore);
+        document.querySelectorAll('.stat-challenges').forEach(el => el.innerText = challengeCount);
+
+        let logHTML = "";
+        if (totalSessions === 0) {
+            logHTML = `<i style="color:var(--text-muted);">${dict[currentLang].dash_empty}</i>`;
+        } else {
+            logHTML = logs.map(l => `
+                <div style="background:rgba(0,0,0,0.4); padding:10px 14px; border-radius:10px; border-left:4px solid var(--btn-green); display:flex; justify-content:space-between; align-items:center;">
+                    <div><div style="font-weight:bold; font-size:0.95rem;">${l.activity}</div><div style="font-size:0.8rem; color:var(--text-muted);">${l.time} (${l.user})</div></div>
+                    <div style="font-weight:900; color:var(--btn-green); font-size:1.1rem;">Skor: ${l.score}</div>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('log-list-learn').innerHTML = logHTML;
+        document.getElementById('log-list-coding').innerHTML = logHTML;
+
+        renderCharts(logs); // Generate/Update Chart.js Graph
+    }
+
     function logUserActivity(activityName, scoreVal) {
         let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
         let newLog = {
@@ -512,40 +562,19 @@
         };
         logs.unshift(newLog);
         localStorage.setItem('pahamteks_logs', JSON.stringify(logs));
+        updateTrackingUI();
 
         fetch(`${serverUrl}/api/user_log`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newLog)
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newLog)
         }).catch(err => {});
     }
 
-    function openDashboard() {
-        document.getElementById('dashboard-modal').style.display = 'flex';
-        let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
-        let totalSessions = logs.length;
-        let totalScoreSum = logs.reduce((acc, curr) => acc + curr.score, 0);
-        let avgScore = totalSessions > 0 ? Math.round(totalScoreSum / totalSessions) : 0;
-        let challengeCount = logs.filter(l => l.activity.includes('Tantangan') || l.activity.includes('Challenge')).length;
+    // Panggil saat web baru pertama kali dibuka agar grafiknya muncul
+    window.onload = function() {
+        updateTrackingUI();
+    };
 
-        document.getElementById('stat-total-sessions').innerText = totalSessions;
-        document.getElementById('stat-avg-score').innerText = avgScore;
-        document.getElementById('stat-challenges').innerText = challengeCount;
-
-        let logListContainer = document.getElementById('activity-log-list');
-        if (totalSessions === 0) {
-            logListContainer.innerHTML = `<i style="color:var(--text-muted);">${dict[currentLang].dash_empty}</i>`;
-        } else {
-            logListContainer.innerHTML = logs.map(l => `
-                <div style="background:rgba(0,0,0,0.4); padding:10px 14px; border-radius:10px; border-left:4px solid var(--btn-green); display:flex; justify-content:space-between; align-items:center;">
-                    <div><div style="font-weight:bold; font-size:0.95rem;">${l.activity}</div><div style="font-size:0.8rem; color:var(--text-muted);">${l.time} (${l.user})</div></div>
-                    <div style="font-weight:900; color:var(--btn-green); font-size:1.1rem;">Skor: ${l.score}</div>
-                </div>
-            `).join('');
-        }
-    }
-    function closeDashboard() { document.getElementById('dashboard-modal').style.display = 'none'; }
-
-    // --- TEXT-TO-SPEECH (TTS) DENGAN FILTER ---
+    // --- TEXT-TO-SPEECH (TTS) FILTER ---
     function speakText(text, langCode = 'id-ID') {
         if (!('speechSynthesis' in window)) return;
         if (!text) return;
@@ -553,7 +582,7 @@
         let filteredText = text;
         const blankWord = langCode.startsWith('en') ? " blank " : " titik-titik ";
         filteredText = filteredText.replace(/_{3,}/g, blankWord); // Filter Garis Bawah
-        filteredText = filteredText.replace(/\*/g, ''); // Filter Bintang
+        filteredText = filteredText.replace(/\*/g, ''); // Filter Bintang Markdown
         
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(filteredText);
@@ -570,9 +599,13 @@
         if(pageName === 'coding') {
             document.body.style.background = "var(--bg-blue)";
             currentSetupMode = 'coding';
+            updateTrackingUI(); // Pastikan grafik di-refresh jika ganti tema layar
         } else {
             document.body.style.background = "var(--bg-green)";
-            if(pageName === 'learn') currentSetupMode = 'learn';
+            if(pageName === 'learn') {
+                currentSetupMode = 'learn';
+                updateTrackingUI(); 
+            }
         }
 
         document.getElementById('page-' + pageName).classList.add('active-page');
@@ -614,7 +647,11 @@
     function continueAsGuest() { activateUser(dict[currentLang].guest); }
     function activateUser(userName) {
         currentUser = userName; localStorage.setItem('pahamteks_user', userName); closeAuthModal();
-        document.getElementById('user-profile-badge').innerHTML = `👤 ${userName}`; logUserActivity("Login", 0);
+        document.getElementById('user-profile-badge').innerHTML = `👤 ${userName}`;
+        document.getElementById('user-profile-badge').style.display = "block";
+        document.getElementById('nav-auth-section').querySelector('.btn-auth').style.display = "none";
+        document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
+        logUserActivity("Login Berhasil", 0);
     }
 
     // --- TRANSLATOR ---
@@ -795,7 +832,7 @@
         circle.style.borderColor = score >= 70 ? "var(--btn-green)" : (score >= 40 ? "var(--btn-cyan)" : "var(--wrong)");
         circle.style.color = circle.style.borderColor;
         
-        logUserActivity(isChallengeMode ? "Tantangan Kuis" : "Latihan Kuis", score);
+        logUserActivity(isChallengeMode ? "⚡ Ujian Tantangan" : "📚 Latihan Kuis", score);
 
         let breakdownHTML = "";
         userAnswersLog.forEach((ans, idx) => {
