@@ -8,7 +8,6 @@
     <meta http-equiv="Expires" content="0">
     <title>PahamTeks - Global Edu & Tracking</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
-    <!-- Mengimpor Chart.js untuk Grafik Tracking -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -69,7 +68,12 @@
         .btn-green { background: var(--btn-green); }
         .btn-cyan { background: var(--btn-cyan); }
         .btn-grey { background: var(--btn-grey); }
-        .btn-orange { background: var(--warning-orange); color: white; }
+        
+        /* Tombol Outline untuk Tantangan agar sesuai tema */
+        .btn-outline-green { background: transparent; border: 2px solid var(--btn-green); color: var(--btn-green); }
+        .btn-outline-green:hover { background: rgba(180, 242, 126, 0.1); }
+        .btn-outline-cyan { background: transparent; border: 2px solid var(--btn-cyan); color: var(--btn-cyan); }
+        .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.1); }
 
         /* Dashboard Tracking Terintegrasi */
         .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-top: 30px; }
@@ -138,6 +142,7 @@
             <button class="btn-nav" id="nav-translator" data-i18n="nav_translator" onclick="switchPage('translator')">Translator</button>
             <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
             <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
+            <button class="btn-nav" id="nav-dashboard" data-i18n="nav_dashboard" onclick="openDashboard()" style="color:var(--btn-cyan)">Tracking</button>
             <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
         </div>
     </div>
@@ -226,7 +231,7 @@
         </div>
 
         <label class="lang-option" onclick="toggleMenu('indo-eng-submenu', 'indo-eng-arrow')">
-            <div data-i18n="cat_pop">🌐 Populer (Indo & Inggris)</div><span id="indo-eng-arrow">▼</span>
+            <div data-i18n="cat_pop">Populer (Indo & Inggris)</div><span id="indo-eng-arrow">▼</span>
         </label>
         <div id="indo-eng-submenu" class="sub-menu" style="display: flex;">
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Baku & EYD)" checked> B. Indonesia (Baku)</label>
@@ -236,7 +241,7 @@
         </div>
 
         <label class="lang-option" onclick="toggleMenu('asia-submenu', 'asia-arrow')">
-            <div data-i18n="cat_asia">🌐 Asia & Pasifik</div><span id="asia-arrow">▼</span>
+            <div data-i18n="cat_asia">Asia & Pasifik</div><span id="asia-arrow">▼</span>
         </label>
         <div id="asia-submenu" class="sub-menu">
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)"> Bahasa Jepang</label>
@@ -246,12 +251,13 @@
 
         <div class="action-row">
             <button class="btn-huge btn-green" data-i18n="btn_start_learn" onclick="startQuizSession('learn')">MULAI BELAJAR</button>
-            <button class="btn-huge btn-orange" onclick="startChallenge('learn')" data-i18n="btn_challenge">⚡ UJIAN TANTANGAN (TIMER)</button>
+            <button class="btn-huge btn-outline-green" onclick="startChallenge('learn')" data-i18n="btn_challenge">UJIAN TANTANGAN (TIMER)</button>
+            <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('lang')">CETAK MODUL</button>
         </div>
 
         <!-- Dashboard Tracking (Berada di Menu Belajar) -->
         <div class="dashboard-box">
-            <h2 style="margin-top:0;" data-i18n="dash_title">📊 Log & Tracking Belajar</h2>
+            <h2 style="margin-top:0;" data-i18n="dash_title">Log & Tracking Belajar</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
@@ -293,7 +299,7 @@
         </div>
 
         <label class="lang-option" onclick="toggleMenu('web-submenu', 'web-arrow')">
-            <div data-i18n="cat_web">🌐 Web & Scripting</div><span id="web-arrow">▼</span>
+            <div data-i18n="cat_web">Web & Scripting</div><span id="web-arrow">▼</span>
         </label>
         <div id="web-submenu" class="sub-menu" style="display: flex;">
             <label class="sub-option"><input type="radio" name="code-category" value="Dasar HTML & CSS"> Dasar HTML & CSS</label>
@@ -302,7 +308,7 @@
         </div>
 
         <label class="lang-option" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
-            <div data-i18n="cat_sys">🌐 Sistem & Software</div><span id="sys-arrow">▼</span>
+            <div data-i18n="cat_sys">Sistem & Software</div><span id="sys-arrow">▼</span>
         </label>
         <div id="sys-submenu" class="sub-menu">
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C++"> C++</label>
@@ -312,12 +318,13 @@
 
         <div class="action-row">
             <button class="btn-huge btn-cyan" data-i18n="btn_start_code" onclick="startQuizSession('coding')">MULAI LATIHAN</button>
-            <button class="btn-huge btn-orange" onclick="startChallenge('coding')" data-i18n="btn_challenge">⚡ UJIAN TANTANGAN (TIMER)</button>
+            <button class="btn-huge btn-outline-cyan" onclick="startChallenge('coding')" data-i18n="btn_challenge">UJIAN TANTANGAN (TIMER)</button>
+            <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('coding')">CETAK MODUL</button>
         </div>
 
         <!-- Dashboard Tracking (Berada di Menu Koding) -->
         <div class="dashboard-box">
-            <h2 style="margin-top:0;" data-i18n="dash_title">📊 Log & Tracking Belajar</h2>
+            <h2 style="margin-top:0;" data-i18n="dash_title">Log & Tracking Belajar</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
@@ -390,7 +397,7 @@
 
 <div id="kamus-modal" class="kamus-modal">
     <div class="kamus-header">
-        <span data-i18n="dict_title">📖 Kamus Pintar AI</span>
+        <span data-i18n="dict_title">Kamus Pintar AI</span>
         <span style="cursor: pointer; font-size: 1.5rem;" onclick="toggleKamus()">×</span>
     </div>
     <div class="kamus-body">
@@ -413,10 +420,10 @@
     document.getElementById('nav-auth-section').querySelector('.btn-auth').style.display = "none";
     document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
 
-    // --- DICTIONARY BILINGUAL (ID/EN) ---
+    // --- DICTIONARY BILINGUAL (ID/EN) (Tanpa Emoji Berlebihan) ---
     const dict = {
         id: {
-            nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "📊 Tracking",
+            nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking",
             btn_login: "Login", btn_register: "Daftar", guest: "Tamu",
             auth_login_title: "Masuk Akun", auth_reg_title: "Buat Akun Baru",
             auth_ph_name: "Nama Lengkap", auth_ph_email: "Alamat Email", auth_ph_pass: "Kata Sandi",
@@ -429,21 +436,21 @@
             trans_ph_source: "Ketik teks yang ingin di terjemahkan...", trans_ph_target: "Terjemahan atau pelafalan...", trans_status: "Menghubungkan ke server AI...",
             setup_level: "Pilih Tingkat Penguasaan", opt_level_1: "Pemula (Dasar / Kosakata A1)", opt_level_2: "Menengah (Struktur Kalimat / B1-B2)", opt_level_3: "Mahir (Kompleks / C1-C2 / Slang)",
             setup_lang_title: "Pilih Bahasa Manusia", setup_lang_desc: "Pilih salah satu bahasa untuk difokuskan",
-            cat_pop: "🌐 Populer (Indo & Inggris)", cat_asia: "🌐 Asia & Pasifik",
-            btn_start_learn: "MULAI BELAJAR", btn_challenge: "⚡ UJIAN TANTANGAN (TIMER)", btn_print: "CETAK MODUL",
+            cat_pop: "Populer (Indo & Inggris)", cat_asia: "Asia & Pasifik",
+            btn_start_learn: "MULAI BELAJAR", btn_challenge: "UJIAN TANTANGAN (TIMER)", btn_print: "CETAK MODUL",
             setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Looping)", opt_code_2: "Menengah (Fungsi, OOP)", opt_code_3: "Mahir (Arsitektur Kompleks)",
             setup_code_title: "Pilih Bahasa Pemrograman", setup_code_desc: "Uji kemampuan logika koding Anda",
-            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", btn_start_code: "MULAI LATIHAN",
-            quiz_header: "Latihan Berlangsung", challenge_header: "⚡ Ujian Tantangan Ber-Timer", timer_label: "Sisa Waktu Ujian:",
+            cat_web: "Web & Scripting", cat_sys: "Sistem & Software", btn_start_code: "MULAI LATIHAN",
+            quiz_header: "Latihan Berlangsung", challenge_header: "Ujian Tantangan Ber-Timer", timer_label: "Sisa Waktu Ujian:",
             result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Kembali ke Menu (Cek Tracking)",
-            dash_title: "📊 Log & Tracking Belajar", dash_subtitle: "Pantau rekam jejak progres pembelajaran Anda secara visual.",
+            dash_title: "Log & Tracking Belajar", dash_subtitle: "Pantau rekam jejak progres pembelajaran Anda secara visual.",
             stat_sessions: "Total Sesi Latihan", stat_avg: "Rata-rata Skor", stat_challenge: "Tantangan Selesai",
             dash_history: "Riwayat Sesi Terakhir:", dash_empty: "Belum ada riwayat aktivitas tercatat.",
-            dict_title: "📖 Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_float: "Kamus Pintar AI",
+            dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_float: "Kamus Pintar AI",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban"
         },
         en: {
-            nav_home: "Home", nav_translator: "Translator", nav_learn: "Languages", nav_coding: "Programming", nav_dashboard: "📊 Tracking",
+            nav_home: "Home", nav_translator: "Translator", nav_learn: "Languages", nav_coding: "Programming", nav_dashboard: "Tracking",
             btn_login: "Login", btn_register: "Sign Up", guest: "Guest",
             auth_login_title: "Sign In", auth_reg_title: "Create Account",
             auth_ph_name: "Full Name", auth_ph_email: "Email Address", auth_ph_pass: "Password",
@@ -456,17 +463,17 @@
             trans_ph_source: "Type text to translate...", trans_ph_target: "Translation or pronunciation...", trans_status: "Connecting to AI server...",
             setup_level: "Select Proficiency Level", opt_level_1: "Beginner (Basics / A1 Vocab)", opt_level_2: "Intermediate (Sentences / B1-B2)", opt_level_3: "Advanced (Complex / C1-C2 / Slang)",
             setup_lang_title: "Select Human Language", setup_lang_desc: "Choose a language to focus on",
-            cat_pop: "🌐 Popular (Indo & English)", cat_asia: "🌐 Asia & Pacific",
-            btn_start_learn: "START LEARNING", btn_challenge: "⚡ TIMED CHALLENGE", btn_print: "PRINT MODULE",
+            cat_pop: "Popular (Indo & English)", cat_asia: "Asia & Pacific",
+            btn_start_learn: "START LEARNING", btn_challenge: "TIMED CHALLENGE", btn_print: "PRINT MODULE",
             setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Loops)", opt_code_2: "Intermediate (Functions, OOP)", opt_code_3: "Advanced (Complex Architecture)",
             setup_code_title: "Select Programming Language", setup_code_desc: "Test your coding logic skills",
-            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", btn_start_code: "START PRACTICE",
-            quiz_header: "Practice in Progress", challenge_header: "⚡ Timed Challenge Quiz", timer_label: "Time Left:",
+            cat_web: "Web & Scripting", cat_sys: "System & Software", btn_start_code: "START PRACTICE",
+            quiz_header: "Practice in Progress", challenge_header: "Timed Challenge Quiz", timer_label: "Time Left:",
             result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Back to Menu (Check Tracking)",
-            dash_title: "📊 Learning Log & Tracking", dash_subtitle: "Monitor your learning progress visually.",
+            dash_title: "Learning Log & Tracking", dash_subtitle: "Monitor your learning progress visually.",
             stat_sessions: "Total Sessions", stat_avg: "Average Score", stat_challenge: "Challenges Completed",
             dash_history: "Recent History:", dash_empty: "No activity history recorded yet.",
-            dict_title: "📖 Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_float: "Smart AI Dictionary",
+            dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_float: "Smart AI Dictionary",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer"
         }
     };
@@ -531,7 +538,6 @@
         let avgScore = totalSessions > 0 ? Math.round(totalScoreSum / totalSessions) : 0;
         let challengeCount = logs.filter(l => l.activity.includes('Tantangan') || l.activity.includes('Challenge')).length;
 
-        // Update semua class stat agar sinkron di kedua halaman (Bahasa & Pemrograman)
         document.querySelectorAll('.stat-total-sessions').forEach(el => el.innerText = totalSessions);
         document.querySelectorAll('.stat-avg-score').forEach(el => el.innerText = avgScore);
         document.querySelectorAll('.stat-challenges').forEach(el => el.innerText = challengeCount);
@@ -551,7 +557,7 @@
         document.getElementById('log-list-learn').innerHTML = logHTML;
         document.getElementById('log-list-coding').innerHTML = logHTML;
 
-        renderCharts(logs); // Generate/Update Chart.js Graph
+        renderCharts(logs);
     }
 
     function logUserActivity(activityName, scoreVal) {
@@ -569,7 +575,6 @@
         }).catch(err => {});
     }
 
-    // Panggil saat web baru pertama kali dibuka agar grafiknya muncul
     window.onload = function() {
         updateTrackingUI();
     };
@@ -581,8 +586,8 @@
         
         let filteredText = text;
         const blankWord = langCode.startsWith('en') ? " blank " : " titik-titik ";
-        filteredText = filteredText.replace(/_{3,}/g, blankWord); // Filter Garis Bawah
-        filteredText = filteredText.replace(/\*/g, ''); // Filter Bintang Markdown
+        filteredText = filteredText.replace(/_{3,}/g, blankWord); 
+        filteredText = filteredText.replace(/\*/g, ''); 
         
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(filteredText);
@@ -599,7 +604,7 @@
         if(pageName === 'coding') {
             document.body.style.background = "var(--bg-blue)";
             currentSetupMode = 'coding';
-            updateTrackingUI(); // Pastikan grafik di-refresh jika ganti tema layar
+            updateTrackingUI();
         } else {
             document.body.style.background = "var(--bg-green)";
             if(pageName === 'learn') {
@@ -832,7 +837,7 @@
         circle.style.borderColor = score >= 70 ? "var(--btn-green)" : (score >= 40 ? "var(--btn-cyan)" : "var(--wrong)");
         circle.style.color = circle.style.borderColor;
         
-        logUserActivity(isChallengeMode ? "⚡ Ujian Tantangan" : "📚 Latihan Kuis", score);
+        logUserActivity(isChallengeMode ? (currentLang === 'id' ? "Tantangan" : "Challenge") : (currentLang === 'id' ? "Latihan Kuis" : "Quiz Session"), score);
 
         let breakdownHTML = "";
         userAnswersLog.forEach((ans, idx) => {
