@@ -13,6 +13,7 @@ CORS(app)
 genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-3.6-flash')
 
+# Cache untuk menyimpan soal kuis sementara agar lebih cepat dimuat ulang
 quiz_cache = {}
 
 # --- SISTEM DATABASE MEMORI (Untuk Login & Daftar) ---
@@ -49,6 +50,20 @@ def login():
     return jsonify({'message': 'Login berhasil!', 'name': users_db[email]['name']})
 # -----------------------------------------------------
 
+# --- SERVER LOGS TRACKING ---
+@app.route('/api/user_log', methods=['POST'])
+def user_log():
+    # Menerima log aktivitas belajar user untuk dicatat di server Vercel
+    data = request.json
+    user_identifier = data.get('user', 'Tamu')
+    activity = data.get('activity', '')
+    score = data.get('score', 0)
+    
+    print(f"[SERVER LOG TRACKER] User: {user_identifier} | Aktivitas: {activity} | Skor: {score}")
+    return jsonify({'status': 'logged', 'message': 'Aktivitas berhasil dicatat di server.'})
+# -----------------------------------------------------
+
+# Daftar Lengkap Bahasa Dunia
 LANGUAGES = {
     "afrikaans": "af", "albanian": "sq", "amharic": "am", "arabic": "ar", "armenian": "hy", "azerbaijani": "az",
     "basque": "eu", "belarusian": "be", "bengali": "bn", "bosnian": "bs", "bulgarian": "bg", "catalan": "ca",
@@ -150,6 +165,27 @@ def generate_quiz():
         quiz_data = json.loads(raw_text)
         quiz_cache[cache_key] = quiz_data
         return jsonify(quiz_data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/generate_challenge', methods=['POST'])
+def generate_challenge():
+    data = request.json
+    category = data.get('category', 'General')
+    
+    prompt = f"""
+    Buat 3 soal ujian tantangan (Challenge Mode ber-timer) yang SANGAT SULIT & kompleks untuk topik: {category}.
+    Soal harus berupa studi kasus menjebak atau analisis panjang berstandar profesional.
+    Format WAJIB JSON Array utuh tanpa markdown (```).
+    Bentuk JSON:
+    [{{ "instruction": "Tantangan Analisis", "question": "Soal studi kasus...", "options": ["A", "B", "C", "D"], "answer": "Jawaban Benar" }}]
+    """
+    try:
+        response = generate_with_retry(prompt)
+        raw_text = response.text.strip()
+        if raw_text.startswith("```"):
+            raw_text = raw_text.strip("`").strip("json").strip("html").strip()
+        return jsonify(json.loads(raw_text))
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

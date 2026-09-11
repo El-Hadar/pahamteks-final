@@ -4,139 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>PahamTeks - Global Edu</title>
+    <title>PahamTeks - Global Edu & Tracking</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-green: radial-gradient(circle at top center, #187a41, #0a1f13);
             --bg-blue: radial-gradient(circle at top center, #1b4b6b, #05131f);
-            
-            --card-bg: rgba(0, 0, 0, 0.6);
-            --card-border: rgba(255, 255, 255, 0.1);
-            
-            --btn-green: #b4f27e;
-            --btn-cyan: #7ef2e0;
-            --btn-grey: #c8d6ce;
-            
-            --text-main: #ffffff;
-            --text-muted: #a0aab2;
-            
-            --correct: #58cc02;
-            --wrong: #ff4757;
+            --card-bg: rgba(0, 0, 0, 0.6); --card-border: rgba(255, 255, 255, 0.1);
+            --btn-green: #b4f27e; --btn-cyan: #7ef2e0; --btn-grey: #c8d6ce;
+            --text-main: #ffffff; --text-muted: #a0aab2;
+            --correct: #58cc02; --wrong: #ff4757; --warning-orange: #ff9f43;
         }
 
         * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
         body { background: var(--bg-green); background-attachment: fixed; color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; transition: background 0.5s ease; }
 
-        .navbar { width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .navbar { width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .logo { font-size: 2rem; font-weight: 900; color: white; cursor: pointer; }
         
         .nav-links { display: flex; gap: 5px; background: rgba(0,0,0,0.4); padding: 5px; border-radius: 30px; flex-wrap: wrap; align-items: center;}
-        .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 20px; font-size: 1rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
+        .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .btn-nav.active { background: rgba(255,255,255,0.2); color: white; }
         .btn-nav:hover:not(.active) { color: white; }
-        .lang-toggle { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--card-border); padding: 8px 15px; font-weight: 900; border-radius: 20px; cursor: pointer; margin-left: 10px; transition: 0.2s; }
+        .lang-toggle { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--card-border); padding: 8px 12px; font-weight: 900; border-radius: 20px; cursor: pointer; margin-left: 5px; transition: 0.2s;}
         .lang-toggle:hover { background: rgba(255,255,255,0.2); }
-        
+
         .nav-right { display: flex; gap: 10px; align-items: center; }
         .btn-auth { background: rgba(255,255,255,0.1); border: 1px solid var(--card-border); border-radius: 20px; padding: 8px 20px; font-size: 1rem; font-weight: 700; color: white; cursor: pointer; transition: 0.2s; }
         .btn-auth.primary { background: black; border-color: black; }
-        .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.1rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; }
+        .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; cursor: pointer; }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .hero { text-align: center; margin-top: 20px; width: 100%; }
-        .hero h1 { font-size: 2.8rem; margin-bottom: 10px; font-weight: 800; }
-        .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; }
+        .hero { text-align: center; margin-top: 10px; width: 100%; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 800; }
+        .hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
         
-        .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; margin-bottom: 50px; }
-        .feature-card { background: #000000; border-radius: 20px; padding: 35px 25px; text-align: left; display: flex; flex-direction: column; gap: 15px; box-shadow: 10px 10px 0px rgba(0,0,0,0.3); transition: transform 0.2s;}
+        .cards-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; width: 100%; margin-bottom: 40px; }
+        .feature-card { background: #000000; border-radius: 20px; padding: 30px 20px; text-align: left; display: flex; flex-direction: column; gap: 15px; box-shadow: 10px 10px 0px rgba(0,0,0,0.3); transition: transform 0.2s; border: 1px solid var(--card-border); }
         .feature-card:hover { transform: translateY(-5px); }
-        .feature-card h2 { font-size: 2rem; margin: 0; line-height: 1.2; text-transform: uppercase; }
+        .feature-card h2 { font-size: 1.7rem; margin: 0; line-height: 1.2; text-transform: uppercase; }
         .feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
         
         .setup-container, .quiz-container { width: 100%; max-width: 750px; display: flex; flex-direction: column; gap: 20px; margin-top: 10px; margin-bottom: 50px; }
-        
         .input-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; width: 100%; }
-        .input-group label { font-size: 1.2rem; font-weight: 800; display: block; margin-bottom: 15px; }
         .styled-select { width: 100%; background: transparent; border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
         .styled-select option { background: #1a1a1a; color: white; }
         
-        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
-        .lang-option:hover { background: rgba(255,255,255,0.1); }
+        .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; }
         .sub-menu { display: none; flex-direction: column; gap: 10px; width: 95%; margin-left: 5%; margin-top: -10px; }
         .sub-option { background: rgba(0,0,0,0.2); padding: 12px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; }
-        .sub-option input { margin-right: 15px; transform: scale(1.3); accent-color: var(--btn-green); cursor: pointer; }
+        .sub-option input { margin-right: 15px; transform: scale(1.3); accent-color: var(--btn-green); cursor: pointer;}
 
         .action-row { display: flex; gap: 15px; width: 100%; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
-        .btn-huge { border: none; border-radius: 25px; padding: 15px 40px; font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: 0.2s; color: black; min-width: 200px; text-transform: uppercase; }
+        .btn-huge { border: none; border-radius: 25px; padding: 15px 30px; font-size: 1.1rem; font-weight: 900; cursor: pointer; transition: 0.2s; color: black; min-width: 180px; text-transform: uppercase; }
         .btn-huge:active { transform: scale(0.95); }
         .btn-green { background: var(--btn-green); }
         .btn-cyan { background: var(--btn-cyan); }
         .btn-grey { background: var(--btn-grey); }
+        .btn-orange { background: var(--warning-orange); color: white; }
 
-        /* Translator Area */
+        /* Translator */
         .translator-container { width: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .translation-area { width: 100%; display: flex; gap: 20px; flex-wrap: wrap; align-items: stretch; justify-content: center; }
         .text-box-wrapper { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 10px; }
         .text-box { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-        textarea { flex: 1; min-height: 250px; border: none; padding: 25px; padding-bottom: 60px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; line-height: 1.5; }
-        .btn-swap-wrap { display: flex; align-items: center; padding-top: 55px; }
-        .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
-        .btn-swap:active { transform: scale(0.9); }
-        
-        /* TTS Button */
-        .btn-speak { position: absolute; bottom: 15px; right: 15px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; cursor: pointer; transition: 0.2s; color: white; }
+        textarea { flex: 1; min-height: 220px; border: none; padding: 25px; padding-bottom: 50px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; }
+        .btn-swap-wrap { display: flex; align-items: center; padding-top: 45px; }
+        .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; }
+        .btn-speak { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; color: white; transition: 0.2s;}
         .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
-        .btn-speak:active { transform: scale(0.9); }
 
-        /* Quiz Area */
-        .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; text-align: center; position: relative; }
-        .mc-btn { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 20px; font-size: 1.1rem; font-weight: 700; color: white; cursor: pointer; text-align: left; margin-bottom: 10px; transition: 0.2s; }
+        /* Quiz & Challenge */
+        .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; text-align: center; position: relative; }
+        .mc-btn { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px; font-size: 1.05rem; font-weight: 700; color: white; cursor: pointer; text-align: left; margin-bottom: 10px; transition: 0.2s; }
         .mc-btn.selected { border-color: var(--btn-green); background: rgba(180, 242, 126, 0.1); }
         .mc-btn.correct { border-color: var(--correct); background: rgba(88, 204, 2, 0.2); }
         .mc-btn.wrong { border-color: var(--wrong); background: rgba(255, 71, 87, 0.2); }
 
-        .result-box { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 100%; margin-bottom: 20px; border: 1px solid var(--card-border); }
-        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; font-weight: 900; margin: 0 auto 20px; border: 8px solid var(--btn-green); color: var(--btn-green); }
-        .explanation-item { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
-        
+        /* Dashboard Tracking */
+        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-bottom: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
+        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--btn-green); margin-top: 5px; }
+
+        /* Timer Bar */
+        .timer-bar-container { width: 100%; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .timer-bar { width: 100%; height: 100%; background: var(--warning-orange); transition: width 1s linear; }
+
         /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
         .modal-box { background: #111; width: 90%; max-width: 400px; border-radius: 20px; padding: 30px; border: 1px solid var(--card-border); text-align: center; position: relative;}
         .auth-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: #000; color: white; margin-bottom: 10px; font-size: 1rem; outline: none;}
-        .auth-input:focus { border-color: var(--btn-cyan); }
 
-        /* Kamus Floating Button & Modal */
-        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(0,0,0,0.8); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 2px solid var(--btn-cyan); z-index: 100; transition: transform 0.2s; }
+        .floating-kamus-btn { position: fixed; bottom: 25px; right: 25px; background: rgba(0,0,0,0.8); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; cursor: pointer; border: 2px solid var(--btn-cyan); z-index: 100; transition: transform 0.2s;}
         .floating-kamus-btn:active { transform: scale(0.9); }
-        .kamus-modal { display: none; position: fixed; bottom: 100px; right: 25px; width: 350px; background: #111; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
-        .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .kamus-modal { display: none; position: fixed; bottom: 95px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; }
+        .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 12px 20px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; }
+        .kamus-body { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
     </style>
 </head>
 <body>
 
 <div class="navbar">
-    <div class="nav-left" style="display:flex; align-items:center; gap:20px;">
+    <div class="nav-left" style="display:flex; align-items:center; gap:15px;">
         <div class="logo" onclick="switchPage('home')">Paham<span style="color:var(--text-muted);">Teks</span></div>
         <div class="nav-links">
             <button class="btn-nav active" id="nav-home" data-i18n="nav_home" onclick="switchPage('home')">Beranda</button>
             <button class="btn-nav" id="nav-translator" data-i18n="nav_translator" onclick="switchPage('translator')">Translator</button>
             <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
             <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
+            <button class="btn-nav" id="nav-dashboard" data-i18n="nav_dashboard" onclick="openDashboard()" style="color:var(--btn-cyan)">📊 Tracking</button>
             <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
         </div>
     </div>
     <div class="nav-right" id="nav-auth-section">
         <button class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Login</button>
         <button class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Daftar</button>
-        <div class="user-profile" id="user-profile-badge">👤 <span data-i18n="guest">Tamu</span></div>
+        <div class="user-profile" id="user-profile-badge" onclick="openDashboard()">👤 <span data-i18n="guest">Tamu</span></div>
     </div>
 </div>
 
@@ -147,10 +134,42 @@
         <input type="text" id="auth-name" class="auth-input" data-i18n-ph="auth_ph_name" placeholder="Nama Lengkap" style="display: none;">
         <input type="email" id="auth-email" class="auth-input" data-i18n-ph="auth_ph_email" placeholder="Alamat Email">
         <input type="password" id="auth-password" class="auth-input" data-i18n-ph="auth_ph_pass" placeholder="Kata Sandi">
-        <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 10px; padding: 12px;" onclick="processAuth()">Masuk</button>
+        <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 5px; padding: 12px;" onclick="processAuth()">Masuk</button>
         <button class="btn-huge btn-grey" data-i18n="auth_btn_guest" style="width:100%; margin-top: 10px; padding: 12px;" onclick="continueAsGuest()">Mode Tamu</button>
-        <p style="color:var(--btn-cyan); cursor:pointer; margin-top:15px; font-size:0.9rem;" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_reg">Belum punya akun? Daftar</p>
+        <p style="color:var(--btn-cyan); cursor:pointer; margin-top:12px; font-size:0.9rem;" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_reg">Belum punya akun? Daftar</p>
         <p style="color:var(--wrong); cursor:pointer; font-size:0.9rem;" onclick="closeAuthModal()" data-i18n="btn_cancel">Batal</p>
+    </div>
+</div>
+
+<!-- Modal Dashboard Tracking -->
+<div class="modal-overlay" id="dashboard-modal">
+    <div class="modal-box" style="max-width: 650px; text-align: left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 style="margin:0;" data-i18n="dash_title">📊 Log & Tracking Belajar</h2>
+            <span style="cursor:pointer; font-size:1.5rem;" onclick="closeDashboard()">×</span>
+        </div>
+        <p style="color:var(--text-muted); margin-top:0;" data-i18n="dash_subtitle">Pantau rekam jejak progres pembelajaran Anda secara real-time.</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
+                <div class="stat-num" id="stat-total-sessions">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
+                <div class="stat-num" id="stat-avg-score">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Tantangan Selesai</div>
+                <div class="stat-num" id="stat-challenges">0</div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom:10px;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
+        <div id="activity-log-list" style="max-height: 200px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;">
+            <i style="color:var(--text-muted);" data-i18n="dash_empty">Belum ada riwayat aktivitas tercatat.</i>
+        </div>
+        <button class="btn-huge btn-grey" style="width:100%; margin-top:20px; padding:10px;" onclick="closeDashboard()" data-i18n="btn_close">Tutup</button>
     </div>
 </div>
 
@@ -163,15 +182,15 @@
     <div class="cards-container">
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('translator')">
             <h2 data-i18n="card_1_title">Mulai<br>Translator</h2>
-            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia secara akurat dan instan.</p>
+            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('learn')">
             <h2 data-i18n="card_2_title">Mulai<br>Bahasa Asing</h2>
-            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia Anda melalui latihan kuis cerdas yang disesuaikan dengan tingkat pemahaman dari pemula hingga mahir.</p>
+            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia melalui latihan kuis cerdas dari pemula hingga mahir.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('coding')">
             <h2 data-i18n="card_3_title">Mulai<br>Ngoding</h2>
-            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar web hingga struktur data dan arsitektur kompleks.</p>
+            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar hingga struktur data.</p>
         </div>
     </div>
 </div>
@@ -184,14 +203,14 @@
                 <select id="source-lang" class="styled-select" style="background:var(--card-bg);"><option value="auto">Mendeteksi...</option></select>
                 <div class="text-box">
                     <textarea id="source-text" data-i18n-ph="trans_ph_source" placeholder="Ketik teks yang ingin di terjemahkan..."></textarea>
-                    <button class="btn-speak" title="Baca Teks" onclick="speakText(document.getElementById('source-text').value, document.getElementById('source-lang').value === 'auto' ? 'id' : document.getElementById('source-lang').value)">🔊</button>
+                    <button class="btn-speak" title="Baca Teks" onclick="speakText(document.getElementById('source-text').value, document.getElementById('source-lang').value === 'auto' ? 'id-ID' : document.getElementById('source-lang').value)">🔊</button>
                 </div>
             </div>
             <div class="btn-swap-wrap"><button class="btn-swap" onclick="swapLangs()">⇄</button></div>
             <div class="text-box-wrapper">
                 <select id="target-lang" class="styled-select" style="background:var(--card-bg);"><option value="en">Mendeteksi...</option></select>
                 <div class="text-box">
-                    <textarea id="target-text" data-i18n-ph="trans_ph_target" placeholder="Terjemahan atau pelafalan (Romaji/Latin) akan muncul di sini.." readonly></textarea>
+                    <textarea id="target-text" data-i18n-ph="trans_ph_target" placeholder="Terjemahan atau pelafalan..." readonly></textarea>
                     <button class="btn-speak" title="Baca Terjemahan" onclick="speakText(document.getElementById('target-text').value, document.getElementById('target-lang').value)">🔊</button>
                 </div>
             </div>
@@ -223,7 +242,7 @@
         <div id="indo-eng-submenu" class="sub-menu" style="display: flex;">
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Baku & EYD)" checked> B. Indonesia (Baku)</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Indonesia (Gaul & Kiasan)"> B. Indonesia (Gaul & Kiasan)</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Inggris (Grammar Dasar & Lanjutan)"> B. Inggris (Grammar & TOEFL)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Inggris (Grammar Dasar & Lanjutan)"> B. Inggris (Grammar)</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Idiom & Slang Bahasa Inggris"> B. Inggris (Idiom & Slang)</label>
         </div>
 
@@ -241,11 +260,9 @@
             <div data-i18n="cat_mid">🌐 Timur Tengah & Afrika</div><span id="arab-arrow">▼</span>
         </label>
         <div id="arab-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)"> Bahasa Arab (Fusha)</label>
+            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Arab Standar (Fusha)"> Bahasa Arab</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Al-Qur'an dan Tajwid Dasar"> Bahasa Al-Qur'an</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Ibrani (Hebrew)"> Bahasa Ibrani</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Turki"> Bahasa Turki</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Persia (Farsi)"> Bahasa Persia (Farsi)</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Swahili"> Bahasa Swahili</label>
         </div>
 
@@ -256,10 +273,7 @@
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jepang (Hiragana/Katakana/Kanji)"> Bahasa Jepang</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Korea (Hangul)"> Bahasa Korea</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Mandarin (Hanzi & Pinyin)"> Bahasa Mandarin</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Hindi"> Bahasa Hindi</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Thai"> Bahasa Thai</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Vietnam"> Bahasa Vietnam</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Tagalog (Filipino)"> Bahasa Tagalog (Filipino)</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('eropa-submenu', 'eropa-arrow')">
@@ -270,16 +284,12 @@
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Prancis"> Bahasa Prancis</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Jerman"> Bahasa Jerman</label>
             <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Rusia (Sirilik)"> Bahasa Rusia</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Italia"> Bahasa Italia</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Belanda"> Bahasa Belanda</label>
-            <label class="sub-option"><input type="radio" name="lang-category" value="Bahasa Portugis"> Bahasa Portugis</label>
         </div>
 
         <div class="action-row">
             <button class="btn-huge btn-green" data-i18n="btn_start_learn" onclick="startQuizSession('learn')">MULAI BELAJAR</button>
-            <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('lang')">CETAK MODUL</button>
+            <button class="btn-huge btn-orange" onclick="startChallenge('learn')" data-i18n="btn_challenge">⚡ UJIAN TANTANGAN (TIMER)</button>
         </div>
-        <div id="print-status-lang" style="text-align:center; color:var(--btn-green); font-weight:bold;"></div>
     </div>
 </div>
 
@@ -289,9 +299,9 @@
         <div class="input-group">
             <label data-i18n="setup_code_level">Pilih Kompleksitas Algoritma ⚙</label>
             <select id="code-level" class="styled-select">
-                <option value="Pemula" data-i18n="opt_code_1">Pemula (Sintaks Dasar, Variabel, Looping)</option>
-                <option value="Menengah" data-i18n="opt_code_2">Menengah (Fungsi, Array, OOP Dasar)</option>
-                <option value="Mahir" data-i18n="opt_code_3">Mahir (Arsitektur Kompleks, Algoritma Rumit)</option>
+                <option value="Pemula" data-i18n="opt_code_1">Pemula (Sintaks Dasar, Looping)</option>
+                <option value="Menengah" data-i18n="opt_code_2">Menengah (Fungsi, OOP Dasar)</option>
+                <option value="Mahir" data-i18n="opt_code_3">Mahir (Arsitektur Kompleks)</option>
             </select>
         </div>
         
@@ -308,22 +318,18 @@
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman JavaScript & TypeScript" checked> JavaScript / TypeScript</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Python"> Python</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman PHP"> PHP</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Ruby"> Ruby</label>
         </div>
 
         <label class="lang-option" onclick="toggleMenu('sys-submenu', 'sys-arrow')">
             <div data-i18n="cat_sys">🌐 Sistem & Software</div><span id="sys-arrow">▼</span>
         </label>
         <div id="sys-submenu" class="sub-menu">
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C"> C</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C++"> C++</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman C#"> C#</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Java"> Java</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Go (Golang)"> Go (Golang)</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Rust"> Rust</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Swift"> Swift</label>
         </div>
-        
+
         <label class="lang-option" onclick="toggleMenu('mob-submenu', 'mob-arrow')">
             <div data-i18n="cat_mob">🌐 Mobile, Data & Database</div><span id="mob-arrow">▼</span>
         </label>
@@ -331,7 +337,6 @@
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Kotlin"> Kotlin</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Pemrograman Dart / Flutter"> Dart (Flutter)</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Bahasa SQL & Database Relasional"> SQL & Database</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="NoSQL & MongoDB"> NoSQL & MongoDB</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Bahasa R (Data Science)"> R (Data Science)</label>
         </div>
 
@@ -342,14 +347,12 @@
             <label class="sub-option"><input type="radio" name="code-category" value="Struktur Data Lanjutan (Linked List, Stack, Tree)"> Struktur Data (Array, Stack, Tree)</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Algoritma Kriptografi & Keamanan Dasar"> Kriptografi & Keamanan</label>
             <label class="sub-option"><input type="radio" name="code-category" value="Konsep Machine Learning Dasar"> Machine Learning Dasar</label>
-            <label class="sub-option"><input type="radio" name="code-category" value="Design Patterns (OOP)"> Design Patterns (OOP)</label>
         </div>
 
         <div class="action-row">
             <button class="btn-huge btn-cyan" data-i18n="btn_start_code" onclick="startQuizSession('coding')">MULAI LATIHAN</button>
-            <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('coding')">CETAK MODUL</button>
+            <button class="btn-huge btn-orange" onclick="startChallenge('coding')" data-i18n="btn_challenge">⚡ UJIAN TANTANGAN (TIMER)</button>
         </div>
-        <div id="print-status-code" style="text-align:center; color:var(--btn-cyan); font-weight:bold;"></div>
     </div>
 </div>
 
@@ -357,13 +360,23 @@
 <div id="page-quiz-active" class="page">
     <div class="quiz-container" id="quiz-playing-area">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="margin:0;" data-i18n="quiz_header">Latihan Berlangsung</h2>
+            <h2 style="margin:0;" id="quiz-mode-title" data-i18n="quiz_header">Latihan Berlangsung</h2>
             <button onclick="switchPage(currentSetupMode)" data-i18n="btn_cancel" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-weight:bold;">Batal</button>
         </div>
+        
+        <!-- Timer Bar khusus Challenge -->
+        <div id="timer-box" style="display:none; width:100%;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:0.9rem; margin-bottom:5px;">
+                <span data-i18n="timer_label">Sisa Waktu Ujian:</span>
+                <span id="timer-countdown" style="color:var(--warning-orange);">25s</span>
+            </div>
+            <div class="timer-bar-container"><div id="timer-bar" class="timer-bar"></div></div>
+        </div>
+
         <div class="quiz-card">
             <div id="quiz-instruction" style="color:var(--btn-cyan); font-weight:bold; margin-bottom:10px;">Instruksi</div>
             <div style="display:flex; align-items:flex-start; justify-content:center; gap:10px; margin-bottom:20px;">
-                <div id="quiz-question" style="font-size:1.4rem; font-weight:bold; max-width:85%;">Memuat soal AI...</div>
+                <div id="quiz-question" style="font-size:1.3rem; font-weight:bold; max-width:85%;">Memuat soal AI...</div>
                 <button class="btn-speak" style="position:static; margin-top:-5px;" title="Baca Soal" onclick="speakText(document.getElementById('quiz-question').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
             </div>
             <div id="mc-options"></div>
@@ -379,24 +392,24 @@
             <div id="result-breakdown"></div>
         </div>
         <div class="action-row">
-            <button class="btn-huge btn-green" data-i18n="btn_retry" onclick="startQuizSession(currentSetupMode)" style="flex:1; padding: 12px;">Ulangi Materi</button>
-            <button class="btn-huge btn-grey" data-i18n="btn_change_topic" onclick="switchPage(currentSetupMode)" style="flex:1; padding: 12px;">Ganti Topik</button>
+            <button class="btn-huge btn-green" data-i18n="btn_retry" onclick="switchPage(currentSetupMode)" style="flex:1; padding: 12px;">Kembali ke Menu</button>
+            <button class="btn-huge btn-cyan" data-i18n="nav_dashboard" onclick="openDashboard()" style="flex:1; padding: 12px;">Lihat Tracking</button>
         </div>
     </div>
 </div>
 
-<!-- Kamus Floating Button & Modal -->
-<div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar AI">📖</div>
+<!-- Kamus -->
+<div class="floating-kamus-btn" onclick="toggleKamus()" title="Kamus Pintar AI">📖</div>
 <div id="kamus-modal" class="kamus-modal">
     <div class="kamus-header">
         <span data-i18n="dict_title">📖 Kamus Pintar AI</span>
-        <span style="cursor: pointer; font-size: 1.5rem; line-height: 1;" onclick="toggleKamus()">×</span>
+        <span style="cursor: pointer; font-size: 1.5rem;" onclick="toggleKamus()">×</span>
     </div>
     <div class="kamus-body">
-        <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/istilah/syntax..." onkeypress="handleKamusEnter(event)">
-        <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="padding: 12px; font-size: 1.1rem; width: 100%; margin: 0; min-width: auto; color:black;" onclick="searchKamus()">Cari Arti</button>
+        <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." onkeypress="handleKamusEnter(event)">
+        <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="padding: 10px; width: 100%; min-width:auto; color:black;" onclick="searchKamus()">Cari Arti</button>
         <div style="position:relative;">
-            <div id="kamus-result" style="margin-top: 10px; margin-bottom:0; font-size: 0.95rem; display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:15px; padding-right:45px; line-height:1.5; color:white;"></div>
+            <div id="kamus-result" style="display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:12px; font-size:0.9rem; line-height:1.4;"></div>
             <button id="btn-speak-kamus" class="btn-speak" style="display:none; bottom:10px; right:10px; width:35px; height:35px; font-size:1rem;" title="Baca Hasil" onclick="speakText(document.getElementById('kamus-result').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
         </div>
     </div>
@@ -405,76 +418,65 @@
 <script>
     const serverUrl = ""; 
     let currentSetupMode = 'learn';
+    let currentUser = localStorage.getItem('pahamteks_user') || 'Tamu';
     
-    // --- TEXT-TO-SPEECH (SUARA AI) DENGAN FILTER ---
-    function speakText(text, langCode = 'id-ID') {
-        if (!('speechSynthesis' in window)) {
-            alert(currentLang === 'id' ? "Browser Anda tidak mendukung fitur Suara (Text-to-Speech)." : "Your browser does not support Text-to-Speech.");
-            return;
-        }
-        if (!text) return;
-        
-        let filteredText = text;
-        const blankWord = langCode.startsWith('en') ? " blank " : " titik-titik ";
-        
-        filteredText = filteredText.replace(/_{3,}/g, blankWord);
-        filteredText = filteredText.replace(/\*/g, '');
-        
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(filteredText);
-        utterance.lang = langCode;
-        window.speechSynthesis.speak(utterance);
-    }
-    
-    // --- BILINGUAL DICTIONARY ---
+    document.getElementById('user-profile-badge').innerHTML = `👤 ${currentUser}`;
+
+    // --- DICTIONARY BILINGUAL (ID/EN) ---
     const dict = {
         id: {
-            nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman",
+            nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "📊 Tracking",
             btn_login: "Login", btn_register: "Daftar", guest: "Tamu",
             auth_login_title: "Masuk Akun", auth_reg_title: "Buat Akun Baru",
             auth_ph_name: "Nama Lengkap", auth_ph_email: "Alamat Email", auth_ph_pass: "Kata Sandi",
             auth_btn_login: "Masuk", auth_btn_reg: "Daftar Sekarang", auth_btn_guest: "Mode Tamu",
-            auth_toggle_reg: "Belum punya akun? Daftar", auth_toggle_login: "Sudah punya akun? Masuk",
-            btn_cancel: "Batal",
+            auth_toggle_reg: "Belum punya akun? Daftar", auth_toggle_login: "Sudah punya akun? Masuk", btn_cancel: "Batal",
             hero_title: "Eksplorasi Bahasa & Logika", hero_desc: "Pelajari bahasa asing dari seluruh dunia hingga logika bahasa pemrograman secara interaktif.",
-            card_1_title: "Mulai<br>Translator", card_1_desc: "Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia secara akurat dan instan.",
-            card_2_title: "Mulai<br>Bahasa Asing", card_2_desc: "Uji dan tingkatkan kemampuan penguasaan bahasa dunia Anda melalui latihan kuis cerdas yang disesuaikan dengan tingkat pemahaman dari pemula hingga mahir.",
-            card_3_title: "Mulai<br>Ngoding", card_3_desc: "Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar web hingga struktur data dan arsitektur kompleks.",
-            trans_ph_source: "Ketik teks yang ingin di terjemahkan...", trans_ph_target: "Terjemahan atau pelafalan (Romaji/Latin) akan muncul di sini..", trans_status: "Menghubungkan ke server AI...",
+            card_1_title: "Mulai<br>Translator", card_1_desc: "Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang.",
+            card_2_title: "Mulai<br>Bahasa Asing", card_2_desc: "Uji dan tingkatkan kemampuan penguasaan bahasa dunia melalui latihan kuis cerdas.",
+            card_3_title: "Mulai<br>Ngoding", card_3_desc: "Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding.",
+            trans_ph_source: "Ketik teks yang ingin di terjemahkan...", trans_ph_target: "Terjemahan atau pelafalan...", trans_status: "Menghubungkan ke server AI...",
             setup_level: "Pilih Tingkat Penguasaan", opt_level_1: "Pemula (Dasar / Kosakata A1)", opt_level_2: "Menengah (Struktur Kalimat / B1-B2)", opt_level_3: "Mahir (Kompleks / C1-C2 / Slang)",
             setup_lang_title: "Pilih Bahasa Manusia", setup_lang_desc: "Pilih salah satu bahasa untuk difokuskan",
             cat_pop: "🌐 Populer (Indo & Inggris)", cat_nus: "🌐 Bahasa Nusantara (Lokal)", cat_mid: "🌐 Timur Tengah & Afrika", cat_asia: "🌐 Asia & Pasifik", cat_eur: "🌐 Benua Eropa",
-            btn_start_learn: "MULAI BELAJAR", btn_print: "CETAK MODUL",
-            setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Variabel, Looping)", opt_code_2: "Menengah (Fungsi, Array, OOP Dasar)", opt_code_3: "Mahir (Arsitektur Kompleks, Algoritma Rumit)",
+            btn_start_learn: "MULAI BELAJAR", btn_challenge: "⚡ UJIAN TANTANGAN (TIMER)", btn_print: "CETAK MODUL",
+            setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Looping)", opt_code_2: "Menengah (Fungsi, OOP)", opt_code_3: "Mahir (Arsitektur Kompleks)",
             setup_code_title: "Pilih Bahasa Pemrograman", setup_code_desc: "Uji kemampuan logika koding Anda",
             cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Teori & Algoritma Khusus",
             btn_start_code: "MULAI LATIHAN",
-            quiz_header: "Latihan Berlangsung", result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Ulangi Materi", btn_change_topic: "Ganti Topik",
-            dict_title: "📖 Kamus Pintar AI", dict_ph: "Ketik kata/istilah/syntax...", dict_btn: "Cari Arti",
+            quiz_header: "Latihan Berlangsung", challenge_header: "⚡ Ujian Tantangan Ber-Timer", timer_label: "Sisa Waktu Ujian:",
+            result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Kembali ke Menu",
+            dash_title: "📊 Log & Tracking Belajar", dash_subtitle: "Pantau rekam jejak progres pembelajaran Anda secara real-time.",
+            stat_sessions: "Total Sesi Latihan", stat_avg: "Rata-rata Skor", stat_challenge: "Tantangan Selesai",
+            dash_history: "Riwayat Sesi Terakhir:", dash_empty: "Belum ada riwayat aktivitas tercatat.", btn_close: "Tutup",
+            dict_title: "📖 Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban"
         },
         en: {
-            nav_home: "Home", nav_translator: "Translator", nav_learn: "World Languages", nav_coding: "Programming",
+            nav_home: "Home", nav_translator: "Translator", nav_learn: "Languages", nav_coding: "Programming", nav_dashboard: "📊 Tracking",
             btn_login: "Login", btn_register: "Sign Up", guest: "Guest",
             auth_login_title: "Sign In", auth_reg_title: "Create Account",
             auth_ph_name: "Full Name", auth_ph_email: "Email Address", auth_ph_pass: "Password",
             auth_btn_login: "Sign In", auth_btn_reg: "Sign Up Now", auth_btn_guest: "Guest Mode",
-            auth_toggle_reg: "No account? Sign up", auth_toggle_login: "Have an account? Sign in",
-            btn_cancel: "Cancel",
+            auth_toggle_reg: "No account? Sign up", auth_toggle_login: "Have an account? Sign in", btn_cancel: "Cancel",
             hero_title: "Explore Language & Logic", hero_desc: "Learn foreign languages from around the world and programming logic interactively.",
-            card_1_title: "Start<br>Translator", card_1_desc: "Access AI-based natural language translation supporting non-latin scripts, idioms, and slang from all over the globe accurately and instantly.",
-            card_2_title: "Start<br>Languages", card_2_desc: "Test and improve your world language mastery through smart quiz exercises tailored to your comprehension level from beginner to advanced.",
-            card_3_title: "Start<br>Coding", card_3_desc: "Sharpen your programming logic and algorithms. Solve coding case studies ranging from basic web syntax to complex data structures and architecture.",
-            trans_ph_source: "Type text to translate...", trans_ph_target: "Translation or pronunciation (Romaji/Latin) will appear here..", trans_status: "Connecting to AI server...",
+            card_1_title: "Start<br>Translator", card_1_desc: "Access AI-based natural language translation supporting non-latin scripts, idioms, and slang.",
+            card_2_title: "Start<br>Languages", card_2_desc: "Test and improve your world language mastery through smart quiz exercises.",
+            card_3_title: "Start<br>Coding", card_3_desc: "Sharpen your programming logic and algorithms. Solve coding case studies.",
+            trans_ph_source: "Type text to translate...", trans_ph_target: "Translation or pronunciation...", trans_status: "Connecting to AI server...",
             setup_level: "Select Proficiency Level", opt_level_1: "Beginner (Basics / A1 Vocab)", opt_level_2: "Intermediate (Sentences / B1-B2)", opt_level_3: "Advanced (Complex / C1-C2 / Slang)",
             setup_lang_title: "Select Human Language", setup_lang_desc: "Choose a language to focus on",
             cat_pop: "🌐 Popular (Indo & English)", cat_nus: "🌐 Nusantara (Local Indonesian)", cat_mid: "🌐 Middle East & Africa", cat_asia: "🌐 Asia & Pacific", cat_eur: "🌐 Europe",
-            btn_start_learn: "START LEARNING", btn_print: "PRINT MODULE",
-            setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Vars, Loops)", opt_code_2: "Intermediate (Functions, Arrays, OOP)", opt_code_3: "Advanced (Complex Architecture, Algorithms)",
+            btn_start_learn: "START LEARNING", btn_challenge: "⚡ TIMED CHALLENGE", btn_print: "PRINT MODULE",
+            setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Loops)", opt_code_2: "Intermediate (Functions, OOP)", opt_code_3: "Advanced (Complex Architecture)",
             setup_code_title: "Select Programming Language", setup_code_desc: "Test your coding logic skills",
-            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Theory & Special Algorithms",
+            cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Theory & Algorithms",
             btn_start_code: "START PRACTICE",
-            quiz_header: "Practice in Progress", result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Retry Topic", btn_change_topic: "Change Topic",
+            quiz_header: "Practice in Progress", challenge_header: "⚡ Timed Challenge Quiz", timer_label: "Time Left:",
+            result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Back to Menu",
+            dash_title: "📊 Learning Log & Tracking", dash_subtitle: "Monitor your learning progress and history in real-time.",
+            stat_sessions: "Total Sessions", stat_avg: "Average Score", stat_challenge: "Challenges Completed",
+            dash_history: "Recent History:", dash_empty: "No activity history recorded yet.", btn_close: "Close",
             dict_title: "📖 Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer"
         }
@@ -484,7 +486,6 @@
     function toggleLang() {
         currentLang = currentLang === 'id' ? 'en' : 'id';
         document.getElementById('btn-lang-toggle').innerText = currentLang === 'id' ? '🌐 ID' : '🌐 EN';
-        
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if(dict[currentLang][key]) el.innerHTML = dict[currentLang][key];
@@ -502,10 +503,69 @@
         updateAuthUI();
     }
 
-    // --- NAVIGASI & TEMA ---
+    // --- TRACKING & LOGGING SYSTEM ---
+    function logUserActivity(activityName, scoreVal) {
+        let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
+        let newLog = {
+            user: currentUser, activity: activityName, score: scoreVal,
+            time: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
+        };
+        logs.unshift(newLog);
+        localStorage.setItem('pahamteks_logs', JSON.stringify(logs));
+
+        fetch(`${serverUrl}/api/user_log`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newLog)
+        }).catch(err => {});
+    }
+
+    function openDashboard() {
+        document.getElementById('dashboard-modal').style.display = 'flex';
+        let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
+        let totalSessions = logs.length;
+        let totalScoreSum = logs.reduce((acc, curr) => acc + curr.score, 0);
+        let avgScore = totalSessions > 0 ? Math.round(totalScoreSum / totalSessions) : 0;
+        let challengeCount = logs.filter(l => l.activity.includes('Tantangan') || l.activity.includes('Challenge')).length;
+
+        document.getElementById('stat-total-sessions').innerText = totalSessions;
+        document.getElementById('stat-avg-score').innerText = avgScore;
+        document.getElementById('stat-challenges').innerText = challengeCount;
+
+        let logListContainer = document.getElementById('activity-log-list');
+        if (totalSessions === 0) {
+            logListContainer.innerHTML = `<i style="color:var(--text-muted);">${dict[currentLang].dash_empty}</i>`;
+        } else {
+            logListContainer.innerHTML = logs.map(l => `
+                <div style="background:rgba(0,0,0,0.4); padding:10px 14px; border-radius:10px; border-left:4px solid var(--btn-green); display:flex; justify-content:space-between; align-items:center;">
+                    <div><div style="font-weight:bold; font-size:0.95rem;">${l.activity}</div><div style="font-size:0.8rem; color:var(--text-muted);">${l.time} (${l.user})</div></div>
+                    <div style="font-weight:900; color:var(--btn-green); font-size:1.1rem;">Skor: ${l.score}</div>
+                </div>
+            `).join('');
+        }
+    }
+    function closeDashboard() { document.getElementById('dashboard-modal').style.display = 'none'; }
+
+    // --- TEXT-TO-SPEECH (TTS) DENGAN FILTER ---
+    function speakText(text, langCode = 'id-ID') {
+        if (!('speechSynthesis' in window)) return;
+        if (!text) return;
+        
+        let filteredText = text;
+        const blankWord = langCode.startsWith('en') ? " blank " : " titik-titik ";
+        filteredText = filteredText.replace(/_{3,}/g, blankWord); // Filter Garis Bawah
+        filteredText = filteredText.replace(/\*/g, ''); // Filter Bintang
+        
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(filteredText);
+        utterance.lang = langCode;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // --- NAVIGASI ---
     function switchPage(pageName) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
+        stopTimer();
         
         if(pageName === 'coding') {
             document.body.style.background = "var(--bg-blue)";
@@ -516,9 +576,7 @@
         }
 
         document.getElementById('page-' + pageName).classList.add('active-page');
-        if(document.getElementById('nav-' + pageName)) {
-            document.getElementById('nav-' + pageName).classList.add('active');
-        }
+        if(document.getElementById('nav-' + pageName)) document.getElementById('nav-' + pageName).classList.add('active');
         
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
@@ -531,22 +589,14 @@
     }
 
     // --- AUTHENTICATION ---
-    let authMode = 'login'; 
-    function openAuthModal(mode) { document.getElementById('auth-modal').style.display = 'flex'; authMode = mode; updateAuthUI(); }
+    function openAuthModal(mode) { document.getElementById('auth-modal').style.display = 'flex'; authMode = mode; updateAuthUI();}
     function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
     function toggleAuthMode() { authMode = (authMode === 'login') ? 'register' : 'login'; updateAuthUI(); }
     function updateAuthUI() {
-        if (authMode === 'login') {
-            document.getElementById('auth-title').innerText = dict[currentLang].auth_login_title;
-            document.getElementById('auth-name').style.display = "none";
-            document.getElementById('btn-auth-submit').innerText = dict[currentLang].auth_btn_login;
-            document.getElementById('auth-toggle-text').innerText = dict[currentLang].auth_toggle_reg;
-        } else {
-            document.getElementById('auth-title').innerText = dict[currentLang].auth_reg_title;
-            document.getElementById('auth-name').style.display = "block";
-            document.getElementById('btn-auth-submit').innerText = dict[currentLang].auth_btn_reg;
-            document.getElementById('auth-toggle-text').innerText = dict[currentLang].auth_toggle_login;
-        }
+        document.getElementById('auth-title').innerText = authMode === 'login' ? dict[currentLang].auth_login_title : dict[currentLang].auth_reg_title;
+        document.getElementById('auth-name').style.display = authMode === 'login' ? "none" : "block";
+        document.getElementById('btn-auth-submit').innerText = authMode === 'login' ? dict[currentLang].auth_btn_login : dict[currentLang].auth_btn_reg;
+        document.getElementById('auth-toggle-text').innerText = authMode === 'login' ? dict[currentLang].auth_toggle_reg : dict[currentLang].auth_toggle_login;
     }
     
     function processAuth() {
@@ -559,12 +609,12 @@
         .then(res => res.json()).then(data => {
             if(data.error) alert("❌ " + data.error);
             else { alert("✅ " + data.message); activateUser(data.name); }
-        }).catch(err => alert("Gagal koneksi."));
+        }).catch(err => alert("Gagal koneksi server."));
     }
     function continueAsGuest() { activateUser(dict[currentLang].guest); }
     function activateUser(userName) {
-        closeAuthModal();
-        document.getElementById('nav-auth-section').innerHTML = `<div class="user-profile" style="display:block;">👤 ${userName}</div>`;
+        currentUser = userName; localStorage.setItem('pahamteks_user', userName); closeAuthModal();
+        document.getElementById('user-profile-badge').innerHTML = `👤 ${userName}`; logUserActivity("Login", 0);
     }
 
     // --- TRANSLATOR ---
@@ -577,8 +627,8 @@
                 s.add(new Option(name.charAt(0).toUpperCase() + name.slice(1), code)); 
                 t.add(new Option(name.charAt(0).toUpperCase() + name.slice(1), code));
             }
-            s.value = "id"; t.value = "en"; document.getElementById("status").innerText = "PahamTeks siap!";
-        }).catch(e => document.getElementById("status").innerText = "Siap (Koneksi Lokal)");
+            s.value = "id"; t.value = "en";
+        }).catch(e => {});
     }
     loadLanguages();
     function triggerTranslate() {
@@ -596,76 +646,62 @@
         sT.value = tT.value; tT.value = ""; triggerTranslate();
     }
 
-    // --- KAMUS PINTAR AI ---
-    function toggleKamus() {
-        const modal = document.getElementById("kamus-modal");
-        modal.style.display = modal.style.display === "flex" ? "none" : "flex";
-        if(modal.style.display === "flex") document.getElementById("kamus-input").focus();
-    }
-    
+    // --- KAMUS PINTAR ---
+    function toggleKamus() { document.getElementById("kamus-modal").style.display = document.getElementById("kamus-modal").style.display === "flex" ? "none" : "flex"; }
     function handleKamusEnter(e) { if(e.key === "Enter") searchKamus(); }
-
     function searchKamus() {
         const input = document.getElementById("kamus-input").value.trim();
         const resultBox = document.getElementById("kamus-result");
         const btnSpeak = document.getElementById("btn-speak-kamus");
         if(!input) return;
-        resultBox.style.display = "block";
-        btnSpeak.style.display = "none";
-        resultBox.innerHTML = `<i>⏳ ${currentLang === 'id' ? 'AI sedang mencari di Kamus...' : 'AI is searching Dictionary...'}</i>`;
-        
-        fetch(`${serverUrl}/api/dictionary`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ keyword: input }) 
-        }).then(res => res.json()).then(data => {
-            if (data.error) throw new Error(data.error);
+        resultBox.style.display = "block"; btnSpeak.style.display = "none";
+        resultBox.innerHTML = `<i>⏳ Mencari...</i>`;
+        fetch(`${serverUrl}/api/dictionary`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: input }) })
+        .then(res => res.json()).then(data => {
             resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
-            btnSpeak.style.display = "flex"; 
-        }).catch(err => { resultBox.innerHTML = `❌ ${currentLang === 'id' ? 'Gagal mengambil data.' : 'Failed to fetch data.'}`; });
+            btnSpeak.style.display = "flex";
+        }).catch(err => { resultBox.innerHTML = `❌ Gagal memuat.`; });
     }
 
-    // --- KUIS & SISTEM NILAI ---
+    // --- KUIS, TIMER, & CHALLENGE SYSTEM ---
     let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
-    let correctAnswersCount = 0;
-    let userAnswersLog = [];
+    let correctAnswersCount = 0, userAnswersLog = [], isChallengeMode = false, timerInterval = null, timeLeft = 25;
 
-    function printModule(type) {
-        alert(currentLang === 'id' ? "Modul akan otomatis dicetak menggunakan UI browser." : "Module will be printed automatically.");
-    }
-
-    function startQuizSession(type) {
-        currentSetupMode = type;
+    function startQuizSession(type, isChallenge = false) {
+        currentSetupMode = type; isChallengeMode = isChallenge;
         let radioName = type === 'coding' ? 'code-category' : 'lang-category';
         let levelId = type === 'coding' ? 'code-level' : 'lang-level';
         
         const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
-        if (!selectedRadio) return alert(currentLang === 'id' ? "Silakan pilih materi belajar terlebih dahulu!" : "Please select a learning topic first!");
+        if (!selectedRadio) return alert(currentLang === 'id' ? "Pilih materi terlebih dahulu!" : "Select topic first!");
         
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
-        
         document.getElementById('page-quiz-active').classList.add('active-page');
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
         
-        document.getElementById("quiz-instruction").innerText = `Level: ${document.getElementById(levelId).value}`;
-        document.getElementById("quiz-question").innerText = currentLang === 'id' ? "Menyusun soal AI..." : "Generating AI questions...";
-        document.getElementById("mc-options").innerHTML = "";
-        document.getElementById("btn-check").style.display = "none";
+        document.getElementById("quiz-mode-title").innerText = isChallenge ? dict[currentLang].challenge_header : dict[currentLang].quiz_header;
+        document.getElementById("timer-box").style.display = isChallenge ? "block" : "none";
+        document.getElementById("quiz-question").innerText = currentLang === 'id' ? "Menyiapkan materi dari server AI..." : "Preparing AI materials...";
+        document.getElementById("mc-options").innerHTML = ""; document.getElementById("btn-check").style.display = "none";
         
-        fetch(`${serverUrl}/api/generate_quiz`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ categories: [selectedRadio.value], level: document.getElementById(levelId).value }) 
+        let endpoint = isChallenge ? '/api/generate_challenge' : '/api/generate_quiz';
+        let payload = isChallenge ? { category: selectedRadio.value } : { categories: [selectedRadio.value], level: document.getElementById(levelId).value };
+
+        fetch(`${serverUrl}${endpoint}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) 
         }).then(res => res.json()).then(data => {
             if(data.error) throw new Error();
             activeQuizPool = data; currentQuizIndex = 0; correctAnswersCount = 0; userAnswersLog = [];
             document.getElementById("btn-check").style.display = "block";
             loadQuiz();
-        }).catch(err => {
-            document.getElementById("quiz-question").innerText = currentLang === 'id' ? "Server Sibuk. Coba lagi." : "Server busy. Try again.";
-        });
+        }).catch(err => { document.getElementById("quiz-question").innerText = "Server sibuk. Silakan coba lagi."; });
     }
 
+    function startChallenge(type) { startQuizSession(type, true); }
+
     function loadQuiz() {
+        stopTimer();
         isChecking = true; selectedAnswer = null;
         const currentData = activeQuizPool[currentQuizIndex];
         
@@ -692,9 +728,42 @@
             };
             optionsContainer.appendChild(btn);
         });
+
+        if (isChallengeMode) { timeLeft = 25; startTimer(); }
+    }
+
+    function startTimer() {
+        const timerCount = document.getElementById('timer-countdown');
+        const timerBar = document.getElementById('timer-bar');
+        timerBar.style.width = '100%';
+        
+        timerInterval = setInterval(() => {
+            timeLeft--; timerCount.innerText = timeLeft + 's';
+            timerBar.style.width = ((timeLeft / 25) * 100) + '%';
+            
+            if (timeLeft <= 0) { stopTimer(); handleTimeOut(); }
+        }, 1000);
+    }
+    function stopTimer() { if (timerInterval) clearInterval(timerInterval); }
+
+    function handleTimeOut() {
+        isChecking = false;
+        const correctAnswer = activeQuizPool[currentQuizIndex].answer;
+        userAnswersLog.push({ question: activeQuizPool[currentQuizIndex].question, selected: "(Waktu Habis)", correct: correctAnswer });
+        
+        document.querySelectorAll('.mc-btn').forEach(btn => { 
+            btn.disabled = true; 
+            if (btn.innerText === correctAnswer) btn.classList.add('correct'); 
+        });
+        
+        const btnCheck = document.getElementById("btn-check");
+        btnCheck.disabled = false;
+        btnCheck.innerText = currentLang === 'id' ? "Waktu Habis! Lanjut ➔" : "Time's up! Next ➔";
+        btnCheck.className = "btn-huge btn-orange";
     }
 
     function processQuiz() {
+        stopTimer();
         const btnCheck = document.getElementById("btn-check");
         if (!isChecking) { 
             currentQuizIndex++;
@@ -704,25 +773,19 @@
 
         isChecking = false;
         const correctAnswer = activeQuizPool[currentQuizIndex].answer;
-        
         if (selectedAnswer === correctAnswer) correctAnswersCount++;
-        
-        userAnswersLog.push({
-            question: activeQuizPool[currentQuizIndex].question,
-            selected: selectedAnswer,
-            correct: correctAnswer
-        });
+        userAnswersLog.push({ question: activeQuizPool[currentQuizIndex].question, selected: selectedAnswer, correct: correctAnswer });
 
         document.querySelectorAll('.mc-btn').forEach(btn => { 
             btn.disabled = true; 
             if (btn.innerText === correctAnswer) btn.classList.add('correct'); 
             else if (btn.innerText === selectedAnswer) btn.classList.add('wrong');
         });
-
         btnCheck.innerText = dict[currentLang].btn_ans_next;
     }
 
     function showQuizResult() {
+        stopTimer();
         document.getElementById('quiz-playing-area').style.display = 'none';
         document.getElementById('quiz-result-area').style.display = 'flex';
         
@@ -732,45 +795,22 @@
         circle.style.borderColor = score >= 70 ? "var(--btn-green)" : (score >= 40 ? "var(--btn-cyan)" : "var(--wrong)");
         circle.style.color = circle.style.borderColor;
         
+        logUserActivity(isChallengeMode ? "Tantangan Kuis" : "Latihan Kuis", score);
+
         let breakdownHTML = "";
         userAnswersLog.forEach((ans, idx) => {
             let isCorrect = ans.selected === ans.correct;
             let color = isCorrect ? 'var(--btn-green)' : 'var(--wrong)';
-            
             breakdownHTML += `
                 <div class="explanation-item" style="border-left: 5px solid ${color};">
-                    <div style="font-size:1.1rem; font-weight:bold; margin-bottom:5px;">${idx+1}. ${ans.question}</div>
+                    <div style="font-weight:bold; margin-bottom:5px;">${idx+1}. ${ans.question}</div>
                     <div style="color:${color};">${currentLang === 'id' ? 'Jawaban Anda:' : 'Your Answer:'} ${ans.selected} ${isCorrect ? '✅' : '❌'}</div>
                     ${!isCorrect ? `<div style="color:var(--btn-green);">${currentLang === 'id' ? 'Jawaban Benar:' : 'Correct Answer:'} ${ans.correct}</div>` : ''}
-                    
-                    <button class="btn-auth" style="margin-top:10px; font-size:0.9rem;" onclick="loadExplanation(${idx}, this)">Tanya Guru AI 💡</button>
-                    <div id="expl-box-${idx}" style="display:none; margin-top:10px; padding:10px; background:rgba(255,255,255,0.1); border-radius:8px; font-size:0.95rem; line-height:1.5;"></div>
                 </div>
             `;
         });
         document.getElementById('result-breakdown').innerHTML = breakdownHTML;
     }
-
-    function loadExplanation(index, btnElement) {
-        const ans = userAnswersLog[index];
-        const box = document.getElementById(`expl-box-${index}`);
-        btnElement.innerText = "⏳ AI Berpikir...";
-        btnElement.disabled = true;
-        
-        fetch(`${serverUrl}/api/explain_answer`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: ans.question, answer: ans.correct }) 
-        }).then(res => res.json()).then(data => {
-            if(data.error) throw new Error();
-            btnElement.style.display = 'none';
-            box.style.display = 'block';
-            box.innerHTML = `<strong>${currentLang === 'id' ? 'Penjelasan AI:' : 'AI Explanation:'}</strong><br>${data.explanation.replace(/\n/g, '<br>')}`;
-        }).catch(err => {
-            btnElement.innerText = "Gagal. Coba lagi.";
-            btnElement.disabled = false;
-        });
-    }
 </script>
-
 </body>
 </html>
