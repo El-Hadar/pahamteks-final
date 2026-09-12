@@ -103,7 +103,7 @@
         .btn-outline-cyan { background: transparent; border: 2px solid var(--btn-cyan); color: var(--btn-cyan); }
         .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.15); }
 
-        /* Dashboard Tracking */
+        /* Dashboard Tracking Inline */
         .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; width: 100%; max-width: 800px; margin-top: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
@@ -141,15 +141,21 @@
         .auth-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: #000; color: white; margin-bottom: 10px; font-size: 1rem; outline: none;}
         .auth-input:focus { border-color: var(--btn-cyan); }
 
-        /* Kamus Floating Button */
-        .floating-kamus-btn { position: fixed; bottom: 40px; right: 25px; background: rgba(0,0,0,0.9); color: white; height: 60px; border-radius: 30px; display: flex; justify-content: center; align-items: center; padding: 0 25px; gap: 10px; cursor: pointer; border: 1px solid var(--btn-cyan); z-index: 100; transition: 0.2s; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
+        /* Kamus Floating Button - Ditinggikan agar di atas garis pembatas */
+        .floating-kamus-btn { position: fixed; bottom: 90px; right: 25px; background: rgba(0,0,0,0.9); color: white; height: 60px; border-radius: 30px; display: flex; justify-content: center; align-items: center; padding: 0 25px; gap: 10px; cursor: pointer; border: 1px solid var(--btn-cyan); z-index: 100; transition: 0.2s; font-weight: 800; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.5);}
         .floating-kamus-btn:active { transform: scale(0.95); }
         .floating-kamus-btn:hover { background: #111; }
         .kamus-text { display: inline; }
-        .kamus-modal { display: none; position: fixed; bottom: 110px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: slideUp 0.3s ease-out;}
+        .kamus-modal { display: none; position: fixed; bottom: 160px; right: 25px; width: 340px; background: #111; border-radius: 20px; border: 1px solid var(--btn-cyan); z-index: 101; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); animation: slideUp 0.3s ease-out;}
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+        /* Kamus List Area */
+        .dict-list-container { width: 100%; max-height: 250px; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--card-border); margin-top: 15px; text-align: left; }
+        .dict-list-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s; color: var(--btn-cyan); font-weight: 700; }
+        .dict-list-item:hover { background: rgba(255,255,255,0.1); }
+        .dict-list-item:last-child { border-bottom: none; }
 
         /* Watermark Footer dengan Garis Pembatas Kiri Bawah */
         .watermark-footer { 
@@ -167,15 +173,7 @@
             display: flex;
             justify-content: flex-start;
         }
-        .watermark-box { 
-            display: inline-block; 
-            background: var(--btn-green); 
-            color: #0a1f13; 
-            padding: 5px 15px; 
-            border-radius: 5px; 
-            font-size: 0.85rem; 
-            font-weight: 800; 
-        }
+        .watermark-box { display: inline-block; background: #b4f27e; color: #0a1f13; padding: 4px 12px; border-radius: 3px; font-size: 0.85rem; font-weight: 800; }
 
         @media (max-width: 768px) {
             .floating-kamus-btn { width: 60px; height: 60px; border-radius: 50%; padding: 0; justify-content: center; }
@@ -532,7 +530,7 @@
     </div>
 </div>
 
-<!-- Kamus Floating Button (Responsif Text) -->
+<!-- Kamus Floating Button -->
 <div class="floating-kamus-btn" onclick="toggleFloatKamus()" title="Buka Kamus Pintar AI">
     <span style="font-size: 1.6rem;">📖</span>
     <span class="kamus-text" data-i18n="dict_btn_float">Kamus Pintar AI</span>
