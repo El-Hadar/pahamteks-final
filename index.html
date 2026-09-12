@@ -146,6 +146,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+
         .dict-list-container { width: 100%; max-height: 250px; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--card-border); margin-top: 15px; text-align: left; }
         .dict-list-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s; color: var(--btn-cyan); font-weight: 700; }
         .dict-list-item:hover { background: rgba(255,255,255,0.1); }
@@ -185,19 +186,20 @@
         <button id="btn-signin" class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Sign In</button>
         <button id="btn-signup" class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Sign Up</button>
         
-        <!-- Kontainer User Logged-in -->
+        <!-- Kontainer User Logged-in & Log Out -->
         <div id="user-profile-container" style="display:none; gap:10px; align-items:center;">
-            <div class="user-profile" id="user-profile-badge" onclick="switchPage('tracking')">👤 Tamu</div>
+            <div class="user-profile" id="user-profile-badge" onclick="switchPage('tracking')" style="display:block;">👤 Tamu</div>
             <button id="btn-logout" class="btn-logout" data-i18n="btn_logout" onclick="logoutUser()">Keluar</button>
         </div>
     </div>
 </div>
 
-<!-- Modal Auth -->
+<!-- Modal Auth (Dengan Sistem Validasi & Fitur Baru) -->
 <div class="modal-overlay" id="auth-modal">
     <div class="modal-box">
         <h2 id="auth-title" data-i18n="auth_login_title" style="margin-top:0;">Sign In</h2>
         
+        <!-- Form Nama (Hanya muncul saat Sign Up) -->
         <div id="auth-name-fields" style="display: none; width:100%;">
             <div class="name-fields-row" style="display:flex; gap:10px;">
                 <input type="text" id="auth-fname" class="auth-input" data-i18n-ph="auth_ph_fname" placeholder="Nama Depan" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
@@ -215,16 +217,19 @@
 
         <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 5px; padding: 12px;" onclick="processAuth()">Sign In</button>
         
+        <!-- Verifikasi OTP (Muncul setelah klik Sign Up) -->
         <div id="otp-section" style="display:none; margin-top:15px; border-top:1px solid var(--card-border); padding-top:15px;">
             <p style="color:var(--btn-cyan); font-size:0.9rem; margin-top:0;" data-i18n="auth_otp_msg">Kode keamanan telah dikirim ke email Anda.<br><span style="color:#a0aab2; font-size:0.8rem;">(Gunakan kode demo: 123456)</span></p>
             <input type="text" id="auth-otp" class="auth-input" placeholder="Masukkan 6 Digit OTP" style="text-align:center; letter-spacing: 5px; font-weight:bold;">
             <button class="btn-huge btn-cyan" style="width:100%; padding: 12px;" onclick="verifyOTPAndRegister()" data-i18n="auth_btn_verify">Verifikasi & Buat Akun</button>
         </div>
 
+        <!-- Mode Tamu & Toggle -->
         <div id="auth-footer-options">
             <button class="btn-huge btn-grey" data-i18n="auth_btn_guest" style="width:100%; margin-top: 10px; padding: 12px;" onclick="continueAsGuest()">Mode Tamu</button>
             <p style="color:var(--btn-cyan); cursor:pointer; margin-top:12px; font-size:0.9rem;" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_reg">Belum punya akun? Daftar</p>
             
+            <!-- Integrasi Social Media Pihak Ketiga -->
             <div id="social-logins" style="margin-top:20px; display:none;">
                 <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">— ATAU DAFTAR DENGAN —</div>
                 <div style="display:flex; gap:10px; justify-content:center;">
@@ -590,7 +595,7 @@
     let currentUser = localStorage.getItem('pahamteks_user') || 'Tamu';
     let authMode = 'login';
     
-    // Inisialisasi UI Profil/Auth
+    // FUNGSI INIT UI: Akan dipanggil saat web baru dimuat ATAU saat user logout
     function initAuthUI() {
         if (currentUser !== 'Tamu' && currentUser !== 'Guest') {
             document.getElementById('user-profile-badge').innerHTML = `👤 ${currentUser}`;
@@ -604,12 +609,12 @@
         }
     }
 
-    // Fungsi Log Out Baru
+    // FUNGSI LOGOUT & RESET DATA MODE TAMU
     function logoutUser() {
         currentUser = currentLang === 'id' ? 'Tamu' : 'Guest';
         localStorage.removeItem('pahamteks_user');
         
-        // Membersihkan data riwayat latihan dan grafik sesuai instruksi
+        // Membersihkan data riwayat latihan
         localStorage.removeItem('pahamteks_logs'); 
         
         initAuthUI();
@@ -871,6 +876,16 @@
     }
 
     window.onload = function() {
+        // --- LOGIKA SESI MODE TAMU (GUEST) ---
+        // Jika belum ada tanda sesi aktif di sessionStorage, berarti web baru dibuka (tab/browser baru)
+        if (!sessionStorage.getItem('pahamteks_active_session')) {
+            sessionStorage.setItem('pahamteks_active_session', 'true');
+            // Reset/hapus data jika saat dibuka user masih Tamu
+            if (currentUser === 'Tamu' || currentUser === 'Guest') {
+                localStorage.removeItem('pahamteks_logs');
+            }
+        }
+
         initAuthUI();
         updateTrackingUI();
         updateKamusList();
