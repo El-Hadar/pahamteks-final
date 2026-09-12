@@ -16,24 +16,53 @@ model = genai.GenerativeModel('gemini-3.6-flash')
 # Cache untuk menyimpan soal kuis sementara agar lebih cepat dimuat ulang
 quiz_cache = {}
 
-# --- SISTEM DATABASE MEMORI (Untuk Login & Daftar) ---
+# --- SISTEM DATABASE MEMORI & OTP ---
 users_db = {}
+otp_db = {}  # Database sementara untuk menyimpan kode OTP
+
+@app.route('/api/send_otp', methods=['POST'])
+def send_otp():
+    data = request.json
+    email = data.get('email', '').strip()
+    
+    if not email:
+        return jsonify({'error': 'Email wajib diisi!'}), 400
+    if email in users_db:
+        return jsonify({'error': 'Email sudah terdaftar! Silakan Sign In.'}), 400
+        
+    # Simulasi pengiriman OTP (Di sistem nyata menggunakan SMTP/SendGrid)
+    otp_db[email] = "123456" 
+    return jsonify({'message': 'Kode verifikasi telah dikirim ke email Anda!'})
 
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
     email = data.get('email', '').strip()
     password = data.get('password', '').strip()
-    name = data.get('name', '').strip()
+    fname = data.get('fname', '').strip()
+    lname = data.get('lname', '').strip()
+    oname = data.get('oname', '').strip()
+    otp_code = data.get('otp', '').strip()
     
-    if not email or not password or not name:
-        return jsonify({'error': 'Semua kolom wajib diisi!'}), 400
+    if not email or not password or not fname or not lname:
+        return jsonify({'error': 'Nama Depan, Belakang, Email, dan Sandi wajib diisi!'}), 400
+        
+    # Validasi OTP
+    if email not in otp_db or otp_db[email] != otp_code:
+        return jsonify({'error': 'Kode OTP salah atau kedaluwarsa!'}), 400
         
     if email in users_db:
-        return jsonify({'error': 'Email sudah terdaftar! Silakan login.'}), 400
+        return jsonify({'error': 'Email sudah terdaftar!'}), 400
         
-    users_db[email] = {'name': name, 'password': password}
-    return jsonify({'message': 'Pendaftaran berhasil!', 'name': name})
+    # Gabungkan nama (Nama Tambahan opsional)
+    full_name = f"{fname} {lname}"
+    if oname: 
+        full_name += f" {oname}"
+        
+    users_db[email] = {'name': full_name, 'password': password}
+    del otp_db[email] # Bersihkan OTP setelah sukses terdaftar
+    
+    return jsonify({'message': 'Verifikasi sukses! Pendaftaran berhasil.', 'name': full_name})
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -48,22 +77,20 @@ def login():
         return jsonify({'error': 'Kata sandi salah!'}), 400
         
     return jsonify({'message': 'Login berhasil!', 'name': users_db[email]['name']})
-# -----------------------------------------------------
 
 # --- SERVER LOGS TRACKING ---
 @app.route('/api/user_log', methods=['POST'])
 def user_log():
-    # Menerima log aktivitas belajar user untuk dicatat di server Vercel
     data = request.json
     user_identifier = data.get('user', 'Tamu')
     activity = data.get('activity', '')
     score = data.get('score', 0)
+    category = data.get('category', 'General')
     
-    print(f"[SERVER LOG TRACKER] User: {user_identifier} | Aktivitas: {activity} | Skor: {score}")
+    print(f"[SERVER LOG TRACKER] User: {user_identifier} | Kategori: {category} | Aktivitas: {activity} | Skor: {score}")
     return jsonify({'status': 'logged', 'message': 'Aktivitas berhasil dicatat di server.'})
-# -----------------------------------------------------
 
-# Daftar Lengkap Bahasa Dunia
+# --- DAFTAR LENGKAP BAHASA DUNIA ---
 LANGUAGES = {
     "afrikaans": "af", "albanian": "sq", "amharic": "am", "arabic": "ar", "armenian": "hy", "azerbaijani": "az",
     "basque": "eu", "belarusian": "be", "bengali": "bn", "bosnian": "bs", "bulgarian": "bg", "catalan": "ca",
@@ -240,7 +267,6 @@ def dictionary():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Rute Sapu Jagat (Untuk menampilkan halaman depan)
 @app.route('/')
 @app.route('/index.html')
 def home():
