@@ -117,6 +117,7 @@
         .btn-swap-wrap { display: flex; align-items: center; padding-top: 45px; }
         .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
         .btn-speak { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; color: white; transition: 0.2s;}
+        .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
 
         /* Quiz Area */
         .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; text-align: center; position: relative; }
@@ -129,6 +130,7 @@
 
         .result-box { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 100%; margin-bottom: 20px; border: 1px solid var(--card-border); }
         .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; font-weight: 900; margin: 0 auto 20px; border: 8px solid var(--btn-green); color: var(--btn-green); }
+        .explanation-item { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
         
         /* Modals & Inputs */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; overflow-y:auto; padding: 20px; }
@@ -186,7 +188,6 @@
         <button id="btn-signin" class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Sign In</button>
         <button id="btn-signup" class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Sign Up</button>
         
-        <!-- Kontainer User Logged-in & Log Out -->
         <div id="user-profile-container" style="display:none; gap:10px; align-items:center;">
             <div class="user-profile" id="user-profile-badge" onclick="switchPage('tracking')" style="display:block;">👤 Tamu</div>
             <button id="btn-logout" class="btn-logout" data-i18n="btn_logout" onclick="logoutUser()">Keluar</button>
@@ -194,12 +195,11 @@
     </div>
 </div>
 
-<!-- Modal Auth (Dengan Sistem Validasi & Fitur Baru) -->
+<!-- Modal Auth -->
 <div class="modal-overlay" id="auth-modal">
     <div class="modal-box">
         <h2 id="auth-title" data-i18n="auth_login_title" style="margin-top:0;">Sign In</h2>
         
-        <!-- Form Nama (Hanya muncul saat Sign Up) -->
         <div id="auth-name-fields" style="display: none; width:100%;">
             <div class="name-fields-row" style="display:flex; gap:10px;">
                 <input type="text" id="auth-fname" class="auth-input" data-i18n-ph="auth_ph_fname" placeholder="Nama Depan" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
@@ -217,19 +217,16 @@
 
         <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 5px; padding: 12px;" onclick="processAuth()">Sign In</button>
         
-        <!-- Verifikasi OTP (Muncul setelah klik Sign Up) -->
         <div id="otp-section" style="display:none; margin-top:15px; border-top:1px solid var(--card-border); padding-top:15px;">
             <p style="color:var(--btn-cyan); font-size:0.9rem; margin-top:0;" data-i18n="auth_otp_msg">Kode keamanan telah dikirim ke email Anda.<br><span style="color:#a0aab2; font-size:0.8rem;">(Gunakan kode demo: 123456)</span></p>
             <input type="text" id="auth-otp" class="auth-input" placeholder="Masukkan 6 Digit OTP" style="text-align:center; letter-spacing: 5px; font-weight:bold;">
             <button class="btn-huge btn-cyan" style="width:100%; padding: 12px;" onclick="verifyOTPAndRegister()" data-i18n="auth_btn_verify">Verifikasi & Buat Akun</button>
         </div>
 
-        <!-- Mode Tamu & Toggle -->
         <div id="auth-footer-options">
             <button class="btn-huge btn-grey" data-i18n="auth_btn_guest" style="width:100%; margin-top: 10px; padding: 12px;" onclick="continueAsGuest()">Mode Tamu</button>
             <p style="color:var(--btn-cyan); cursor:pointer; margin-top:12px; font-size:0.9rem;" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_reg">Belum punya akun? Daftar</p>
             
-            <!-- Integrasi Social Media Pihak Ketiga -->
             <div id="social-logins" style="margin-top:20px; display:none;">
                 <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">— ATAU DAFTAR DENGAN —</div>
                 <div style="display:flex; gap:10px; justify-content:center;">
@@ -594,8 +591,19 @@
     let currentSetupMode = 'learn';
     let currentUser = localStorage.getItem('pahamteks_user') || 'Tamu';
     let authMode = 'login';
+
+    // --- MANAJEMEN SEJARAH BROWSER (HISTORY API) ---
+    window.addEventListener('popstate', function(event) {
+        // Ketika user menekan tombol Back (Kembali) di browser/HP
+        if (event.state && event.state.page) {
+            switchPage(event.state.page, false); // false artinya jangan push lagi ke history
+        } else {
+            // Default kembali ke home jika riwayat habis
+            switchPage('home', false);
+        }
+    });
     
-    // FUNGSI INIT UI: Akan dipanggil saat web baru dimuat ATAU saat user logout
+    // FUNGSI INIT UI
     function initAuthUI() {
         if (currentUser !== 'Tamu' && currentUser !== 'Guest') {
             document.getElementById('user-profile-badge').innerHTML = `👤 ${currentUser}`;
@@ -609,22 +617,20 @@
         }
     }
 
-    // FUNGSI LOGOUT & RESET DATA MODE TAMU
+    // FUNGSI LOGOUT
     function logoutUser() {
         currentUser = currentLang === 'id' ? 'Tamu' : 'Guest';
         localStorage.removeItem('pahamteks_user');
-        
-        // Membersihkan data riwayat latihan
         localStorage.removeItem('pahamteks_logs'); 
         
         initAuthUI();
-        updateTrackingUI(); // Mem-push UI Tracking agar kembali kosong/nol
+        updateTrackingUI();
         switchPage('home');
         
         alert(dict[currentLang].logout_msg || "Anda berhasil keluar. Data progres telah direset ke Mode Tamu.");
     }
 
-    // --- DICTIONARY BILINGUAL (ID/EN) LENGKAP ---
+    // --- DICTIONARY BILINGUAL ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking", nav_dictionary: "Kamus",
@@ -643,22 +649,18 @@
             trans_ph_source: "Ketik teks yang ingin di terjemahkan...", trans_ph_target: "Terjemahan atau pelafalan...", trans_status: "Menghubungkan ke server AI...",
             setup_level: "Pilih Tingkat Penguasaan", opt_level_1: "Pemula (Dasar / Kosakata A1)", opt_level_2: "Menengah (Struktur Kalimat / B1-B2)", opt_level_3: "Mahir (Kompleks / C1-C2 / Slang)",
             setup_lang_title: "Pilih Bahasa Manusia", setup_lang_desc: "Pilih salah satu bahasa untuk difokuskan",
-            
             cat_pop: "🌐 Populer (Indo & Inggris)", cat_nus: "🌐 Bahasa Nusantara (Lokal)", cat_mid: "🌐 Timur Tengah & Afrika", cat_asia: "🌐 Asia & Pasifik", cat_eur: "🌐 Benua Eropa",
             opt_lang_id_baku: "Indonesia (Baku)", opt_lang_id_gaul: "Indonesia (Gaul & Kiasan)", opt_lang_en_gram: "Inggris (Grammar)", opt_lang_en_slang: "Inggris (Idiom & Slang)",
             opt_lang_jv: "Jawa", opt_lang_su: "Sunda", opt_lang_mi: "Minang", opt_lang_ba: "Bali",
             opt_lang_ar: "Arab", opt_lang_quran: "Al-Qur'an", opt_lang_he: "Ibrani", opt_lang_tr: "Turki", opt_lang_fa: "Persia", opt_lang_sw: "Swahili",
             opt_lang_ja: "Jepang", opt_lang_ko: "Korea", opt_lang_zh: "Mandarin", opt_lang_hi: "Hindi", opt_lang_th: "Thai", opt_lang_vi: "Vietnam", opt_lang_tl: "Tagalog",
             opt_lang_es: "Spanyol", opt_lang_fr: "Prancis", opt_lang_de: "Jerman", opt_lang_ru: "Rusia", opt_lang_it: "Italia", opt_lang_nl: "Belanda", opt_lang_pt: "Portugis",
-
             btn_start_learn: "MULAI BELAJAR", btn_challenge: "PERMAINAN CEPAT", btn_print: "CETAK MODUL",
             setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Looping)", opt_code_2: "Menengah (Fungsi, OOP)", opt_code_3: "Mahir (Arsitektur Kompleks)",
             setup_code_title: "Pilih Bahasa Pemrograman", setup_code_desc: "Uji kemampuan logika koding Anda",
-            
             cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Teori & Algoritma Khusus",
             opt_code_html: "HTML & CSS", opt_code_js: "JavaScript / TypeScript", opt_code_py: "Python", opt_code_php: "PHP", opt_code_ruby: "Ruby",
             opt_code_ds: "Struktur Data (Array, Stack, Tree)", opt_code_crypto: "Kriptografi & Keamanan", opt_code_ml: "Machine Learning Dasar", opt_code_dp: "Design Patterns (OOP)",
-
             btn_start_code: "MULAI LATIHAN",
             quiz_header: "Latihan Berlangsung", challenge_header: "Permainan Cepat (Timer)", timer_label: "Sisa Waktu Ujian:",
             result_title: "Sesi Selesai!", result_breakdown: "Rincian Pengerjaan", btn_retry: "Kembali ke Menu (Cek Tracking)",
@@ -666,12 +668,10 @@
             stat_sessions: "Total Sesi Latihan", stat_avg: "Rata-rata Skor", stat_challenge: "Permainan Cepat Selesai",
             dash_history: "Riwayat Sesi Terakhir:", dash_empty: "Belum ada riwayat aktivitas tercatat.",
             dash_capability: "Analisis Kemampuan:",
-            
             dict_page_title: "Pusat Kamus & Istilah", dict_page_desc: "Cari arti kata, slang, idiom, atau sintaks pemrograman di sini.",
             dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "CARI ARTI", dict_btn_rand: "ACAK", dict_btn_rand_short: "Acak", dict_btn_float: "Kamus Pintar AI",
             dict_word_list: "Daftar Kosakata:",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban",
-            
             pred_excellent: "Sangat Baik", pred_good: "Baik", pred_fair: "Cukup Baik", pred_poor: "Kurang Baik"
         },
         en: {
@@ -691,22 +691,18 @@
             trans_ph_source: "Type text to translate...", trans_ph_target: "Translation or pronunciation...", trans_status: "Connecting to AI server...",
             setup_level: "Select Proficiency Level", opt_level_1: "Beginner (Basics / A1 Vocab)", opt_level_2: "Intermediate (Sentences / B1-B2)", opt_level_3: "Advanced (Complex / C1-C2 / Slang)",
             setup_lang_title: "Select Human Language", setup_lang_desc: "Choose a language to focus on",
-            
             cat_pop: "🌐 Popular (Indo & English)", cat_nus: "🌐 Nusantara (Local Indonesian)", cat_mid: "🌐 Middle East & Africa", cat_asia: "🌐 Asia & Pacific", cat_eur: "🌐 Europe",
             opt_lang_id_baku: "Indonesian (Formal)", opt_lang_id_gaul: "Indonesian (Slang)", opt_lang_en_gram: "English (Grammar)", opt_lang_en_slang: "English (Idioms)",
             opt_lang_jv: "Javanese", opt_lang_su: "Sundanese", opt_lang_mi: "Minangkabau", opt_lang_ba: "Balinese",
             opt_lang_ar: "Arabic", opt_lang_quran: "Quranic Arabic", opt_lang_he: "Hebrew", opt_lang_tr: "Turkish", opt_lang_fa: "Persian", opt_lang_sw: "Swahili",
             opt_lang_ja: "Japanese", opt_lang_ko: "Korean", opt_lang_zh: "Mandarin", opt_lang_hi: "Hindi", opt_lang_th: "Thai", opt_lang_vi: "Vietnamese", opt_lang_tl: "Tagalog",
             opt_lang_es: "Spanish", opt_lang_fr: "French", opt_lang_de: "German", opt_lang_ru: "Russian", opt_lang_it: "Italian", opt_lang_nl: "Dutch", opt_lang_pt: "Portuguese",
-
             btn_start_learn: "START LEARNING", btn_challenge: "QUICK PLAY", btn_print: "PRINT MODULE",
             setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Loops)", opt_code_2: "Intermediate (Functions, OOP)", opt_code_3: "Advanced (Complex Architecture)",
             setup_code_title: "Select Programming Language", setup_code_desc: "Test your coding logic skills",
-            
             cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Theory & Algorithms",
             opt_code_html: "HTML & CSS", opt_code_js: "JavaScript / TypeScript", opt_code_py: "Python", opt_code_php: "PHP", opt_code_ruby: "Ruby",
             opt_code_ds: "Data Structures (Array, Stack, Tree)", opt_code_crypto: "Cryptography & Security", opt_code_ml: "Basic Machine Learning", opt_code_dp: "Design Patterns (OOP)",
-
             btn_start_code: "START PRACTICE",
             quiz_header: "Practice in Progress", challenge_header: "Quick Play (Timer)", timer_label: "Time Left:",
             result_title: "Session Complete!", result_breakdown: "Performance Breakdown", btn_retry: "Back to Menu (Check Tracking)",
@@ -714,12 +710,10 @@
             stat_sessions: "Total Sessions", stat_avg: "Average Score", stat_challenge: "Quick Plays Completed",
             dash_history: "Recent History:", dash_empty: "No activity history recorded yet.",
             dash_capability: "Capability Analysis:",
-            
             dict_page_title: "Dictionary & Terminology Center", dict_page_desc: "Search for word meanings, slang, idioms, or programming syntax here.",
             dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "SEARCH", dict_btn_rand: "RANDOM", dict_btn_rand_short: "Rand", dict_btn_float: "Smart AI Dictionary",
             dict_word_list: "Vocabulary List:",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer",
-            
             pred_excellent: "Excellent", pred_good: "Good", pred_fair: "Fair", pred_poor: "Poor"
         }
     };
@@ -746,7 +740,7 @@
         updateKamusList();
     }
 
-    // --- TRACKING & GRAFIK (CHART.JS) + ANALISIS KEMAMPUAN ---
+    // --- TRACKING & GRAFIK (CHART.JS) ---
     let trackingChart;
 
     function renderCharts(logs) {
@@ -773,8 +767,6 @@
 
     function updateTrackingUI() {
         let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
-        
-        // Membersihkan log dari aktivitas Sign In yang mungkin masih tersimpan
         let validLogs = logs.filter(l => l.category !== "Sistem" && l.activity !== "Sign In");
         
         let totalSessions = validLogs.length;
@@ -875,12 +867,10 @@
         }).catch(err => {});
     }
 
+    // --- INISIALISASI & DETEKSI AWAL BROWSER ---
     window.onload = function() {
-        // --- LOGIKA SESI MODE TAMU (GUEST) ---
-        // Jika belum ada tanda sesi aktif di sessionStorage, berarti web baru dibuka (tab/browser baru)
         if (!sessionStorage.getItem('pahamteks_active_session')) {
             sessionStorage.setItem('pahamteks_active_session', 'true');
-            // Reset/hapus data jika saat dibuka user masih Tamu
             if (currentUser === 'Tamu' || currentUser === 'Guest') {
                 localStorage.removeItem('pahamteks_logs');
             }
@@ -889,6 +879,18 @@
         initAuthUI();
         updateTrackingUI();
         updateKamusList();
+
+        // Cek apakah ada History Hash sebelumnya di URL
+        let initialPage = 'home';
+        if(window.location.hash) {
+            let hashPage = window.location.hash.substring(1);
+            if(document.getElementById('page-' + hashPage)) {
+                initialPage = hashPage;
+            }
+        }
+        // Ganti status riwayat pertama dengan halaman yang cocok
+        history.replaceState({ page: initialPage }, '', '#' + initialPage);
+        switchPage(initialPage, false);
     };
 
     // --- TEXT-TO-SPEECH (TTS) FILTER ---
@@ -903,8 +905,9 @@
         window.speechSynthesis.speak(utterance);
     }
 
-    // --- NAVIGASI ---
-    function switchPage(pageName) {
+    // --- NAVIGASI DENGAN HISTORY API ---
+    // pushHistory: true jika ditekan dari menu navigasi, false jika dari tombol Back HP/Browser
+    function switchPage(pageName, pushHistory = true) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
         stopTimer();
@@ -925,6 +928,11 @@
         
         if(pageName === 'tracking') updateTrackingUI(); 
         window.scrollTo(0,0);
+
+        // Rekam pergerakan menu ke dalam histori browser pengguna
+        if (pushHistory) {
+            history.pushState({ page: pageName }, '', '#' + pageName);
+        }
     }
     
     function scrollToTracking() { switchPage('tracking'); }
@@ -1055,7 +1063,7 @@
         sT.value = tT.value; tT.value = ""; triggerTranslate();
     }
 
-    // --- KAMUS PINTAR (Modal & Full Page) DENGAN DATABASE LOKAL ---
+    // --- KAMUS PINTAR (Modal & Full Page) ---
     const dictDatabase = {
         "Bahasa Inggris": ["Serendipity", "Ephemeral", "Ubiquitous", "Break a leg (Idiom)", "Rizz (Slang)", "Mellifluous", "Petrichor", "Lollygag", "Bamboozle", "Gobbledygook"],
         "Bahasa Indonesia": ["Mangkus", "Sangkil", "Nirwana", "Swakarya", "Pancaroba", "Buah bibir (Kiasan)", "Semenjana", "Suryakanta", "Gawai", "Mangkrak"],
