@@ -30,46 +30,41 @@
         * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
         body { background: var(--bg-green); background-attachment: fixed; color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; transition: background 0.5s ease; }
 
-        /* NAVBAR DIPERBARUI AGAR MENU HP RAPI DI DALAM BUBBLE */
+        /* NAVBAR */
         .navbar { 
             width: 100%; max-width: 1300px; padding: 15px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px; gap: 15px; flex-wrap: wrap; 
+            margin-bottom: 20px; gap: 15px; 
+            overflow-x: auto; white-space: nowrap; 
         }
+        .navbar::-webkit-scrollbar { display: none; }
+        .navbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         .nav-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
         .logo { font-size: 2.2rem; font-weight: 900; color: white; cursor: pointer; }
         
-        /* Bubble Menu Navigasi */
         .nav-links { 
             display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; 
-            border-radius: 30px; align-items: center; 
-            overflow-x: auto; /* Membuat menu bisa di-swipe */
-            white-space: nowrap; /* Mencegah tombol turun ke baris baru */
-            max-width: 100%;
+            border-radius: 30px; align-items: center; flex-shrink: 0;
         }
-        /* Sembunyikan scrollbar agar estetis */
-        .nav-links::-webkit-scrollbar { display: none; }
-        .nav-links { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .btn-nav.active { background: rgba(255,255,255,0.15); color: white; }
         .btn-nav:hover:not(.active) { color: white; }
-        .lang-toggle { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--card-border); padding: 8px 12px; font-weight: 900; border-radius: 20px; cursor: pointer; margin-left: 5px; transition: 0.2s; flex-shrink: 0; }
+        .lang-toggle { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--card-border); padding: 8px 12px; font-weight: 900; border-radius: 20px; cursor: pointer; margin-left: 5px; transition: 0.2s;}
         .lang-toggle:hover { background: rgba(255,255,255,0.2); }
 
         .nav-right { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
-        .btn-auth { background: #1a5632; border: none; border-radius: 20px; padding: 10px 22px; font-size: 1rem; font-weight: 800; color: white; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .btn-auth { background: #1a5632; border: none; border-radius: 20px; padding: 10px 22px; font-size: 1rem; font-weight: 800; color: white; cursor: pointer; transition: 0.2s; }
         .btn-auth:hover { background: #134225; }
         .btn-auth.primary { background: #000000; border: 1px solid var(--card-border); }
-        .user-profile { font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); cursor: pointer; flex-shrink: 0;}
-        .btn-logout { background: var(--wrong); border: none; border-radius: 20px; padding: 10px 18px; font-size: 0.95rem; font-weight: 800; color: white; cursor: pointer; transition: 0.2s; flex-shrink: 0;}
+        .user-profile { font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); cursor: pointer;}
+        .btn-logout { background: var(--wrong); border: none; border-radius: 20px; padding: 10px 18px; font-size: 0.95rem; font-weight: 800; color: white; cursor: pointer; transition: 0.2s; }
         .btn-logout:hover { background: #e84118; }
 
         @media (max-width: 1050px) {
-            .nav-left { order: 1; }
-            .nav-right { order: 2; margin-left: auto; } /* Memaksa tombol Sign In tetap di pojok kanan atas */
-            .nav-links { order: 3; width: 100%; margin-top: 5px; justify-content: flex-start; }
+            .nav-links { order: 3; width: 100%; margin-top: 5px; }
+            .logo { order: 1; }
+            .nav-right { order: 2; }
         }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; flex: 1; }
@@ -122,6 +117,7 @@
         .btn-swap-wrap { display: flex; align-items: center; padding-top: 45px; }
         .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
         .btn-speak { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; color: white; transition: 0.2s;}
+        .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
 
         /* Quiz Area */
         .quiz-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; text-align: center; position: relative; }
@@ -134,6 +130,7 @@
 
         .result-box { background: var(--card-bg); border-radius: 20px; padding: 30px; width: 100%; margin-bottom: 20px; border: 1px solid var(--card-border); }
         .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3.5rem; font-weight: 900; margin: 0 auto 20px; border: 8px solid var(--btn-green); color: var(--btn-green); }
+        .explanation-item { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: left; }
         
         /* Modals & Inputs */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; overflow-y:auto; padding: 20px; }
@@ -161,12 +158,20 @@
         .watermark-inner { width: 100%; max-width: 1300px; padding: 0 20px; display: flex; justify-content: flex-start; }
         .watermark-box { display: inline-block; background: #b4f27e; color: #0a1f13; padding: 4px 12px; border-radius: 3px; font-size: 0.85rem; font-weight: 800; }
 
+        /* --- PENYESUAIAN RESPONSIVE (HP) --- */
         @media (max-width: 768px) {
             .floating-kamus-btn { width: 60px; height: 60px; border-radius: 50%; padding: 0; justify-content: center; }
             .kamus-text { display: none; }
             .stats-grid { grid-template-columns: 1fr; }
             .action-row button { width: 100%; flex: none; }
             .name-fields-row { flex-direction: column; gap: 0; }
+            
+            /* Perbaikan Bubble Kamus Pintar di HP agar tidak meluber */
+            .kamus-modal {
+                width: calc(100% - 40px); /* Memastikan lebar pop-up pas di layar HP dengan margin 20px */
+                right: 20px;
+                bottom: 110px; /* Menyesuaikan jarak dari floating button */
+            }
         }
     </style>
 </head>
@@ -597,17 +602,13 @@
 
     // --- MANAJEMEN SEJARAH BROWSER (HISTORY API) UNTUK TOMBOL BACK ---
     window.addEventListener('popstate', function(event) {
-        // Ketika user menekan tombol Back (Kembali) atau Swipe di HP
         if (event.state && event.state.page) {
-            // Kembali ke halaman sebelumnya tanpa menambah history baru (pushHistory = false)
             switchPage(event.state.page, false); 
         } else {
-            // Jika history habis (berada di titik awal), kembalikan ke Beranda
             switchPage('home', false);
         }
     });
     
-    // FUNGSI INIT UI
     function initAuthUI() {
         if (currentUser !== 'Tamu' && currentUser !== 'Guest') {
             document.getElementById('user-profile-badge').innerHTML = `👤 ${currentUser}`;
@@ -621,20 +622,16 @@
         }
     }
 
-    // FUNGSI LOGOUT
     function logoutUser() {
         currentUser = currentLang === 'id' ? 'Tamu' : 'Guest';
         localStorage.removeItem('pahamteks_user');
         localStorage.removeItem('pahamteks_logs'); 
-        
         initAuthUI();
         updateTrackingUI();
         switchPage('home');
-        
         alert(dict[currentLang].logout_msg || "Anda berhasil keluar. Data progres telah direset ke Mode Tamu.");
     }
 
-    // --- DICTIONARY BILINGUAL ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking", nav_dictionary: "Kamus",
@@ -871,7 +868,6 @@
         }).catch(err => {});
     }
 
-    // --- INISIALISASI & DETEKSI AWAL BROWSER ---
     window.onload = function() {
         if (!sessionStorage.getItem('pahamteks_active_session')) {
             sessionStorage.setItem('pahamteks_active_session', 'true');
@@ -884,7 +880,6 @@
         updateTrackingUI();
         updateKamusList();
 
-        // Cek URL Hash untuk Load Halaman Pertama
         let initialPage = 'home';
         if(window.location.hash) {
             let hashPage = window.location.hash.substring(1);
@@ -896,7 +891,6 @@
         switchPage(initialPage, false);
     };
 
-    // --- TEXT-TO-SPEECH (TTS) FILTER ---
     function speakText(text, langCode = 'id-ID') {
         if (!('speechSynthesis' in window)) return;
         if (!text) return;
@@ -908,7 +902,6 @@
         window.speechSynthesis.speak(utterance);
     }
 
-    // --- NAVIGASI DENGAN HISTORY API (Dapat Back di Browser/HP) ---
     function switchPage(pageName, pushHistory = true) {
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
@@ -944,7 +937,6 @@
         else { submenu.style.display = "flex"; arrow.innerText = "▲"; }
     }
 
-    // --- AUTHENTICATION & OTP ---
     function openAuthModal(mode) { 
         document.getElementById('auth-modal').style.display = 'flex'; 
         authMode = mode; 
@@ -1035,7 +1027,6 @@
         initAuthUI();
     }
 
-    // --- TRANSLATOR ---
     let timeout = null;
     function loadLanguages() {
         fetch(`${serverUrl}/api/languages`).then(res => res.json()).then(data => {
@@ -1064,7 +1055,6 @@
         sT.value = tT.value; tT.value = ""; triggerTranslate();
     }
 
-    // --- KAMUS PINTAR (Modal & Full Page) ---
     const dictDatabase = {
         "Bahasa Inggris": ["Serendipity", "Ephemeral", "Ubiquitous", "Break a leg (Idiom)", "Rizz (Slang)", "Mellifluous", "Petrichor", "Lollygag", "Bamboozle", "Gobbledygook"],
         "Bahasa Indonesia": ["Mangkus", "Sangkil", "Nirwana", "Swakarya", "Pancaroba", "Buah bibir (Kiasan)", "Semenjana", "Suryakanta", "Gawai", "Mangkrak"],
@@ -1141,7 +1131,6 @@
         });
     }
 
-    // --- KUIS, TIMER, & CHALLENGE SYSTEM ---
     let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
     let correctAnswersCount = 0, userAnswersLog = [], isChallengeMode = false, timerInterval = null, timeLeft = 25;
     let currentQuizCategory = "";
