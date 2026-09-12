@@ -103,7 +103,7 @@
         .btn-outline-cyan { background: transparent; border: 2px solid var(--btn-cyan); color: var(--btn-cyan); }
         .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.15); }
 
-        /* Dashboard Tracking */
+        /* Dashboard Tracking Inline */
         .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; width: 100%; max-width: 800px; margin-top: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
@@ -118,6 +118,7 @@
         textarea { flex: 1; min-height: 220px; border: none; padding: 25px; padding-bottom: 60px; font-size: 1.2rem; color: white; resize: none; outline: none; background: transparent; }
         .btn-swap-wrap { display: flex; align-items: center; padding-top: 45px; }
         .btn-swap { background: transparent; border: none; font-size: 2rem; color: white; cursor: pointer; transition: 0.2s;}
+        .btn-swap:active { transform: scale(0.9); }
         .btn-speak { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,0.15); border: 1px solid var(--card-border); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; cursor: pointer; color: white; transition: 0.2s;}
         .btn-speak:hover { background: rgba(255,255,255,0.3); transform: scale(1.1); }
 
@@ -140,7 +141,6 @@
         .auth-input { width: 100%; padding: 15px; border-radius: 10px; border: 1px solid var(--card-border); background: #000; color: white; margin-bottom: 10px; font-size: 1rem; outline: none;}
         .auth-input:focus { border-color: var(--btn-cyan); }
         
-        /* FITUR PASSWORD MATA */
         .password-container { position: relative; width: 100%; }
         .password-toggle { position: absolute; right: 15px; top: 15px; cursor: pointer; color: var(--text-muted); font-size: 1.2rem; }
 
@@ -195,12 +195,11 @@
     </div>
 </div>
 
-<!-- Modal Auth (Sistem Keamanan & OTP) -->
+<!-- Modal Auth (Dengan Sistem Validasi & Fitur Baru) -->
 <div class="modal-overlay" id="auth-modal">
     <div class="modal-box">
         <h2 id="auth-title" data-i18n="auth_login_title" style="margin-top:0;">Sign In</h2>
         
-        <!-- Form Nama 3 Baris (Hanya muncul saat Sign Up) -->
         <div id="auth-name-fields" style="display: none; width:100%;">
             <div class="name-fields-row" style="display:flex; gap:10px;">
                 <input type="text" id="auth-fname" class="auth-input" data-i18n-ph="auth_ph_fname" placeholder="Nama Depan" oninput="this.value = this.value.replace(/[^A-Za-z\s]/g, '')">
@@ -218,14 +217,12 @@
 
         <button class="btn-huge btn-green" id="btn-auth-submit" data-i18n="auth_btn_login" style="width:100%; margin-top: 5px; padding: 12px;" onclick="processAuth()">Sign In</button>
         
-        <!-- Sistem Verifikasi OTP -->
         <div id="otp-section" style="display:none; margin-top:15px; border-top:1px solid var(--card-border); padding-top:15px;">
             <p style="color:var(--btn-cyan); font-size:0.9rem; margin-top:0;" data-i18n="auth_otp_msg">Kode keamanan telah dikirim ke email Anda.<br><span style="color:#a0aab2; font-size:0.8rem;">(Gunakan kode demo: 123456)</span></p>
             <input type="text" id="auth-otp" class="auth-input" placeholder="Masukkan 6 Digit OTP" style="text-align:center; letter-spacing: 5px; font-weight:bold;">
             <button class="btn-huge btn-cyan" style="width:100%; padding: 12px;" onclick="verifyOTPAndRegister()" data-i18n="auth_btn_verify">Verifikasi & Buat Akun</button>
         </div>
 
-        <!-- Opsi Tambahan -->
         <div id="auth-footer-options">
             <button class="btn-huge btn-grey" data-i18n="auth_btn_guest" style="width:100%; margin-top: 10px; padding: 12px;" onclick="continueAsGuest()">Mode Tamu</button>
             <p style="color:var(--btn-cyan); cursor:pointer; margin-top:12px; font-size:0.9rem;" onclick="toggleAuthMode()" id="auth-toggle-text" data-i18n="auth_toggle_reg">Belum punya akun? Daftar</p>
@@ -252,15 +249,15 @@
     <div class="cards-container">
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('translator')">
             <h2 data-i18n="card_1_title">Mulai<br>Translator</h2>
-            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia secara akurat.</p>
+            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('learn')">
             <h2 data-i18n="card_2_title">Mulai<br>Bahasa Asing</h2>
-            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia Anda melalui latihan kuis cerdas yang disesuaikan tingkat pemahaman.</p>
+            <p data-i18n="card_2_desc">Uji dan tingkatkan kemampuan penguasaan bahasa dunia melalui latihan kuis cerdas.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('coding')">
             <h2 data-i18n="card_3_title">Mulai<br>Ngoding</h2>
-            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding mulai dari sintaks dasar web hingga arsitektur.</p>
+            <p data-i18n="card_3_desc">Asah logika pemrograman dan algoritma Anda. Selesaikan studi kasus koding.</p>
         </div>
     </div>
 </div>
@@ -749,10 +746,12 @@
 
     function updateTrackingUI() {
         let logs = JSON.parse(localStorage.getItem('pahamteks_logs') || '[]');
-        let totalSessions = logs.length;
-        let totalScoreSum = logs.reduce((acc, curr) => acc + curr.score, 0);
+        let validLogs = logs.filter(l => l.category !== "Sistem" && l.activity !== "Sign In");
+        
+        let totalSessions = validLogs.length;
+        let totalScoreSum = validLogs.reduce((acc, curr) => acc + curr.score, 0);
         let avgScore = totalSessions > 0 ? Math.round(totalScoreSum / totalSessions) : 0;
-        let challengeCount = logs.filter(l => l.activity.includes('Cepat') || l.activity.includes('Quick')).length;
+        let challengeCount = validLogs.filter(l => l.activity.includes('Cepat') || l.activity.includes('Quick')).length;
 
         document.querySelectorAll('.stat-total-sessions').forEach(el => el.innerText = totalSessions);
         document.querySelectorAll('.stat-avg-score').forEach(el => el.innerText = avgScore);
@@ -764,15 +763,14 @@
         if (totalSessions === 0) {
             logHTML = `<i style="color:var(--text-muted);">${dict[currentLang].dash_empty}</i>`;
         } else {
-            logHTML = logs.map(l => `
+            logHTML = validLogs.map(l => `
                 <div style="background:rgba(0,0,0,0.4); padding:10px 14px; border-radius:10px; border-left:4px solid var(--btn-green); display:flex; justify-content:space-between; align-items:center;">
                     <div><div style="font-weight:bold; font-size:0.95rem;">${l.activity} <span style="color:var(--btn-cyan);font-size:0.8rem;">(${l.category || "General"})</span></div><div style="font-size:0.8rem; color:var(--text-muted);">${l.time}</div></div>
                     <div style="font-weight:900; color:var(--btn-green); font-size:1.1rem;">Skor: ${l.score}</div>
                 </div>
             `).join('');
 
-            logs.forEach(l => {
-                if(!l.category || l.category === "General" || l.category === "Sistem") return;
+            validLogs.forEach(l => {
                 let catClean = l.category;
                 
                 if(currentLang === 'en') {
@@ -830,7 +828,7 @@
         let elemCapTrack = document.getElementById('capability-list-tracking');
         if(elemCapTrack) elemCapTrack.innerHTML = capabilityHTML;
 
-        renderCharts(logs);
+        renderCharts(validLogs);
     }
 
     function logUserActivity(activityName, scoreVal, categoryVal) {
@@ -985,7 +983,6 @@
         document.getElementById('user-profile-badge').style.display = "block";
         document.getElementById('nav-auth-section').querySelector('.btn-auth').style.display = "none";
         document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
-        logUserActivity("Sign In", 0, "Sistem");
     }
 
     // --- TRANSLATOR ---
@@ -1017,7 +1014,7 @@
         sT.value = tT.value; tT.value = ""; triggerTranslate();
     }
 
-    // --- KAMUS PINTAR (Modal & Full Page) ---
+    // --- KAMUS PINTAR (Modal & Full Page) DENGAN DATABASE LOKAL ---
     const dictDatabase = {
         "Bahasa Inggris": ["Serendipity", "Ephemeral", "Ubiquitous", "Break a leg (Idiom)", "Rizz (Slang)", "Mellifluous", "Petrichor", "Lollygag", "Bamboozle", "Gobbledygook"],
         "Bahasa Indonesia": ["Mangkus", "Sangkil", "Nirwana", "Swakarya", "Pancaroba", "Buah bibir (Kiasan)", "Semenjana", "Suryakanta", "Gawai", "Mangkrak"],
