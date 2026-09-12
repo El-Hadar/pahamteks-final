@@ -55,7 +55,7 @@
         
         .setup-container, .quiz-container { width: 100%; max-width: 750px; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 50px; }
         .input-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; width: 100%; }
-        .styled-select { width: 100%; background: transparent; border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
+        .styled-select { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
         .styled-select option { background: #115930; color: white; }
         
         .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
@@ -77,12 +77,12 @@
         .btn-outline-cyan { background: transparent; border: 2px solid var(--btn-cyan); color: var(--btn-cyan); }
         .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.15); }
 
-        /* Dashboard Tracking Inline */
-        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 25px; width: 100%; margin-top: 40px; }
+        /* Dashboard Tracking */
+        .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; width: 100%; max-width: 800px; margin-top: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
         .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--btn-green); margin-top: 5px; }
-        .chart-container { position: relative; height: 250px; width: 100%; margin-bottom: 20px; }
+        .chart-container { position: relative; height: 300px; width: 100%; margin-bottom: 20px; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; border: 1px solid var(--card-border);}
 
         /* Translator Area */
         .translator-container { width: 100%; display: flex; flex-direction: column; gap: 20px; align-items: center; }
@@ -149,14 +149,14 @@
             <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
             <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
             <button class="btn-nav" id="nav-dictionary" data-i18n="nav_dictionary" onclick="switchPage('dictionary')">Kamus</button>
-            <button class="btn-nav" id="nav-dashboard" data-i18n="nav_dashboard" onclick="scrollToTracking()" style="color:var(--btn-cyan)">Tracking</button>
+            <button class="btn-nav" id="nav-tracking" data-i18n="nav_dashboard" onclick="switchPage('tracking')" style="color:var(--btn-cyan)">Tracking</button>
             <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
         </div>
     </div>
     <div class="nav-right" id="nav-auth-section">
         <button class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Sign In</button>
         <button class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Sign Up</button>
-        <div class="user-profile" id="user-profile-badge" style="display:none;">👤 <span data-i18n="guest">Tamu</span></div>
+        <div class="user-profile" id="user-profile-badge" style="display:none;" onclick="switchPage('tracking')">👤 <span data-i18n="guest">Tamu</span></div>
     </div>
 </div>
 
@@ -220,14 +220,25 @@
     </div>
 </div>
 
-<!-- Halaman Kamus Penuh -->
+<!-- Halaman Kamus Penuh (Baru) -->
 <div id="page-dictionary" class="page">
     <div class="setup-container" style="max-width: 800px; text-align: center; margin-top:20px;">
         <h1 data-i18n="dict_page_title" style="margin-bottom:10px;">Pusat Kamus & Istilah</h1>
         <p style="color:var(--text-muted); margin-top:0;" data-i18n="dict_page_desc">Cari arti kata, slang, idiom, atau sintaks pemrograman di sini.</p>
         
-        <div class="input-group" style="display:flex; gap:10px; background:var(--card-bg); padding:15px; border-radius:15px;">
-            <input type="text" id="main-kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." style="margin:0; flex:1;" onkeypress="if(event.key === 'Enter') searchMainKamus()">
+        <div class="input-group" style="display:flex; flex-wrap:wrap; gap:10px; background:var(--card-bg); padding:15px; border-radius:15px; justify-content:center;">
+            <select id="main-dict-category" class="styled-select" style="flex:1; min-width: 200px;">
+                <option value="Bahasa Inggris">Bahasa Inggris (English)</option>
+                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                <option value="Bahasa Jepang">Bahasa Jepang</option>
+                <option value="Bahasa Arab">Bahasa Arab</option>
+                <option value="Pemrograman JavaScript">Pemrograman JavaScript</option>
+                <option value="Pemrograman Python">Pemrograman Python</option>
+                <option value="Pemrograman C++">Pemrograman C++</option>
+                <option value="Database SQL">Database SQL</option>
+            </select>
+            <input type="text" id="main-kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." style="margin:0; flex:2; min-width: 200px;" onkeypress="if(event.key === 'Enter') searchMainKamus()">
+            <button class="btn-huge btn-green" data-i18n="dict_btn_rand" style="min-width:auto; padding:15px 20px; font-size:1rem;" onclick="randomKamus('main')">🎲 Acak</button>
             <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="min-width:auto; padding:15px 30px; font-size:1rem;" onclick="searchMainKamus()">Cari Arti</button>
         </div>
         
@@ -238,7 +249,38 @@
     </div>
 </div>
 
-<!-- Bahasa Dunia & Tracking Inline -->
+<!-- Halaman Tracking Mandiri (Baru) -->
+<div id="page-tracking" class="page">
+    <div class="dashboard-box" style="margin-top:20px;">
+        <h2 style="margin-top:0; text-align:center;" data-i18n="dash_title">Log & Tracking Belajar</h2>
+        <p style="color:var(--text-muted); text-align:center; margin-top:0;" data-i18n="dash_subtitle">Pantau rekam jejak progres pembelajaran Anda secara visual.</p>
+        
+        <div class="stats-grid" style="margin-top: 20px;">
+            <div class="stat-card">
+                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
+                <div class="stat-num stat-total-sessions">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
+                <div class="stat-num stat-avg-score">0</div>
+            </div>
+            <div class="stat-card">
+                <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Permainan Cepat Selesai</div>
+                <div class="stat-num stat-challenges">0</div>
+            </div>
+        </div>
+        
+        <div class="chart-container"><canvas id="chart-tracking"></canvas></div>
+
+        <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_capability">Analisis Kemampuan:</h3>
+        <div id="capability-list-tracking" style="display:flex; flex-direction:column; gap:8px;"></div>
+
+        <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
+        <div id="log-list-tracking" style="max-height: 250px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+</div>
+
+<!-- Bahasa Dunia -->
 <div id="page-learn" class="page">
     <div class="setup-container">
         <div class="input-group">
@@ -318,38 +360,10 @@
             <button class="btn-huge btn-outline-green" onclick="startChallenge('learn')" data-i18n="btn_challenge">PERMAINAN CEPAT</button>
             <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('lang')">CETAK MODUL</button>
         </div>
-
-        <!-- Dashboard Tracking (Inline) -->
-        <div class="dashboard-box">
-            <h2 style="margin-top:0;" data-i18n="dash_title">Log & Tracking Belajar</h2>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
-                    <div class="stat-num stat-total-sessions">0</div>
-                </div>
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
-                    <div class="stat-num stat-avg-score">0</div>
-                </div>
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Permainan Cepat Selesai</div>
-                    <div class="stat-num stat-challenges">0</div>
-                </div>
-            </div>
-            
-            <div class="chart-container"><canvas id="chart-learn"></canvas></div>
-
-            <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_capability">Analisis Kemampuan:</h3>
-            <div id="capability-list-learn" style="display:flex; flex-direction:column; gap:8px;"></div>
-
-            <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
-            <div id="log-list-learn" style="max-height: 200px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
     </div>
 </div>
 
-<!-- Pemrograman & Tracking Inline -->
+<!-- Pemrograman -->
 <div id="page-coding" class="page">
     <div class="setup-container">
         <div class="input-group">
@@ -416,34 +430,6 @@
             <button class="btn-huge btn-outline-cyan" onclick="startChallenge('coding')" data-i18n="btn_challenge">PERMAINAN CEPAT</button>
             <button class="btn-huge btn-grey" data-i18n="btn_print" onclick="printModule('coding')">CETAK MODUL</button>
         </div>
-
-        <!-- Dashboard Tracking (Inline) -->
-        <div class="dashboard-box">
-            <h2 style="margin-top:0;" data-i18n="dash_title">Log & Tracking Belajar</h2>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
-                    <div class="stat-num stat-total-sessions">0</div>
-                </div>
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_avg">Rata-rata Skor</div>
-                    <div class="stat-num stat-avg-score">0</div>
-                </div>
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_challenge">Permainan Cepat Selesai</div>
-                    <div class="stat-num stat-challenges">0</div>
-                </div>
-            </div>
-            
-            <div class="chart-container"><canvas id="chart-coding"></canvas></div>
-
-            <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_capability">Analisis Kemampuan:</h3>
-            <div id="capability-list-coding" style="display:flex; flex-direction:column; gap:8px;"></div>
-
-            <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
-            <div id="log-list-coding" style="max-height: 200px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
-        </div>
     </div>
 </div>
 
@@ -483,13 +469,13 @@
             <div id="result-breakdown"></div>
         </div>
         <div class="action-row">
-            <button class="btn-huge btn-green" data-i18n="btn_retry" onclick="switchPage(currentSetupMode)" style="flex:1; padding: 12px; width:100%;">Kembali ke Menu (Cek Tracking)</button>
+            <button class="btn-huge btn-green" data-i18n="btn_retry" onclick="switchPage('tracking')" style="flex:1; padding: 12px; width:100%;">Kembali ke Menu (Cek Tracking)</button>
         </div>
     </div>
 </div>
 
 <!-- Kamus Floating Button (Responsif Text) -->
-<div class="floating-kamus-btn" onclick="toggleKamus()" title="Kamus Pintar AI">
+<div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar AI">
     <span style="font-size: 1.6rem;">📖</span>
     <span class="kamus-text" data-i18n="dict_btn_float">Kamus Pintar AI</span>
 </div>
@@ -500,7 +486,17 @@
         <span style="cursor: pointer; font-size: 1.5rem;" onclick="toggleKamus()">×</span>
     </div>
     <div class="kamus-body">
-        <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." onkeypress="handleKamusEnter(event)">
+        <select id="float-dict-category" class="styled-select" style="padding: 10px; font-size: 0.95rem; margin-bottom: 5px;">
+            <option value="Bahasa Inggris">Bahasa Inggris (English)</option>
+            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+            <option value="Pemrograman JavaScript">JavaScript / TypeScript</option>
+            <option value="Pemrograman Python">Python</option>
+            <option value="Pemrograman C++">C++</option>
+        </select>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata..." style="margin:0; flex:1;" onkeypress="if(event.key === 'Enter') searchKamus('float')">
+            <button class="btn-huge btn-green" data-i18n="dict_btn_rand" style="padding: 10px; min-width:auto;" onclick="randomKamus('float')" title="Acak Kata">🎲</button>
+        </div>
         <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="padding: 10px; width: 100%; min-width:auto; color:black;" onclick="searchKamus('float')">Cari Arti</button>
         <div style="position:relative;">
             <div id="kamus-result" style="display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:12px; padding-right:45px; font-size:0.9rem; line-height:1.4;"></div>
@@ -526,7 +522,7 @@
         document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
     }
 
-    // --- DICTIONARY BILINGUAL (ID/EN) ---
+    // --- DICTIONARY BILINGUAL (ID/EN) LENGKAP ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking", nav_dictionary: "Kamus",
@@ -569,7 +565,7 @@
             dash_capability: "Analisis Kemampuan:",
             
             dict_page_title: "Pusat Kamus & Istilah", dict_page_desc: "Cari arti kata, slang, idiom, atau sintaks pemrograman di sini.",
-            dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_float: "Kamus Pintar AI",
+            dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_rand: "🎲 Acak", dict_btn_float: "Kamus Pintar AI",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban",
             
             pred_excellent: "Sangat Baik", pred_good: "Baik", pred_fair: "Cukup Baik", pred_poor: "Kurang Baik"
@@ -615,7 +611,7 @@
             dash_capability: "Capability Analysis:",
             
             dict_page_title: "Dictionary & Terminology Center", dict_page_desc: "Search for word meanings, slang, idioms, or programming syntax here.",
-            dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_float: "Smart AI Dictionary",
+            dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_rand: "🎲 Random", dict_btn_float: "Smart AI Dictionary",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer",
             
             pred_excellent: "Excellent", pred_good: "Good", pred_fair: "Fair", pred_poor: "Poor"
@@ -644,7 +640,7 @@
     }
 
     // --- TRACKING & GRAFIK (CHART.JS) + ANALISIS KEMAMPUAN ---
-    let learnChart, codingChart;
+    let trackingChart;
 
     function renderCharts(logs) {
         let chartLogs = logs.slice(0, 10).reverse();
@@ -663,13 +659,10 @@
             }
         };
 
-        if(learnChart) learnChart.destroy();
-        if(codingChart) codingChart.destroy();
+        if(trackingChart) trackingChart.destroy();
 
-        let ctxLearn = document.getElementById('chart-learn');
-        let ctxCoding = document.getElementById('chart-coding');
-        if(ctxLearn) learnChart = new Chart(ctxLearn, config);
-        if(ctxCoding) codingChart = new Chart(ctxCoding, config);
+        let ctxTrack = document.getElementById('chart-tracking');
+        if(ctxTrack) trackingChart = new Chart(ctxTrack, config);
     }
 
     function updateTrackingUI() {
@@ -697,15 +690,22 @@
             `).join('');
 
             logs.forEach(l => {
-                if(!l.category) return;
-                if(!categoryStats[l.category]) categoryStats[l.category] = { total: 0, count: 0 };
-                categoryStats[l.category].total += l.score;
-                categoryStats[l.category].count += 1;
+                if(!l.category || l.category === "General") return;
+                let catClean = l.category;
+                if(currentLang === 'en') {
+                    // Coba terjemahkan kategori jika memungkinkan
+                    if(catClean.includes("Web & Scripting")) catClean = catClean.replace("Web & Scripting", "Web & Scripting");
+                    if(catClean.includes("Indonesia (Baku)")) catClean = "Indonesian (Formal)";
+                }
+                
+                if(!categoryStats[catClean]) categoryStats[catClean] = { total: 0, count: 0 };
+                categoryStats[catClean].total += l.score;
+                categoryStats[catClean].count += 1;
             });
         }
         
-        document.getElementById('log-list-learn').innerHTML = logHTML;
-        document.getElementById('log-list-coding').innerHTML = logHTML;
+        let elemListTrack = document.getElementById('log-list-tracking');
+        if(elemListTrack) elemListTrack.innerHTML = logHTML;
 
         // Analisis Kemampuan List
         let capabilityHTML = "";
@@ -717,16 +717,23 @@
             else if(avg >= 40) { predikat = dict[currentLang].pred_fair; color = "var(--warning-orange)"; }
             else { predikat = dict[currentLang].pred_poor; color = "var(--wrong)"; }
             
+            // Format seperti yang diminta (Kategori > Predikat)
+            let formattedCat = cat;
+            if(cat.includes(" : ")) {
+                let parts = cat.split(" : ");
+                formattedCat = `${parts[0].toLowerCase()} : ${parts[1].toLowerCase()}`;
+            }
+            
             capabilityHTML += `
             <div style="background:rgba(255,255,255,0.05); padding:12px 15px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
-                <div style="font-weight:700;"><span style="color:${color}; margin-right:8px;">🟢</span> ${cat}</div>
-                <div style="font-weight:900; color:${color};">${predikat}</div>
+                <div style="font-weight:700; text-transform:capitalize;"><span style="color:${color}; margin-right:8px;">🟢</span> ${formattedCat}</div>
+                <div style="font-weight:900; color:${color};">> ${predikat}</div>
             </div>`;
         }
         if(!capabilityHTML) capabilityHTML = `<i style="color:var(--text-muted);">${dict[currentLang].dash_empty}</i>`;
         
-        document.getElementById('capability-list-learn').innerHTML = capabilityHTML;
-        document.getElementById('capability-list-coding').innerHTML = capabilityHTML;
+        let elemCapTrack = document.getElementById('capability-list-tracking');
+        if(elemCapTrack) elemCapTrack.innerHTML = capabilityHTML;
 
         renderCharts(logs);
     }
@@ -771,11 +778,9 @@
         if(pageName === 'coding') {
             document.body.style.background = "var(--bg-blue)";
             currentSetupMode = 'coding';
-            updateTrackingUI();
         } else {
             document.body.style.background = "var(--bg-green)";
             if(pageName === 'learn') currentSetupMode = 'learn';
-            updateTrackingUI(); 
         }
 
         document.getElementById('page-' + pageName).classList.add('active-page');
@@ -783,21 +788,13 @@
         
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
+        
+        if(pageName === 'tracking') updateTrackingUI(); // render ulang chart jika masuk tracking
         window.scrollTo(0,0);
     }
     
     function scrollToTracking() {
-        if (currentSetupMode !== 'learn' && currentSetupMode !== 'coding') {
-            switchPage('learn'); // Otomatis ke halaman belajar jika di-klik dari Home/Kamus/Translator
-        }
-        setTimeout(() => {
-            const activePage = document.querySelector('.page.active-page');
-            const dashboard = activePage.querySelector('.dashboard-box');
-            if (dashboard) {
-                const y = dashboard.getBoundingClientRect().top + window.scrollY - 80;
-                window.scrollTo({top: y, behavior: 'smooth'});
-            }
-        }, 100); 
+        switchPage('tracking');
     }
 
     function toggleMenu(menuId, arrowId) {
@@ -868,33 +865,66 @@
         sT.value = tT.value; tT.value = ""; triggerTranslate();
     }
 
-    // --- KAMUS PINTAR (Modal & Full Page) ---
+    // --- KAMUS PINTAR (Modal & Full Page) DENGAN DATABASE ACAK LOKAL ---
+    const dictDatabase = {
+        "Bahasa Inggris": ["Serendipity", "Ephemeral", "Ubiquitous", "Break a leg (Idiom)", "Rizz (Slang)", "Mellifluous", "Petrichor"],
+        "Bahasa Indonesia": ["Mangkus", "Sangkil", "Nirwana", "Swakarya", "Pancaroba", "Buah bibir (Kiasan)", "Semenjana"],
+        "Bahasa Jepang": ["Komorebi (木漏れ日)", "Tsundoku (積ん読)", "Wabi-sabi", "Ikigai", "Otsukaresama", "Arigatou"],
+        "Bahasa Arab": ["Tawakkul (توكل)", "Maktub (مكتوب)", "Sabr (صبر)", "Inshallah", "Alhamdulillah"],
+        "Pemrograman JavaScript": ["Closure", "Promise", "Hoisting", "Async/Await", "Event Loop", "Arrow Function", "DOM Manipulation"],
+        "Pemrograman Python": ["List Comprehension", "Decorator", "Lambda Function", "GIL (Global Interpreter Lock)", "Tuple", "Dunder Method"],
+        "Pemrograman C++": ["Pointer", "Polymorphism", "Virtual Function", "Memory Leak", "STL (Standard Template Library)", "Template"],
+        "Database SQL": ["JOIN", "INDEX", "Primary Key", "Normalization", "Stored Procedure", "Trigger", "ACID Properties"]
+    };
+
     function toggleKamus() { document.getElementById("kamus-modal").style.display = document.getElementById("kamus-modal").style.display === "flex" ? "none" : "flex"; }
     function handleKamusEnter(e) { if(e.key === "Enter") searchKamus('float'); }
     
+    function randomKamus(mode = 'float') {
+        const isMain = mode === 'main';
+        const catSelect = document.getElementById(isMain ? "main-dict-category" : "float-dict-category").value;
+        const inputField = document.getElementById(isMain ? "main-kamus-input" : "kamus-input");
+        
+        let words = dictDatabase[catSelect];
+        if(!words) words = dictDatabase["Bahasa Inggris"];
+        
+        const randWord = words[Math.floor(Math.random() * words.length)];
+        inputField.value = randWord;
+        searchKamus(mode);
+    }
+
     function searchKamus(mode = 'float') {
         const isMain = mode === 'main';
         const input = document.getElementById(isMain ? "main-kamus-input" : "kamus-input").value.trim();
+        const catSelect = document.getElementById(isMain ? "main-dict-category" : "float-dict-category").value;
         const resultBox = document.getElementById(isMain ? "main-kamus-result" : "kamus-result");
-        const resultContent = document.getElementById(isMain ? "main-kamus-content" : "kamus-result"); // reuse variable for float
+        const resultContent = document.getElementById(isMain ? "main-kamus-content" : "kamus-result"); 
         const btnSpeak = document.getElementById(isMain ? "btn-speak-main-kamus" : "btn-speak-kamus");
         
         if(!input) return;
         resultBox.style.display = "block"; btnSpeak.style.display = "none";
         
-        if (isMain) resultContent.innerHTML = `<i>⏳ ${currentLang === 'id' ? 'Mencari...' : 'Searching...'}</i>`;
-        else resultBox.innerHTML = `<i>⏳ ${currentLang === 'id' ? 'Mencari...' : 'Searching...'}</i>`;
+        let searchingText = `<i>⏳ ${currentLang === 'id' ? 'Mencari...' : 'Searching...'}</i>`;
+        if (isMain) resultContent.innerHTML = searchingText;
+        else resultBox.innerHTML = searchingText;
         
-        fetch(`${serverUrl}/api/dictionary`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: input }) })
+        // Gabungkan keyword dengan kategori agar AI menjawab akurat
+        let queryContext = `${input} (Konteks: ${catSelect})`;
+        
+        fetch(`${serverUrl}/api/dictionary`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: queryContext }) })
         .then(res => res.json()).then(data => {
             if (isMain) resultContent.innerHTML = data.result.replace(/\n/g, '<br>');
             else resultBox.innerHTML = data.result.replace(/\n/g, '<br>');
             btnSpeak.style.display = "flex";
         }).catch(err => { 
-            if (isMain) resultContent.innerHTML = `❌ Gagal memuat.`; 
-            else resultBox.innerHTML = `❌ Gagal memuat.`;
+            let errorText = `❌ ${currentLang === 'id' ? 'Gagal memuat. Server sibuk.' : 'Failed to fetch. Server busy.'}`;
+            if (isMain) resultContent.innerHTML = errorText; 
+            else resultBox.innerHTML = errorText;
         });
     }
+
+    // Bind tombol search main kamus
+    function searchMainKamus() { searchKamus('main'); }
 
     // --- KUIS, TIMER, & CHALLENGE SYSTEM ---
     let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
@@ -912,7 +942,7 @@
         
         const selectedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
         if (!selectedRadio) return alert(currentLang === 'id' ? "Pilih materi terlebih dahulu!" : "Select topic first!");
-        currentQuizCategory = selectedRadio.value; // Ambil Value Asli (misal: "Web & Scripting : Python")
+        currentQuizCategory = selectedRadio.value;
         
         document.querySelectorAll('.page').forEach(page => page.classList.remove('active-page'));
         document.getElementById('page-quiz-active').classList.add('active-page');
@@ -1037,7 +1067,6 @@
         
         let modeName = isChallengeMode ? (currentLang === 'id' ? "Permainan Cepat" : "Quick Play") : (currentLang === 'id' ? "Latihan Kuis" : "Quiz Session");
         
-        // Simpan log dengan format: Nama Mode (Kategori) | Cth: Permainan Cepat (Web & Scripting : Python)
         logUserActivity(modeName, score, currentQuizCategory);
 
         let breakdownHTML = "";
