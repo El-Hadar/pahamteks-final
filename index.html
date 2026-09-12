@@ -30,14 +30,13 @@
         * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
         body { background: var(--bg-green); background-attachment: fixed; color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; transition: background 0.5s ease; }
 
-        /* NAVBAR DIPERBARUI AGAR SEJAJAR & BISA DI-SWIPE DI HP */
+        /* NAVBAR */
         .navbar { 
             width: 100%; max-width: 1300px; padding: 15px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
             margin-bottom: 20px; gap: 15px; 
             overflow-x: auto; white-space: nowrap; 
         }
-        /* Sembunyikan scrollbar tapi tetap bisa digeser */
         .navbar::-webkit-scrollbar { display: none; }
         .navbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -59,6 +58,12 @@
         .btn-auth:hover { background: #134225; }
         .btn-auth.primary { background: #000000; border: 1px solid var(--card-border); }
         .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); cursor: pointer;}
+
+        @media (max-width: 1050px) {
+            .nav-links { order: 3; width: 100%; margin-top: 5px; }
+            .logo { order: 1; }
+            .nav-right { order: 2; }
+        }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; flex: 1; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
@@ -145,6 +150,12 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .kamus-header { background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--card-border); color: white; padding: 15px 20px; font-weight: 900; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
         .kamus-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+        /* Kamus List Area */
+        .dict-list-container { width: 100%; max-height: 250px; overflow-y: auto; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--card-border); margin-top: 15px; text-align: left; }
+        .dict-list-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: 0.2s; color: var(--btn-cyan); font-weight: 700; }
+        .dict-list-item:hover { background: rgba(255,255,255,0.1); }
+        .dict-list-item:last-child { border-bottom: none; }
 
         /* Watermark Footer */
         .watermark-footer { width: 100%; text-align: center; padding: 25px 10px 15px 10px; margin-top: auto; }
@@ -249,25 +260,39 @@
         <h1 data-i18n="dict_page_title" style="margin-bottom:10px;">Pusat Kamus & Istilah</h1>
         <p style="color:var(--text-muted); margin-top:0;" data-i18n="dict_page_desc">Cari arti kata, slang, idiom, atau sintaks pemrograman di sini.</p>
         
-        <div class="input-group" style="display:flex; flex-wrap:wrap; gap:10px; background:var(--card-bg); padding:15px; border-radius:15px; justify-content:center;">
-            <select id="main-dict-category" class="styled-select" style="flex:1; min-width: 200px;">
-                <option value="Bahasa Inggris">Bahasa Inggris (English)</option>
-                <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-                <option value="Bahasa Jepang">Bahasa Jepang</option>
-                <option value="Bahasa Arab">Bahasa Arab</option>
-                <option value="Pemrograman JavaScript">Pemrograman JavaScript</option>
-                <option value="Pemrograman Python">Pemrograman Python</option>
-                <option value="Pemrograman C++">Pemrograman C++</option>
-                <option value="Database SQL">Database SQL</option>
-            </select>
-            <input type="text" id="main-kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." style="margin:0; flex:2; min-width: 200px;" onkeypress="if(event.key === 'Enter') searchMainKamus()">
-            <button class="btn-huge btn-green" data-i18n="dict_btn_rand" style="min-width:auto; padding:15px 20px; font-size:1rem;" onclick="randomKamus('main')">🎲 Acak</button>
-            <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="min-width:auto; padding:15px 30px; font-size:1rem;" onclick="searchMainKamus()">Cari Arti</button>
-        </div>
-        
-        <div id="main-kamus-result" style="display:none; background:var(--card-bg); border:1px solid var(--card-border); border-radius:15px; padding:25px; margin-top:20px; text-align:left; line-height:1.6; position:relative;">
-            <div id="main-kamus-content"></div>
-            <button id="btn-speak-main-kamus" class="btn-speak" style="display:none; bottom:15px; right:15px;" title="Baca Hasil" onclick="speakText(document.getElementById('main-kamus-content').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
+        <div class="input-group" style="background:var(--card-bg); padding:25px; border-radius:15px; text-align:left;">
+            <!-- Baris 1: Pilihan Kategori Bahasa & Input -->
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 15px;">
+                <select id="main-dict-category" class="styled-select" style="flex:1; min-width: 200px; padding:18px; border:2px solid var(--card-border); background:rgba(0,0,0,0.8);" onchange="updateKamusList()">
+                    <option value="Bahasa Inggris">Bahasa Inggris (English)</option>
+                    <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                    <option value="Bahasa Jepang">Bahasa Jepang</option>
+                    <option value="Bahasa Arab">Bahasa Arab</option>
+                    <option value="Pemrograman JavaScript">Pemrograman JavaScript</option>
+                    <option value="Pemrograman Python">Pemrograman Python</option>
+                    <option value="Pemrograman C++">Pemrograman C++</option>
+                    <option value="Database SQL">Database SQL</option>
+                </select>
+                <input type="text" id="main-kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata/syntax..." style="margin:0; flex:2; min-width: 200px; padding:18px; border:2px solid var(--card-border);" onkeypress="if(event.key === 'Enter') searchMainKamus()">
+            </div>
+            
+            <!-- Baris 2: Tombol Aksi -->
+            <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end;">
+                <button class="btn-huge btn-green" data-i18n="dict_btn_rand" style="min-width:auto; padding:15px 30px; font-size:1rem;" onclick="randomKamus('main')">ACAK</button>
+                <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="min-width:auto; padding:15px 40px; font-size:1rem;" onclick="searchMainKamus()">CARI ARTI</button>
+            </div>
+            
+            <!-- Daftar Kosakata Bawaan -->
+            <h3 style="margin-top:25px; margin-bottom:5px; font-size:1rem; color:var(--text-muted);" data-i18n="dict_word_list">Daftar Kosakata:</h3>
+            <div id="main-dict-list" class="dict-list-container">
+                <!-- List kata akan digenerate via JS -->
+            </div>
+            
+            <!-- Hasil Pencarian -->
+            <div id="main-kamus-result" style="display:none; background:rgba(0,0,0,0.5); border:1px solid var(--btn-cyan); border-radius:15px; padding:25px; margin-top:20px; line-height:1.6; position:relative;">
+                <div id="main-kamus-content"></div>
+                <button id="btn-speak-main-kamus" class="btn-speak" style="display:none; bottom:15px; right:15px;" title="Baca Hasil" onclick="speakText(document.getElementById('main-kamus-content').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
+            </div>
         </div>
     </div>
 </div>
@@ -278,7 +303,7 @@
         <h2 style="margin-top:0; text-align:center;" data-i18n="dash_title">Log & Tracking Belajar</h2>
         <p style="color:var(--text-muted); text-align:center; margin-top:0;" data-i18n="dash_subtitle">Pantau rekam jejak progres pembelajaran Anda secara visual.</p>
         
-        <div class="stats-grid" style="margin-top: 20px;">
+        <div class="stats-grid" style="margin-top: 30px;">
             <div class="stat-card">
                 <div style="color:var(--text-muted); font-size:0.9rem;" data-i18n="stat_sessions">Total Sesi Latihan</div>
                 <div class="stat-num stat-total-sessions">0</div>
@@ -299,7 +324,7 @@
         <div id="capability-list-tracking" style="display:flex; flex-direction:column; gap:8px;"></div>
 
         <h3 style="margin-bottom:10px; font-size:1.1rem; margin-top:30px;" data-i18n="dash_history">Riwayat Sesi Terakhir:</h3>
-        <div id="log-list-tracking" style="max-height: 250px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
+        <div id="log-list-tracking" style="max-height: 300px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;"></div>
     </div>
 </div>
 
@@ -498,15 +523,15 @@
 </div>
 
 <!-- Kamus Floating Button (Responsif Text) -->
-<div class="floating-kamus-btn" onclick="toggleKamus()" title="Buka Kamus Pintar AI">
+<div class="floating-kamus-btn" onclick="toggleFloatKamus()" title="Buka Kamus Pintar AI">
     <span style="font-size: 1.6rem;">📖</span>
     <span class="kamus-text" data-i18n="dict_btn_float">Kamus Pintar AI</span>
 </div>
 
-<div id="kamus-modal" class="kamus-modal">
+<div id="float-kamus-modal" class="kamus-modal">
     <div class="kamus-header">
         <span data-i18n="dict_title">Kamus Pintar AI</span>
-        <span style="cursor: pointer; font-size: 1.5rem;" onclick="toggleKamus()">×</span>
+        <span style="cursor: pointer; font-size: 1.5rem;" onclick="toggleFloatKamus()">×</span>
     </div>
     <div class="kamus-body">
         <select id="float-dict-category" class="styled-select" style="padding: 10px; font-size: 0.95rem; margin-bottom: 5px;">
@@ -517,13 +542,13 @@
             <option value="Pemrograman C++">C++</option>
         </select>
         <div style="display:flex; gap:5px;">
-            <input type="text" id="kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata..." style="margin:0; flex:1;" onkeypress="if(event.key === 'Enter') searchKamus('float')">
-            <button class="btn-huge btn-green" data-i18n="dict_btn_rand" style="padding: 10px; min-width:auto;" onclick="randomKamus('float')" title="Acak Kata">🎲</button>
+            <input type="text" id="float-kamus-input" class="auth-input" data-i18n-ph="dict_ph" placeholder="Ketik kata..." style="margin:0; flex:1;" onkeypress="if(event.key === 'Enter') searchKamus('float')">
+            <button class="btn-huge btn-green" data-i18n="dict_btn_rand_short" style="padding: 10px; min-width:auto;" onclick="randomKamus('float')" title="Acak Kata">Acak</button>
         </div>
         <button class="btn-huge btn-cyan" data-i18n="dict_btn" style="padding: 10px; width: 100%; min-width:auto; color:black;" onclick="searchKamus('float')">Cari Arti</button>
         <div style="position:relative;">
-            <div id="kamus-result" style="display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:12px; padding-right:45px; font-size:0.9rem; line-height:1.4;"></div>
-            <button id="btn-speak-kamus" class="btn-speak" style="display:none; bottom:10px; right:10px; width:35px; height:35px; font-size:1rem;" title="Baca Hasil" onclick="speakText(document.getElementById('kamus-result').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
+            <div id="float-kamus-result" style="display:none; background:rgba(255,255,255,0.1); border-radius:8px; padding:12px; padding-right:45px; font-size:0.9rem; line-height:1.4;"></div>
+            <button id="btn-speak-float-kamus" class="btn-speak" style="display:none; bottom:10px; right:10px; width:35px; height:35px; font-size:1rem;" title="Baca Hasil" onclick="speakText(document.getElementById('float-kamus-result').innerText, currentLang === 'id' ? 'id-ID' : 'en-US')">🔊</button>
         </div>
     </div>
 </div>
@@ -545,7 +570,7 @@
         document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
     }
 
-    // --- DICTIONARY BILINGUAL (ID/EN) LENGKAP ---
+    // --- DICTIONARY BILINGUAL (ID/EN) ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking", nav_dictionary: "Kamus",
@@ -586,7 +611,8 @@
             dash_capability: "Analisis Kemampuan:",
             
             dict_page_title: "Pusat Kamus & Istilah", dict_page_desc: "Cari arti kata, slang, idiom, atau sintaks pemrograman di sini.",
-            dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "Cari Arti", dict_btn_rand: "🎲 Acak", dict_btn_float: "Kamus Pintar AI",
+            dict_title: "Kamus Pintar AI", dict_ph: "Ketik kata/syntax...", dict_btn: "CARI ARTI", dict_btn_rand: "ACAK", dict_btn_rand_short: "Acak", dict_btn_float: "Kamus Pintar AI",
+            dict_word_list: "Daftar Kosakata:",
             btn_ans_check: "Kunci Jawaban", btn_ans_next: "Lanjut Soal Berikutnya ➔", btn_ans_select: "Pilih Jawaban",
             
             pred_excellent: "Sangat Baik", pred_good: "Baik", pred_fair: "Cukup Baik", pred_poor: "Kurang Baik"
@@ -630,7 +656,8 @@
             dash_capability: "Capability Analysis:",
             
             dict_page_title: "Dictionary & Terminology Center", dict_page_desc: "Search for word meanings, slang, idioms, or programming syntax here.",
-            dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "Search Meaning", dict_btn_rand: "🎲 Random", dict_btn_float: "Smart AI Dictionary",
+            dict_title: "Smart AI Dictionary", dict_ph: "Type word/term/syntax...", dict_btn: "SEARCH", dict_btn_rand: "RANDOM", dict_btn_rand_short: "Rand", dict_btn_float: "Smart AI Dictionary",
+            dict_word_list: "Vocabulary List:",
             btn_ans_check: "Submit Answer", btn_ans_next: "Next Question ➔", btn_ans_select: "Select Answer",
             
             pred_excellent: "Excellent", pred_good: "Good", pred_fair: "Fair", pred_poor: "Poor"
@@ -656,6 +683,7 @@
         else btnCheck.innerText = dict[currentLang].btn_ans_check;
         
         updateTrackingUI(); 
+        updateKamusList(); // Perbarui daftar kosakata bawaan berdasarkan bahasa
     }
 
     // --- TRACKING & GRAFIK (CHART.JS) + ANALISIS KEMAMPUAN ---
@@ -741,7 +769,6 @@
         let elemListTrack = document.getElementById('log-list-tracking');
         if(elemListTrack) elemListTrack.innerHTML = logHTML;
 
-        // Analisis Kemampuan List
         let capabilityHTML = "";
         for(let cat in categoryStats) {
             let avg = Math.round(categoryStats[cat].total / categoryStats[cat].count);
@@ -788,6 +815,7 @@
 
     window.onload = function() {
         updateTrackingUI();
+        updateKamusList();
     };
 
     // --- TEXT-TO-SPEECH (TTS) FILTER ---
@@ -898,25 +926,25 @@
         sT.value = tT.value; tT.value = ""; triggerTranslate();
     }
 
-    // --- KAMUS PINTAR (Modal & Full Page) DENGAN DATABASE ACAK LOKAL ---
+    // --- KAMUS PINTAR (Modal & Full Page) DENGAN DATABASE LOKAL ---
     const dictDatabase = {
-        "Bahasa Inggris": ["Serendipity", "Ephemeral", "Ubiquitous", "Break a leg (Idiom)", "Rizz (Slang)", "Mellifluous", "Petrichor"],
-        "Bahasa Indonesia": ["Mangkus", "Sangkil", "Nirwana", "Swakarya", "Pancaroba", "Buah bibir (Kiasan)", "Semenjana"],
-        "Bahasa Jepang": ["Komorebi (木漏れ日)", "Tsundoku (積ん読)", "Wabi-sabi", "Ikigai", "Otsukaresama", "Arigatou"],
-        "Bahasa Arab": ["Tawakkul (توكل)", "Maktub (مكتوب)", "Sabr (صبر)", "Inshallah", "Alhamdulillah"],
-        "Pemrograman JavaScript": ["Closure", "Promise", "Hoisting", "Async/Await", "Event Loop", "Arrow Function", "DOM Manipulation"],
-        "Pemrograman Python": ["List Comprehension", "Decorator", "Lambda Function", "GIL (Global Interpreter Lock)", "Tuple", "Dunder Method"],
-        "Pemrograman C++": ["Pointer", "Polymorphism", "Virtual Function", "Memory Leak", "STL (Standard Template Library)", "Template"],
-        "Database SQL": ["JOIN", "INDEX", "Primary Key", "Normalization", "Stored Procedure", "Trigger", "ACID Properties"]
+        "Bahasa Inggris": ["Serendipity", "Ephemeral", "Ubiquitous", "Break a leg (Idiom)", "Rizz (Slang)", "Mellifluous", "Petrichor", "Lollygag", "Bamboozle", "Gobbledygook"],
+        "Bahasa Indonesia": ["Mangkus", "Sangkil", "Nirwana", "Swakarya", "Pancaroba", "Buah bibir (Kiasan)", "Semenjana", "Suryakanta", "Gawai", "Mangkrak"],
+        "Bahasa Jepang": ["Komorebi (木漏れ日)", "Tsundoku (積ん読)", "Wabi-sabi", "Ikigai", "Otsukaresama", "Arigatou", "Kintsugi", "Baka", "Kawaii", "Yabai"],
+        "Bahasa Arab": ["Tawakkul (توكل)", "Maktub (مكتوب)", "Sabr (صبر)", "Inshallah", "Alhamdulillah", "Bismillah", "Mashallah", "Shukran"],
+        "Pemrograman JavaScript": ["Closure", "Promise", "Hoisting", "Async/Await", "Event Loop", "Arrow Function", "DOM Manipulation", "Callback", "JSON", "Map & Filter"],
+        "Pemrograman Python": ["List Comprehension", "Decorator", "Lambda Function", "GIL", "Tuple", "Dunder Method", "Pip", "Pandas", "NumPy", "Dictionary"],
+        "Pemrograman C++": ["Pointer", "Polymorphism", "Virtual Function", "Memory Leak", "STL", "Template", "Class", "Inheritance", "Overloading", "Destructor"],
+        "Database SQL": ["JOIN", "INDEX", "Primary Key", "Normalization", "Stored Procedure", "Trigger", "ACID Properties", "Foreign Key", "GROUP BY", "SELECT"]
     };
 
-    function toggleKamus() { document.getElementById("kamus-modal").style.display = document.getElementById("kamus-modal").style.display === "flex" ? "none" : "flex"; }
+    function toggleFloatKamus() { document.getElementById("float-kamus-modal").style.display = document.getElementById("float-kamus-modal").style.display === "flex" ? "none" : "flex"; }
     function handleKamusEnter(e) { if(e.key === "Enter") searchKamus('float'); }
     
     function randomKamus(mode = 'float') {
         const isMain = mode === 'main';
         const catSelect = document.getElementById(isMain ? "main-dict-category" : "float-dict-category").value;
-        const inputField = document.getElementById(isMain ? "main-kamus-input" : "kamus-input");
+        const inputField = document.getElementById(isMain ? "main-kamus-input" : "float-kamus-input");
         
         let words = dictDatabase[catSelect];
         if(!words) words = dictDatabase["Bahasa Inggris"];
@@ -928,11 +956,11 @@
 
     function searchKamus(mode = 'float') {
         const isMain = mode === 'main';
-        const input = document.getElementById(isMain ? "main-kamus-input" : "kamus-input").value.trim();
+        const input = document.getElementById(isMain ? "main-kamus-input" : "float-kamus-input").value.trim();
         const catSelect = document.getElementById(isMain ? "main-dict-category" : "float-dict-category").value;
-        const resultBox = document.getElementById(isMain ? "main-kamus-result" : "kamus-result");
-        const resultContent = document.getElementById(isMain ? "main-kamus-content" : "kamus-result"); 
-        const btnSpeak = document.getElementById(isMain ? "btn-speak-main-kamus" : "btn-speak-kamus");
+        const resultBox = document.getElementById(isMain ? "main-kamus-result" : "float-kamus-result");
+        const resultContent = document.getElementById(isMain ? "main-kamus-content" : "float-kamus-result"); 
+        const btnSpeak = document.getElementById(isMain ? "btn-speak-main-kamus" : "btn-speak-float-kamus");
         
         if(!input) return;
         resultBox.style.display = "block"; btnSpeak.style.display = "none";
@@ -956,6 +984,25 @@
     }
 
     function searchMainKamus() { searchKamus('main'); }
+
+    // Memuat daftar kosakata bawaan di halaman Kamus Utama
+    function updateKamusList() {
+        const catSelect = document.getElementById("main-dict-category").value;
+        const listContainer = document.getElementById("main-dict-list");
+        let words = dictDatabase[catSelect] || [];
+        
+        listContainer.innerHTML = "";
+        words.forEach(word => {
+            let div = document.createElement("div");
+            div.className = "dict-list-item";
+            div.innerText = word;
+            div.onclick = function() {
+                document.getElementById("main-kamus-input").value = word;
+                searchMainKamus();
+            };
+            listContainer.appendChild(div);
+        });
+    }
 
     // --- KUIS, TIMER, & CHALLENGE SYSTEM ---
     let activeQuizPool = [], currentQuizIndex = 0, isChecking = true, selectedAnswer = null;
