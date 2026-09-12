@@ -23,21 +23,36 @@
         * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
         body { background: var(--bg-green); background-attachment: fixed; color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; transition: background 0.5s ease; }
 
-        .navbar { width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .logo { font-size: 2.2rem; font-weight: 900; color: white; cursor: pointer; }
+        /* NAVBAR RESPONSIF BARU */
+        .navbar { 
+            width: 100%; max-width: 1200px; padding: 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; flex-wrap: wrap; gap: 15px; 
+        }
+        .logo { font-size: 2.2rem; font-weight: 900; color: white; cursor: pointer; flex-shrink: 0; }
         
-        .nav-links { display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 30px; flex-wrap: wrap; align-items: center;}
+        .nav-links { 
+            display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; 
+            border-radius: 30px; flex-wrap: wrap; align-items: center; justify-content: center;
+        }
         .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .btn-nav.active { background: rgba(255,255,255,0.15); color: white; }
         .btn-nav:hover:not(.active) { color: white; }
         .lang-toggle { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--card-border); padding: 8px 12px; font-weight: 900; border-radius: 20px; cursor: pointer; margin-left: 5px; transition: 0.2s;}
         .lang-toggle:hover { background: rgba(255,255,255,0.2); }
 
-        .nav-right { display: flex; gap: 10px; align-items: center; }
+        .nav-right { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
         .btn-auth { background: #1a5632; border: none; border-radius: 20px; padding: 10px 22px; font-size: 1rem; font-weight: 800; color: white; cursor: pointer; transition: 0.2s; }
         .btn-auth:hover { background: #134225; }
         .btn-auth.primary { background: #000000; border: 1px solid var(--card-border); }
-        .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); }
+        .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); cursor: pointer;}
+
+        /* MEDIA QUERY: Mengatur elemen navbar ketika layar mengecil */
+        @media (max-width: 1050px) {
+            .nav-links { order: 3; width: 100%; margin-top: 5px; }
+            .logo { order: 1; }
+            .nav-right { order: 2; }
+        }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; flex: 1; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
@@ -55,7 +70,7 @@
         
         .setup-container, .quiz-container { width: 100%; max-width: 750px; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; margin-bottom: 50px; }
         .input-group { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; width: 100%; }
-        .styled-select { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
+        .styled-select { width: 100%; background: transparent; border: 1px solid var(--card-border); color: white; padding: 15px; border-radius: 10px; font-size: 1.1rem; outline: none; cursor: pointer; }
         .styled-select option { background: #115930; color: white; }
         
         .lang-option { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-size: 1.1rem; font-weight: 700; transition: 0.2s; }
@@ -141,18 +156,18 @@
 <body>
 
 <div class="navbar">
-    <div class="nav-left" style="display:flex; align-items:center; gap:15px;">
-        <div class="logo" onclick="switchPage('home')">Paham<span style="color:var(--text-muted);">Teks</span></div>
-        <div class="nav-links">
-            <button class="btn-nav active" id="nav-home" data-i18n="nav_home" onclick="switchPage('home')">Beranda</button>
-            <button class="btn-nav" id="nav-translator" data-i18n="nav_translator" onclick="switchPage('translator')">Translator</button>
-            <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
-            <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
-            <button class="btn-nav" id="nav-dictionary" data-i18n="nav_dictionary" onclick="switchPage('dictionary')">Kamus</button>
-            <button class="btn-nav" id="nav-tracking" data-i18n="nav_dashboard" onclick="switchPage('tracking')" style="color:var(--btn-cyan)">Tracking</button>
-            <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
-        </div>
+    <div class="logo" onclick="switchPage('home')">Paham<span style="color:var(--text-muted);">Teks</span></div>
+    
+    <div class="nav-links">
+        <button class="btn-nav active" id="nav-home" data-i18n="nav_home" onclick="switchPage('home')">Beranda</button>
+        <button class="btn-nav" id="nav-translator" data-i18n="nav_translator" onclick="switchPage('translator')">Translator</button>
+        <button class="btn-nav" id="nav-learn" data-i18n="nav_learn" onclick="switchPage('learn')">Bahasa Dunia</button>
+        <button class="btn-nav" id="nav-coding" data-i18n="nav_coding" onclick="switchPage('coding')">Pemrograman</button>
+        <button class="btn-nav" id="nav-dictionary" data-i18n="nav_dictionary" onclick="switchPage('dictionary')">Kamus</button>
+        <button class="btn-nav" id="nav-tracking" data-i18n="nav_dashboard" onclick="switchPage('tracking')" style="color:var(--btn-cyan)">Tracking</button>
+        <button class="lang-toggle" onclick="toggleLang()" id="btn-lang-toggle">🌐 ID</button>
     </div>
+    
     <div class="nav-right" id="nav-auth-section">
         <button class="btn-auth" data-i18n="btn_login" onclick="openAuthModal('login')">Sign In</button>
         <button class="btn-auth primary" data-i18n="btn_register" onclick="openAuthModal('register')">Sign Up</button>
@@ -183,7 +198,7 @@
     <div class="cards-container">
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('translator')">
             <h2 data-i18n="card_1_title">Mulai<br>Translator</h2>
-            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia.</p>
+            <p data-i18n="card_1_desc">Akses fitur penerjemah bahasa alami berbasis AI yang mendukung huruf non-latin, idiom, dan slang dari seluruh belahan dunia secara akurat.</p>
         </div>
         <div class="feature-card" style="cursor:pointer;" onclick="switchPage('learn')">
             <h2 data-i18n="card_2_title">Mulai<br>Bahasa Asing</h2>
@@ -220,7 +235,7 @@
     </div>
 </div>
 
-<!-- Halaman Kamus Penuh (Baru) -->
+<!-- Halaman Kamus Penuh -->
 <div id="page-dictionary" class="page">
     <div class="setup-container" style="max-width: 800px; text-align: center; margin-top:20px;">
         <h1 data-i18n="dict_page_title" style="margin-bottom:10px;">Pusat Kamus & Istilah</h1>
@@ -249,7 +264,7 @@
     </div>
 </div>
 
-<!-- Halaman Tracking Mandiri (Baru) -->
+<!-- Halaman Tracking Mandiri -->
 <div id="page-tracking" class="page">
     <div class="dashboard-box" style="margin-top:20px;">
         <h2 style="margin-top:0; text-align:center;" data-i18n="dash_title">Log & Tracking Belajar</h2>
@@ -522,7 +537,7 @@
         document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
     }
 
-    // --- DICTIONARY BILINGUAL (ID/EN) LENGKAP ---
+    // --- DICTIONARY BILINGUAL (ID/EN) ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking", nav_dictionary: "Kamus",
@@ -690,12 +705,28 @@
             `).join('');
 
             logs.forEach(l => {
-                if(!l.category || l.category === "General") return;
+                if(!l.category || l.category === "General" || l.category === "Sistem") return;
                 let catClean = l.category;
+                
+                // Terjemahkan otomatis kategori jika dalam bahasa Inggris
                 if(currentLang === 'en') {
-                    // Coba terjemahkan kategori jika memungkinkan
-                    if(catClean.includes("Web & Scripting")) catClean = catClean.replace("Web & Scripting", "Web & Scripting");
-                    if(catClean.includes("Indonesia (Baku)")) catClean = "Indonesian (Formal)";
+                    if(catClean.includes("Populer : Indonesia (Baku)")) catClean = "Popular : Indonesian (Formal)";
+                    if(catClean.includes("Populer : Indonesia (Gaul & Kiasan)")) catClean = "Popular : Indonesian (Slang)";
+                    if(catClean.includes("Populer : Inggris (Grammar)")) catClean = "Popular : English (Grammar)";
+                    if(catClean.includes("Populer : Inggris (Idiom & Slang)")) catClean = "Popular : English (Idioms)";
+                    
+                    if(catClean.includes("Asia & Pasifik : Jepang")) catClean = "Asia & Pacific : Japanese";
+                    if(catClean.includes("Asia & Pasifik : Korea")) catClean = "Asia & Pacific : Korean";
+                    if(catClean.includes("Asia & Pasifik : Mandarin")) catClean = "Asia & Pacific : Mandarin";
+                    
+                    if(catClean.includes("Benua Eropa : Spanyol")) catClean = "Europe : Spanish";
+                    if(catClean.includes("Benua Eropa : Prancis")) catClean = "Europe : French";
+                    if(catClean.includes("Benua Eropa : Jerman")) catClean = "Europe : German";
+                    
+                    if(catClean.includes("Web & Scripting : JavaScript / TypeScript")) catClean = "Web & Scripting : JS/TS";
+                    if(catClean.includes("Web & Scripting : Python")) catClean = "Web & Scripting : Python";
+                    if(catClean.includes("Sistem & Software : C++")) catClean = "System & Software : C++";
+                    if(catClean.includes("Teori & Algoritma Khusus : Struktur Data")) catClean = "Theory : Data Structures";
                 }
                 
                 if(!categoryStats[catClean]) categoryStats[catClean] = { total: 0, count: 0 };
@@ -717,11 +748,10 @@
             else if(avg >= 40) { predikat = dict[currentLang].pred_fair; color = "var(--warning-orange)"; }
             else { predikat = dict[currentLang].pred_poor; color = "var(--wrong)"; }
             
-            // Format seperti yang diminta (Kategori > Predikat)
             let formattedCat = cat;
             if(cat.includes(" : ")) {
                 let parts = cat.split(" : ");
-                formattedCat = `${parts[0].toLowerCase()} : ${parts[1].toLowerCase()}`;
+                formattedCat = `<span style="opacity:0.7;">${parts[0].toLowerCase()} :</span> ${parts[1].toLowerCase()}`;
             }
             
             capabilityHTML += `
@@ -789,7 +819,7 @@
         document.getElementById('quiz-playing-area').style.display = 'flex';
         document.getElementById('quiz-result-area').style.display = 'none';
         
-        if(pageName === 'tracking') updateTrackingUI(); // render ulang chart jika masuk tracking
+        if(pageName === 'tracking') updateTrackingUI(); 
         window.scrollTo(0,0);
     }
     
@@ -908,7 +938,6 @@
         if (isMain) resultContent.innerHTML = searchingText;
         else resultBox.innerHTML = searchingText;
         
-        // Gabungkan keyword dengan kategori agar AI menjawab akurat
         let queryContext = `${input} (Konteks: ${catSelect})`;
         
         fetch(`${serverUrl}/api/dictionary`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: queryContext }) })
@@ -923,7 +952,6 @@
         });
     }
 
-    // Bind tombol search main kamus
     function searchMainKamus() { searchKamus('main'); }
 
     // --- KUIS, TIMER, & CHALLENGE SYSTEM ---
