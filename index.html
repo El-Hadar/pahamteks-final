@@ -23,17 +23,23 @@
         * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
         body { background: var(--bg-green); background-attachment: fixed; color: var(--text-main); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; transition: background 0.5s ease; }
 
-        /* NAVBAR RESPONSIF BARU */
+        /* NAVBAR DIPERBARUI AGAR SEJAJAR & BISA DI-SWIPE DI HP */
         .navbar { 
-            width: 100%; max-width: 1200px; padding: 20px; 
+            width: 100%; max-width: 1300px; padding: 15px 20px; 
             display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 20px; flex-wrap: wrap; gap: 15px; 
+            margin-bottom: 20px; gap: 15px; 
+            overflow-x: auto; white-space: nowrap; 
         }
-        .logo { font-size: 2.2rem; font-weight: 900; color: white; cursor: pointer; flex-shrink: 0; }
+        /* Sembunyikan scrollbar tapi tetap bisa digeser */
+        .navbar::-webkit-scrollbar { display: none; }
+        .navbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .nav-left { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+        .logo { font-size: 2.2rem; font-weight: 900; color: white; cursor: pointer; }
         
         .nav-links { 
             display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; 
-            border-radius: 30px; flex-wrap: wrap; align-items: center; justify-content: center;
+            border-radius: 30px; align-items: center; flex-shrink: 0;
         }
         .btn-nav { background: transparent; border: none; border-radius: 25px; padding: 10px 18px; font-size: 0.95rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .btn-nav.active { background: rgba(255,255,255,0.15); color: white; }
@@ -46,13 +52,6 @@
         .btn-auth:hover { background: #134225; }
         .btn-auth.primary { background: #000000; border: 1px solid var(--card-border); }
         .user-profile { display: none; font-weight: 800; color: var(--btn-green); font-size: 1.05rem; background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--btn-green); cursor: pointer;}
-
-        /* MEDIA QUERY: Mengatur elemen navbar ketika layar mengecil */
-        @media (max-width: 1050px) {
-            .nav-links { order: 3; width: 100%; margin-top: 5px; }
-            .logo { order: 1; }
-            .nav-right { order: 2; }
-        }
 
         .page { display: none; width: 100%; max-width: 1000px; padding: 0 20px; animation: fadeIn 0.4s ease-out; flex: 1; }
         .page.active-page { display: flex; flex-direction: column; align-items: center; }
@@ -92,7 +91,7 @@
         .btn-outline-cyan { background: transparent; border: 2px solid var(--btn-cyan); color: var(--btn-cyan); }
         .btn-outline-cyan:hover { background: rgba(126, 242, 224, 0.15); }
 
-        /* Dashboard Tracking */
+        /* Dashboard Tracking Inline */
         .dashboard-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; width: 100%; max-width: 800px; margin-top: 20px; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .stat-card { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: center; }
@@ -156,7 +155,9 @@
 <body>
 
 <div class="navbar">
-    <div class="logo" onclick="switchPage('home')">Paham<span style="color:var(--text-muted);">Teks</span></div>
+    <div class="nav-left">
+        <div class="logo" onclick="switchPage('home')">Paham<span style="color:var(--text-muted);">Teks</span></div>
+    </div>
     
     <div class="nav-links">
         <button class="btn-nav active" id="nav-home" data-i18n="nav_home" onclick="switchPage('home')">Beranda</button>
@@ -537,7 +538,7 @@
         document.getElementById('nav-auth-section').querySelector('.primary').style.display = "none";
     }
 
-    // --- DICTIONARY BILINGUAL (ID/EN) ---
+    // --- DICTIONARY BILINGUAL (ID/EN) LENGKAP ---
     const dict = {
         id: {
             nav_home: "Beranda", nav_translator: "Translator", nav_learn: "Bahasa Dunia", nav_coding: "Pemrograman", nav_dashboard: "Tracking", nav_dictionary: "Kamus",
@@ -554,7 +555,6 @@
             setup_level: "Pilih Tingkat Penguasaan", opt_level_1: "Pemula (Dasar / Kosakata A1)", opt_level_2: "Menengah (Struktur Kalimat / B1-B2)", opt_level_3: "Mahir (Kompleks / C1-C2 / Slang)",
             setup_lang_title: "Pilih Bahasa Manusia", setup_lang_desc: "Pilih salah satu bahasa untuk difokuskan",
             
-            // Nama Bahasa List ID
             cat_pop: "🌐 Populer (Indo & Inggris)", cat_nus: "🌐 Bahasa Nusantara (Lokal)", cat_mid: "🌐 Timur Tengah & Afrika", cat_asia: "🌐 Asia & Pasifik", cat_eur: "🌐 Benua Eropa",
             opt_lang_id_baku: "Indonesia (Baku)", opt_lang_id_gaul: "Indonesia (Gaul & Kiasan)", opt_lang_en_gram: "Inggris (Grammar)", opt_lang_en_slang: "Inggris (Idiom & Slang)",
             opt_lang_jv: "Jawa", opt_lang_su: "Sunda", opt_lang_mi: "Minang", opt_lang_ba: "Bali",
@@ -566,7 +566,6 @@
             setup_code_level: "Pilih Kompleksitas Algoritma ⚙", opt_code_1: "Pemula (Sintaks Dasar, Looping)", opt_code_2: "Menengah (Fungsi, OOP)", opt_code_3: "Mahir (Arsitektur Kompleks)",
             setup_code_title: "Pilih Bahasa Pemrograman", setup_code_desc: "Uji kemampuan logika koding Anda",
             
-            // Nama Koding List ID
             cat_web: "🌐 Web & Scripting", cat_sys: "🌐 Sistem & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Teori & Algoritma Khusus",
             opt_code_html: "HTML & CSS", opt_code_js: "JavaScript / TypeScript", opt_code_py: "Python", opt_code_php: "PHP", opt_code_ruby: "Ruby",
             opt_code_ds: "Struktur Data (Array, Stack, Tree)", opt_code_crypto: "Kriptografi & Keamanan", opt_code_ml: "Machine Learning Dasar", opt_code_dp: "Design Patterns (OOP)",
@@ -600,7 +599,6 @@
             setup_level: "Select Proficiency Level", opt_level_1: "Beginner (Basics / A1 Vocab)", opt_level_2: "Intermediate (Sentences / B1-B2)", opt_level_3: "Advanced (Complex / C1-C2 / Slang)",
             setup_lang_title: "Select Human Language", setup_lang_desc: "Choose a language to focus on",
             
-            // Nama Bahasa List EN
             cat_pop: "🌐 Popular (Indo & English)", cat_nus: "🌐 Nusantara (Local Indonesian)", cat_mid: "🌐 Middle East & Africa", cat_asia: "🌐 Asia & Pacific", cat_eur: "🌐 Europe",
             opt_lang_id_baku: "Indonesian (Formal)", opt_lang_id_gaul: "Indonesian (Slang)", opt_lang_en_gram: "English (Grammar)", opt_lang_en_slang: "English (Idioms)",
             opt_lang_jv: "Javanese", opt_lang_su: "Sundanese", opt_lang_mi: "Minangkabau", opt_lang_ba: "Balinese",
@@ -612,7 +610,6 @@
             setup_code_level: "Select Algorithm Complexity ⚙", opt_code_1: "Beginner (Basic Syntax, Loops)", opt_code_2: "Intermediate (Functions, OOP)", opt_code_3: "Advanced (Complex Architecture)",
             setup_code_title: "Select Programming Language", setup_code_desc: "Test your coding logic skills",
             
-            // Nama Koding List EN
             cat_web: "🌐 Web & Scripting", cat_sys: "🌐 System & Software", cat_mob: "🌐 Mobile, Data & Database", cat_theory: "🌐 Theory & Algorithms",
             opt_code_html: "HTML & CSS", opt_code_js: "JavaScript / TypeScript", opt_code_py: "Python", opt_code_php: "PHP", opt_code_ruby: "Ruby",
             opt_code_ds: "Data Structures (Array, Stack, Tree)", opt_code_crypto: "Cryptography & Security", opt_code_ml: "Basic Machine Learning", opt_code_dp: "Design Patterns (OOP)",
@@ -708,7 +705,6 @@
                 if(!l.category || l.category === "General" || l.category === "Sistem") return;
                 let catClean = l.category;
                 
-                // Terjemahkan otomatis kategori jika dalam bahasa Inggris
                 if(currentLang === 'en') {
                     if(catClean.includes("Populer : Indonesia (Baku)")) catClean = "Popular : Indonesian (Formal)";
                     if(catClean.includes("Populer : Indonesia (Gaul & Kiasan)")) catClean = "Popular : Indonesian (Slang)";
